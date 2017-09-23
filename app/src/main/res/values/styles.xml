@@ -1,0 +1,20 @@
+<resources>
+
+    <style name="Theme.AppBaseTheme" parent="Theme.AppCompat.Light">
+        <item name="android:editTextColor">#FFF</item>
+        <item name="android:textColorPrimary">#FFF</item>
+        <item name="android:textColorSecondary">#FFF</item>
+        <item name="android:textColorTertiary">#FFF</item>
+        <item name="android:textColorPrimaryInverse">#000</item>
+        <item name="android:textColorSecondaryInverse">#000</item>
+        <item name="android:textColorTertiaryInverse">#000</item>
+    </style>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppBaseTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+</resources>
