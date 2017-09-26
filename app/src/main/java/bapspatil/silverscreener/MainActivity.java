@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     private String MOVIE_URL_POPULAR = "http://api.themoviedb.org/3/movie/popular";
     private String MOVIE_URL_RATED = "http://api.themoviedb.org/3/movie/top_rated";
     private String MOVIE_POSTER_URL = "http://image.tmdb.org/t/p/w500";
+    private String MOVIE_BACKDROP_URL = "http://image.tmdb.org/t/p/w780";
     private Context mContext;
     public GetTheMoviesTask getTheMoviesTask;
 
@@ -128,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                     JSONObject jsonMovie = jsonMoviesArray.getJSONObject(i);
                     Movie movie = new Movie();
                     movie.setPosterPath(MOVIE_POSTER_URL + jsonMovie.getString("poster_path"));
+                    movie.setBackdropPath(MOVIE_BACKDROP_URL + jsonMovie.getString("backdrop_path"));
                     movie.setTitle(jsonMovie.getString("title"));
                     movie.setPlot(jsonMovie.getString("overview"));
                     movie.setDate(jsonMovie.getString("release_date"));

@@ -5,10 +5,10 @@ import android.os.Parcelable;
 
 public class Movie implements Parcelable {
 
-    private String posterPath, title, plot, date, rating;
+    private String posterPath, title, plot, date, rating, backdropPath;
     private int id;
 
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator(){
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         @Override
         public Movie createFromParcel(Parcel source) {
             return new Movie(source);
@@ -27,6 +27,7 @@ public class Movie implements Parcelable {
         this.date = in.readString();
         this.rating = in.readString();
         this.id = in.readInt();
+        this.backdropPath = in.readString();
     }
 
     Movie() {
@@ -81,6 +82,14 @@ public class Movie implements Parcelable {
         this.rating = rating;
     }
 
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -94,5 +103,6 @@ public class Movie implements Parcelable {
         dest.writeString(this.date);
         dest.writeString(this.rating);
         dest.writeInt(this.id);
+        dest.writeString(this.backdropPath);
     }
 }

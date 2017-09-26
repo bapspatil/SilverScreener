@@ -4,7 +4,8 @@
     <string name="popular">Popular</string>
     <string name="highest_rated">Top Rated</string>
     <string name="spinner">Sort By</string>
-    
+    <string name="backdrop_iv_info">Backdrop of the movie</string>
+
     <string-array name="sort_criteria">
         <item>Most Popular</item>
         <item>Highest Rated</item>

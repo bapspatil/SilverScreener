@@ -17,18 +17,24 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/poster_image_view"
+            <android.support.v7.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="300dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:contentDescription="This is a poster for the movie."
-                android:scaleType="centerCrop"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@color/colorAccent" />
+                app:cardBackgroundColor="#212121"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <ImageView
+                    android:id="@+id/poster_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="This is a poster for the movie."
+                    android:scaleType="centerCrop"
+                    tools:srcCompat="@color/colorAccent" />
+            </android.support.v7.widget.CardView>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -54,7 +60,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
                     android:textColor="#212121"
-                    android:textSize="26sp"
+                    android:textSize="56sp"
                     tools:text="10.0" />
 
                 <TextView
@@ -78,11 +84,13 @@
                     android:textSize="26sp"
                     tools:text="12/13/1989" />
 
-                <com.github.ivbaranov.mfb.MaterialFavoriteButton
+                <Button
+                    android:id="@+id/fav_button"
                     android:layout_width="64dp"
                     android:layout_height="0dp"
                     android:layout_gravity="center"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:background="@drawable/ic_favorite_border_black_24dp" />
 
             </LinearLayout>
 
@@ -94,7 +102,6 @@
             android:id="@+id/title_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:padding="16dp"
             android:textColor="#212121"
             android:textSize="32sp"
@@ -122,10 +129,38 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_trailers"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="#212121"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <ImageView
+                    android:id="@+id/backdrop_image_view"
+                    android:layout_width="390dp"
+                    android:layout_height="219dp"
+                    android:contentDescription="@string/backdrop_iv_info"
+                    android:scaleType="centerCrop" />
+
+            </android.support.v7.widget.CardView>
+
+            <!--<com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
+                android:id="@+id/rv_trailers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:msrv_gravity="center"
+                app:msrv_snap_count="1" />-->
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/reviews_label_tv"
@@ -138,10 +173,12 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <android.support.v7.widget.RecyclerView
+        <!--<com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
             android:id="@+id/rv_reviews"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:msrv_gravity="center"
+            app:msrv_snap_count="1" />-->
 
     </LinearLayout>
 
