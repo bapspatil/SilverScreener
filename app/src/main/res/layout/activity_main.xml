@@ -16,7 +16,6 @@
         android:elevation="8dp"
         android:entries="@array/sort_criteria"
         android:padding="8dp"
-        android:prompt="@string/spinner"
         android:spinnerMode="dialog" />
 
     <View
