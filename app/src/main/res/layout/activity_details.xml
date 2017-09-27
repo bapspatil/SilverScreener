@@ -184,12 +184,13 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <!--<com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
+        <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
             android:id="@+id/rv_reviews"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             app:msrv_gravity="center"
-            app:msrv_snap_count="1" />-->
+            app:msrv_snap_count="1" />
 
     </LinearLayout>
 

@@ -12,24 +12,30 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
 import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.net.URL;
 import java.util.ArrayList;
 
-public class DetailsActivity extends AppCompatActivity implements TrailerRecyclerViewAdapter.ItemClickListener{
+public class DetailsActivity extends AppCompatActivity implements TrailerRecyclerViewAdapter.ItemClickListener {
 
 
     private TextView mRatingTextView, mDateTextView, mTitleTextView, mPlotTextView;
     private ImageView mPosterImageView, mBackdropImageView;
-    private MultiSnapRecyclerView mTrailerRecyclerView, mUserRecyclerView;
+    private MultiSnapRecyclerView mTrailerRecyclerView, mReviewRecyclerView;
     private TrailerRecyclerViewAdapter mTrailerAdapter;
+    private ReviewRecyclerViewAdapter mReviewAdapter;
     private Button mFavoriteButton;
     private Context mContext;
     private ArrayList<String> mTrailerTitles = new ArrayList<String>();
     private ArrayList<String> mTrailerPaths = new ArrayList<String>();
+    private ArrayList<String> mReviewAuthors = new ArrayList<String>();
+    private ArrayList<String> mReviewContents = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +56,20 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 return;
             }
         });
+
         mTrailerRecyclerView = (MultiSnapRecyclerView) findViewById(R.id.rv_trailers);
         mTrailerRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
-
         mTrailerAdapter = new TrailerRecyclerViewAdapter(mContext, mTrailerTitles, mTrailerPaths, this);
         mTrailerRecyclerView.setAdapter(mTrailerAdapter);
 
+        mReviewRecyclerView = (MultiSnapRecyclerView) findViewById(R.id.rv_reviews);
+        mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        mReviewAdapter = new ReviewRecyclerViewAdapter(mContext, mReviewAuthors, mReviewContents);
+        mReviewRecyclerView.setAdapter(mReviewAdapter);
+
         Movie movie;
         Intent receivedIntent = getIntent();
-        if(receivedIntent.hasExtra("movie")) {
+        if (receivedIntent.hasExtra("movie")) {
             movie = receivedIntent.getParcelableExtra("movie");
             mRatingTextView.setText(movie.getRating());
             mDateTextView.setText(movie.getDate());
@@ -66,7 +77,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             mPlotTextView.setText(movie.getPlot());
             Picasso.with(getApplicationContext()).load(movie.getPosterPath()).into(mPosterImageView);
             Picasso.with(getApplicationContext()).load(movie.getBackdropPath()).into(mBackdropImageView);
-            (new GetTrailersAndReviewsTask()).execute(movie.getId());
+            (new GetTheTrailersTask()).execute(movie.getId());
+            (new GetTheReviewsTask()).execute(movie.getId());
         }
     }
 
@@ -77,7 +89,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         startActivity(openYoutube);
     }
 
-    private class GetTrailersAndReviewsTask extends AsyncTask<Integer, Void, String> {
+    private class GetTheTrailersTask extends AsyncTask<Integer, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -119,6 +131,53 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 }
             } catch (Exception e) {
                 Toast.makeText(mContext, "Error in the trailer data fetched!", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class GetTheReviewsTask extends AsyncTask<Integer, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            if (!Connection.hasNetwork(mContext)) {
+                cancel(true);
+                Toast.makeText(mContext, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+        @Override
+        protected String doInBackground(Integer... params) {
+            Uri builtUriReviews = Uri.parse("https://api.themoviedb.org/3/movie/" + params[0] + "/reviews").buildUpon()
+                    .appendQueryParameter("api_key", BuildConfig.TMDB_API_TOKEN)
+                    .appendQueryParameter("language", "en-US")
+                    .build();
+            String jsonResponseReviews;
+            try {
+                jsonResponseReviews = Connection.getResponseFromHttpUrl(new URL(builtUriReviews.toString()));
+                return jsonResponseReviews;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String jsonResponse) {
+            mReviewAuthors.clear();
+            mReviewContents.clear();
+            try {
+                JSONObject jsonReviewsObject = new JSONObject(jsonResponse);
+                JSONArray jsonReviewsArray = jsonReviewsObject.getJSONArray("results");
+                for (int i = 0; i < jsonReviewsArray.length(); i++) {
+                    JSONObject jsonReview = jsonReviewsArray.getJSONObject(i);
+                    mReviewAuthors.add(jsonReview.getString("author"));
+                    mReviewContents.add(jsonReview.getString("content"));
+                    mReviewAdapter.notifyDataSetChanged();
+                }
+            } catch (Exception e) {
+                Toast.makeText(mContext, "Error in the review data fetched!", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }
