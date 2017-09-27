@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -15,7 +16,7 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
     private ItemClickListener mClickListener;
 
     public interface ItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(int position, String stringUrlTrailerClicked);
     }
 
     public TrailerRecyclerViewAdapter(Context context, ArrayList<String> trailerTitles, ArrayList<String> trailerPaths, ItemClickListener itemClickListener) {
@@ -32,8 +33,9 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
     }
 
     @Override
-    public void onBindViewHolder(TrailerViewHolder viewHolder, int i) {
-
+    public void onBindViewHolder(TrailerViewHolder viewHolder, int position) {
+        String title = mTrailerTitles.get(position);
+        viewHolder.trailerTitleTextView.setText(title);
     }
 
     @Override
@@ -43,13 +45,18 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
     }
 
     public class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView trailerTitleTextView;
+
         public TrailerViewHolder(View itemView) {
             super(itemView);
+            trailerTitleTextView = (TextView) itemView.findViewById(R.id.trailer_title_tv);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
+            if (mClickListener != null)
+                mClickListener.onItemClick(getAdapterPosition(),mTrailerPaths.get(getAdapterPosition()));
         }
     }
 

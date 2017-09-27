@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                     .appendQueryParameter("api_key", BuildConfig.TMDB_API_TOKEN)
                     .appendQueryParameter("language", "en-US")
                     .build();
-
             String jsonResponse;
             try {
                 jsonResponse = Connection.getResponseFromHttpUrl(new URL(builtUri.toString()));
