@@ -100,10 +100,10 @@
             android:id="@+id/title_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:padding="16dp"
             android:textColor="#212121"
             android:textSize="32sp"
+            android:textStyle="bold"
             tools:text="A Very Long Title Of The Movie" />
 
         <TextView
@@ -131,34 +131,36 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp">
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp">
+
+            <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
+                android:id="@+id/rv_trailers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="8dp"
+                app:msrv_gravity="center"
+                app:msrv_snap_count="1" />
 
             <android.support.v7.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
                 app:cardBackgroundColor="#212121"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp">
 
                 <ImageView
                     android:id="@+id/backdrop_image_view"
-                    android:layout_width="390dp"
-                    android:layout_height="219dp"
+                    android:layout_width="400dp"
+                    android:layout_height="225dp"
                     android:contentDescription="@string/backdrop_iv_info"
                     android:scaleType="centerCrop" />
 
             </android.support.v7.widget.CardView>
 
-            <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
-                android:id="@+id/rv_trailers"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:msrv_gravity="center"
-                app:msrv_snap_count="1" />
 
         </FrameLayout>
 

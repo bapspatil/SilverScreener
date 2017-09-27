@@ -16,7 +16,7 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
     private ItemClickListener mClickListener;
 
     public interface ItemClickListener {
-        void onItemClick(int position, String stringUrlTrailerClicked);
+        void onItemClick(String stringUrlTrailerClicked);
     }
 
     public TrailerRecyclerViewAdapter(Context context, ArrayList<String> trailerTitles, ArrayList<String> trailerPaths, ItemClickListener itemClickListener) {
@@ -56,7 +56,7 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
         @Override
         public void onClick(View v) {
             if (mClickListener != null)
-                mClickListener.onItemClick(getAdapterPosition(),mTrailerPaths.get(getAdapterPosition()));
+                mClickListener.onItemClick(mTrailerPaths.get(getAdapterPosition()));
         }
     }
 

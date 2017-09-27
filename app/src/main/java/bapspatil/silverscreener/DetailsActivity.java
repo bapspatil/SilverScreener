@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,7 +28,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     private TextView mRatingTextView, mDateTextView, mTitleTextView, mPlotTextView;
     private ImageView mPosterImageView, mBackdropImageView;
     private MultiSnapRecyclerView mTrailerRecyclerView, mUserRecyclerView;
-    private TrailerRecyclerViewAdapter mAdapter;
+    private TrailerRecyclerViewAdapter mTrailerAdapter;
     private Button mFavoriteButton;
     private Context mContext;
     private ArrayList<String> mTrailerTitles = new ArrayList<String>();
@@ -52,8 +53,11 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 return;
             }
         });
+        mTrailerRecyclerView = (MultiSnapRecyclerView) findViewById(R.id.rv_trailers);
+        mTrailerRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
-        mAdapter = new TrailerRecyclerViewAdapter(mContext, mTrailerTitles, mTrailerPaths, this);
+        mTrailerAdapter = new TrailerRecyclerViewAdapter(mContext, mTrailerTitles, mTrailerPaths, this);
+        mTrailerRecyclerView.setAdapter(mTrailerAdapter);
 
         Movie movie;
         Intent receivedIntent = getIntent();
@@ -65,17 +69,15 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             mPlotTextView.setText(movie.getPlot());
             Picasso.with(getApplicationContext()).load(movie.getPosterPath()).into(mPosterImageView);
             Picasso.with(getApplicationContext()).load(movie.getBackdropPath()).into(mBackdropImageView);
+            (new GetTrailersAndReviewsTask()).execute(movie.getId());
         }
     }
 
-    void favButtonOnClick(View v) {
-        // TODO (1) Implement the favorite button functionality here.
-        return;
-    }
-
     @Override
-    public void onItemClick(int position, String stringUrlTrailerClicked) {
-
+    public void onItemClick(String stringUrlTrailerClicked) {
+        Uri youtubeUri = Uri.parse(stringUrlTrailerClicked);
+        Intent openYoutube = new Intent(Intent.ACTION_VIEW, youtubeUri);
+        startActivity(openYoutube);
     }
 
     private class GetTrailersAndReviewsTask extends AsyncTask<Integer, Void, String> {
@@ -116,7 +118,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     JSONObject jsonTrailer = jsonTrailersArray.getJSONObject(i);
                     mTrailerTitles.add(jsonTrailer.getString("name"));
                     mTrailerPaths.add("https://www.youtube.com/watch?v=" + jsonTrailer.getString("key"));
-                    mAdapter.notifyDataSetChanged();
+                    mTrailerAdapter.notifyDataSetChanged();
                 }
 
             } catch (Exception e) {
