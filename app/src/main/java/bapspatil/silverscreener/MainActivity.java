@@ -13,13 +13,10 @@ import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.net.URL;
 import java.util.ArrayList;
-
 import it.gmariotti.recyclerview.adapter.SlideInBottomAnimatorAdapter;
 
 public class MainActivity extends AppCompatActivity implements MovieRecyclerViewAdapter.ItemClickListener {

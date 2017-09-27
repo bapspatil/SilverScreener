@@ -2,7 +2,6 @@ package bapspatil.silverscreener;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import java.util.ArrayList;
 
 public class Movie implements Parcelable {

@@ -12,13 +12,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.squareup.picasso.Picasso;
 import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -120,12 +117,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     mTrailerPaths.add("https://www.youtube.com/watch?v=" + jsonTrailer.getString("key"));
                     mTrailerAdapter.notifyDataSetChanged();
                 }
-
             } catch (Exception e) {
                 Toast.makeText(mContext, "Error in the trailer data fetched!", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
-
         }
     }
 }
