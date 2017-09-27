@@ -99,7 +99,7 @@ public class Movie implements Parcelable {
 
     public void addTrailerInfo(String title, String path) {
         trailerTitles.add(title);
-        trailerPaths.add("https://youtube.com/watch?v=" + path);
+        trailerPaths.add("https://www.youtube.com/watch?v=" + path);
     }
 
     public void addReviewInfo(String author, String content) {
