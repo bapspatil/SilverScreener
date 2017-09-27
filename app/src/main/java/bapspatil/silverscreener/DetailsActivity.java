@@ -19,7 +19,6 @@ public class DetailsActivity extends AppCompatActivity {
     private MultiSnapRecyclerView mTrailerRecyclerView, mUserRecyclerView;
     private Button mFavoriteButton;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

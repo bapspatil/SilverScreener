@@ -86,17 +86,15 @@
 
                 <Button
                     android:id="@+id/fav_button"
-                    android:layout_width="64dp"
-                    android:layout_height="0dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:background="@drawable/ic_favorite_border_black_24dp" />
 
             </LinearLayout>
 
 
         </LinearLayout>
-
 
         <TextView
             android:id="@+id/title_tv"
