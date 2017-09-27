@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 
 public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecyclerViewAdapter.TrailerViewHolder> {
 
+
+
     public TrailerRecyclerViewAdapter() {
         super();
     }
