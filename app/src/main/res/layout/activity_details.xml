@@ -178,17 +178,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="16dp"
+            android:layout_marginTop="8dp"
             android:paddingStart="16dp"
             android:text="USER REVIEWS"
             android:textColor="#000"
             android:textSize="14sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="(SWIPE SIDEWAYS TO SEE MORE REVIEWS)"
+            android:textColor="#000"
+            android:textSize="12sp" />
+
         <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
             android:id="@+id/rv_reviews"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             app:msrv_gravity="center"
             app:msrv_snap_count="1" />
 
