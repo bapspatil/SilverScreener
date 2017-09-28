@@ -13,7 +13,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
     private ArrayList<String> mReviewAuthors, mReviewContents;
     private Context mContext;
 
-    public ReviewRecyclerViewAdapter(Context context, ArrayList<String> reviewAuthors, ArrayList<String> reviewContents) {
+    ReviewRecyclerViewAdapter(Context context, ArrayList<String> reviewAuthors, ArrayList<String> reviewContents) {
         this.mContext = context;
         this.mReviewAuthors = reviewAuthors;
         this.mReviewContents = reviewContents;
@@ -37,9 +37,9 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
         else return mReviewAuthors.size();
     }
 
-    public class ReviewItemViewHolder extends RecyclerView.ViewHolder{
+    class ReviewItemViewHolder extends RecyclerView.ViewHolder{
         TextView reviewAuthorTextView, reviewContentTextView;
-        public ReviewItemViewHolder(View itemView) {
+        ReviewItemViewHolder(View itemView) {
             super(itemView);
             reviewAuthorTextView = (TextView) itemView.findViewById(R.id.review_author_tv);
             reviewContentTextView = (TextView) itemView.findViewById(R.id.review_content_tv);

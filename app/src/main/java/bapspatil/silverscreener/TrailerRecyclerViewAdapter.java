@@ -14,11 +14,11 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
     private Context mContext;
     private ItemClickListener mClickListener;
 
-    public interface ItemClickListener {
+    interface ItemClickListener {
         void onItemClick(String stringUrlTrailerClicked);
     }
 
-    public TrailerRecyclerViewAdapter(Context context, ArrayList<String> trailerTitles, ArrayList<String> trailerPaths, ItemClickListener itemClickListener) {
+    TrailerRecyclerViewAdapter(Context context, ArrayList<String> trailerTitles, ArrayList<String> trailerPaths, ItemClickListener itemClickListener) {
         this.mContext = context;
         this.mClickListener = itemClickListener;
         this.mTrailerTitles = trailerTitles;
@@ -43,10 +43,10 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
         else return mTrailerTitles.size();
     }
 
-    public class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView trailerTitleTextView;
 
-        public TrailerViewHolder(View itemView) {
+        TrailerViewHolder(View itemView) {
             super(itemView);
             trailerTitleTextView = (TextView) itemView.findViewById(R.id.trailer_title_tv);
             itemView.setOnClickListener(this);

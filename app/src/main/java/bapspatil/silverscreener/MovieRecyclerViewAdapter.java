@@ -16,11 +16,11 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     private Context mContext;
     private ItemClickListener mClickListener;
 
-    public interface ItemClickListener {
+    interface ItemClickListener {
         void onItemClick(int position);
     }
 
-    public MovieRecyclerViewAdapter(Context context, ArrayList<Movie> movieArrayList, ItemClickListener itemClickListener) {
+    MovieRecyclerViewAdapter(Context context, ArrayList<Movie> movieArrayList, ItemClickListener itemClickListener) {
         this.mContext = context;
         this.mMoviesArrayList = movieArrayList;
         this.mClickListener = itemClickListener;
@@ -46,7 +46,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
         else return mMoviesArrayList.size();
     }
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView mPosterImageView;
 
         MovieViewHolder(View itemView) {
