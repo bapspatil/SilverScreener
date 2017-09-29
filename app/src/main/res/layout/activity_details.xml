@@ -96,7 +96,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/ic_favorite_border_black_24dp" />
+                    android:background="@drawable/ic_favorite_border" />
 
             </LinearLayout>
 
