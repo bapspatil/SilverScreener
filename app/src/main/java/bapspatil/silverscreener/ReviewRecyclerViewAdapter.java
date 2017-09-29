@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 
-public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecyclerViewAdapter.ReviewItemViewHolder>{
+public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecyclerViewAdapter.ReviewItemViewHolder> {
 
     private ArrayList<String> mReviewAuthors, mReviewContents;
     private Context mContext;
@@ -27,8 +28,13 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
 
     @Override
     public void onBindViewHolder(ReviewItemViewHolder holder, int position) {
-        holder.reviewAuthorTextView.setText(mReviewAuthors.get(position));
-        holder.reviewContentTextView.setText(mReviewContents.get(position));
+        String reviewAuthor = mReviewAuthors.get(position);
+        if (reviewAuthor == null)
+            holder.reviewAuthorTextView.setText("Either you're not connected to the internet or no one bothered to write user reviews for this movie!");
+        else {
+            holder.reviewAuthorTextView.setText(reviewAuthor);
+            holder.reviewContentTextView.setText(mReviewContents.get(position));
+        }
     }
 
     @Override
@@ -37,8 +43,9 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
         else return mReviewAuthors.size();
     }
 
-    class ReviewItemViewHolder extends RecyclerView.ViewHolder{
+    class ReviewItemViewHolder extends RecyclerView.ViewHolder {
         TextView reviewAuthorTextView, reviewContentTextView;
+
         ReviewItemViewHolder(View itemView) {
             super(itemView);
             reviewAuthorTextView = (TextView) itemView.findViewById(R.id.review_author_tv);

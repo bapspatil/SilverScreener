@@ -34,7 +34,10 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
     @Override
     public void onBindViewHolder(TrailerViewHolder viewHolder, int position) {
         String title = mTrailerTitles.get(position);
-        viewHolder.trailerTitleTextView.setText(title);
+        if(title == null)
+            viewHolder.trailerTitleTextView.setText("Why aren't you connected to the internet? Or maybe there are no trailers for this movie...");
+        else
+            viewHolder.trailerTitleTextView.setText(title);
     }
 
     @Override
