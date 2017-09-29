@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        toolbar.setLogo(R.mipmap.ic_launcher);
+        toolbar.setLogo(R.drawable.titlebar_logo);
         setSupportActionBar(toolbar);
         Toast.makeText(mContext, "App developed by Bapusaheb Patil", Toast.LENGTH_SHORT).show();
 

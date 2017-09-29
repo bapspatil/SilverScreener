@@ -44,7 +44,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         setContentView(R.layout.activity_details);
         mContext = getApplicationContext();
         Toolbar toolbar = (Toolbar) findViewById(R.id.details_toolbar);
-        toolbar.setLogo(R.mipmap.ic_launcher);
+        toolbar.setLogo(R.drawable.titlebar_logo);
         setSupportActionBar(toolbar);
 
         mRatingTextView = (TextView) findViewById(R.id.rating_value_tv);
