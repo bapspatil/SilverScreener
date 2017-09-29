@@ -12,6 +12,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/details_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -177,8 +184,8 @@
             android:id="@+id/reviews_label_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="16dp"
             android:layout_marginTop="8dp"
+            android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:text="USER REVIEWS"
             android:textColor="#000"

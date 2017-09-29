@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,6 +43,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         mContext = getApplicationContext();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.details_toolbar);
+        toolbar.setLogo(R.mipmap.ic_launcher);
+        setSupportActionBar(toolbar);
 
         mRatingTextView = (TextView) findViewById(R.id.rating_value_tv);
         mDateTextView = (TextView) findViewById(R.id.date_value_tv);

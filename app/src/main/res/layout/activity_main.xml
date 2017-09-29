@@ -7,11 +7,11 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/my_awesome_toolbar"
-        android:layout_height="wrap_content"
+        android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize" />
 
     <Spinner
         android:id="@+id/sort_spinner"
@@ -22,6 +22,7 @@
         android:background="#212121"
         android:elevation="8dp"
         android:entries="@array/sort_criteria"
+        android:gravity="center"
         android:padding="8dp"
         android:spinnerMode="dialog" />
 
@@ -39,7 +40,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_movies"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <ProgressBar
             android:id="@+id/loading_indicator"
