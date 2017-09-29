@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="Theme.AppBaseTheme" parent="Theme.AppCompat.Light">
+    <style name="Theme.AppBaseTheme" parent="android:Theme.Material.Light.DarkActionBar">
         <item name="android:editTextColor">#FFF</item>
         <item name="android:textColorPrimary">#FFF</item>
         <item name="android:textColorSecondary">#FFF</item>
