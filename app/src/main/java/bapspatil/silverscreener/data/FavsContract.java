@@ -2,7 +2,7 @@ package bapspatil.silverscreener.data;
 
 import android.provider.BaseColumns;
 
-public class FavoritesContract {
+public class FavsContract {
 
     public static final class FavoritesEntry implements BaseColumns {
 

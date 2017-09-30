@@ -25,8 +25,8 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.ArrayList;
 
-import bapspatil.silverscreener.data.FavoritesContract;
-import bapspatil.silverscreener.data.FavoritesDbHelper;
+import bapspatil.silverscreener.data.FavsContract;
+import bapspatil.silverscreener.data.FavsDbHelper;
 
 public class DetailsActivity extends AppCompatActivity implements TrailerRecyclerViewAdapter.ItemClickListener {
 
@@ -52,7 +52,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         Toolbar toolbar = (Toolbar) findViewById(R.id.details_toolbar);
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
-        FavoritesDbHelper mDbHelper = new FavoritesDbHelper(this);
+        FavsDbHelper mDbHelper = new FavsDbHelper(this);
         mDb = mDbHelper.getWritableDatabase();
 
         mRatingTextView = (TextView) findViewById(R.id.rating_value_tv);
@@ -67,12 +67,12 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             public void onClick(View v) {
                 Movie movie = getIntent().getParcelableExtra("movie");
                 ContentValues cv = new ContentValues();
-                cv.put(FavoritesContract.FavoritesEntry._ID, movie.getId());
-                cv.put(FavoritesContract.FavoritesEntry.COLUMN_TITLE, movie.getTitle());
-                cv.put(FavoritesContract.FavoritesEntry.COLUMN_PLOT, movie.getPlot());
-                cv.put(FavoritesContract.FavoritesEntry.COLUMN_RATING, movie.getRating());
-                cv.put(FavoritesContract.FavoritesEntry.COLUMN_DATE, movie.getDate());
-                mDb.insert(FavoritesContract.FavoritesEntry.TABLE_NAME, null, cv);
+                cv.put(FavsContract.FavoritesEntry._ID, movie.getId());
+                cv.put(FavsContract.FavoritesEntry.COLUMN_TITLE, movie.getTitle());
+                cv.put(FavsContract.FavoritesEntry.COLUMN_PLOT, movie.getPlot());
+                cv.put(FavsContract.FavoritesEntry.COLUMN_RATING, movie.getRating());
+                cv.put(FavsContract.FavoritesEntry.COLUMN_DATE, movie.getDate());
+                mDb.insert(FavsContract.FavoritesEntry.TABLE_NAME, null, cv);
             }
         });
 
