@@ -3,6 +3,7 @@ package bapspatil.silverscreener;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -63,18 +64,20 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mBackdropImageView = (ImageView) findViewById(R.id.backdrop_image_view);
         mFavoriteButton = (Button) findViewById(R.id.fav_button);
         mFavoriteButton.setOnClickListener(new View.OnClickListener() {
-            boolean isFavorited = false;
+            Movie movie = getIntent().getParcelableExtra("movie");
+            String[] movieTitle = {movie.getTitle()};
+
             @Override
             public void onClick(View v) {
-                Movie movie = getIntent().getParcelableExtra("movie");
-                if(isFavorited) {
-                    deleteMovieFromFavorites(movie);
-                    isFavorited = false;
-                }
-                else {
+                Cursor cursor = mDb.rawQuery("SELECT * FROM " + FavsContract.FavoritesEntry.TABLE_NAME + " WHERE " + FavsContract.FavoritesEntry.COLUMN_TITLE + " = ?", movieTitle);
+                if (cursor.getCount() == 0) {
                     addMovieToFavorites(movie);
-                    isFavorited = true;
+                    mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite);
+                } else {
+                    deleteMovieFromFavorites(movie);
+                    mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite_border);
                 }
+                cursor.close();
             }
         });
 
@@ -205,6 +208,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     }
 
     void addMovieToFavorites(Movie movie) {
+        Toast.makeText(mContext, "Movie added to Favorites! :-)", Toast.LENGTH_SHORT).show();
         ContentValues cv = new ContentValues();
         cv.put(FavsContract.FavoritesEntry._ID, movie.getId());
         cv.put(FavsContract.FavoritesEntry.COLUMN_TITLE, movie.getTitle());
@@ -212,11 +216,11 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         cv.put(FavsContract.FavoritesEntry.COLUMN_RATING, movie.getRating());
         cv.put(FavsContract.FavoritesEntry.COLUMN_DATE, movie.getDate());
         mDb.insert(FavsContract.FavoritesEntry.TABLE_NAME, null, cv);
-        Toast.makeText(mContext, "Movie added to Favorites! :-)", Toast.LENGTH_SHORT).show();
     }
 
     void deleteMovieFromFavorites(Movie movie) {
-        mDb.delete(FavsContract.FavoritesEntry.TABLE_NAME, FavsContract.FavoritesEntry.COLUMN_TITLE + " = " + movie.getTitle(), null);
         Toast.makeText(mContext, "Movie removed from Favorites! :-(", Toast.LENGTH_SHORT).show();
+        String[] movieTitle = {movie.getTitle()};
+        mDb.delete(FavsContract.FavoritesEntry.TABLE_NAME, FavsContract.FavoritesEntry.COLUMN_TITLE + " = ?", movieTitle);
     }
 }
