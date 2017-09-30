@@ -3,6 +3,7 @@ package bapspatil.silverscreener;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,16 +16,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.squareup.picasso.Picasso;
 import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.net.URL;
 import java.util.ArrayList;
-
 import bapspatil.silverscreener.data.FavsContract;
 import bapspatil.silverscreener.data.FavsDbHelper;
 
@@ -38,10 +35,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     private ReviewRecyclerViewAdapter mReviewAdapter;
     private Button mFavoriteButton;
     private Context mContext;
-    private ArrayList<String> mTrailerTitles = new ArrayList<String>();
-    private ArrayList<String> mTrailerPaths = new ArrayList<String>();
-    private ArrayList<String> mReviewAuthors = new ArrayList<String>();
-    private ArrayList<String> mReviewContents = new ArrayList<String>();
+    private ArrayList<String> mTrailerTitles = new ArrayList<>();
+    private ArrayList<String> mTrailerPaths = new ArrayList<>();
+    private ArrayList<String> mReviewAuthors = new ArrayList<>();
+    private ArrayList<String> mReviewContents = new ArrayList<>();
     private SQLiteDatabase mDb;
 
     @Override
@@ -65,14 +62,22 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mFavoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean isFavorited;
                 Movie movie = getIntent().getParcelableExtra("movie");
-                ContentValues cv = new ContentValues();
-                cv.put(FavsContract.FavoritesEntry._ID, movie.getId());
-                cv.put(FavsContract.FavoritesEntry.COLUMN_TITLE, movie.getTitle());
-                cv.put(FavsContract.FavoritesEntry.COLUMN_PLOT, movie.getPlot());
-                cv.put(FavsContract.FavoritesEntry.COLUMN_RATING, movie.getRating());
-                cv.put(FavsContract.FavoritesEntry.COLUMN_DATE, movie.getDate());
-                mDb.insert(FavsContract.FavoritesEntry.TABLE_NAME, null, cv);
+                Cursor cursor = mDb.rawQuery("SELECT * FROM " + FavsContract.FavoritesEntry.TABLE_NAME + " WHERE " + FavsContract.FavoritesEntry.COLUMN_TITLE + " = " + movie.getTitle(), null);
+                isFavorited = cursor.getCount() != 0;
+                cursor.close();
+                if(isFavorited) {
+                    mDb.delete(FavsContract.FavoritesEntry.TABLE_NAME, FavsContract.FavoritesEntry.COLUMN_TITLE + " = " + movie.getTitle(), null);
+                } else {
+                    ContentValues cv = new ContentValues();
+                    cv.put(FavsContract.FavoritesEntry._ID, movie.getId());
+                    cv.put(FavsContract.FavoritesEntry.COLUMN_TITLE, movie.getTitle());
+                    cv.put(FavsContract.FavoritesEntry.COLUMN_PLOT, movie.getPlot());
+                    cv.put(FavsContract.FavoritesEntry.COLUMN_RATING, movie.getRating());
+                    cv.put(FavsContract.FavoritesEntry.COLUMN_DATE, movie.getDate());
+                    mDb.insert(FavsContract.FavoritesEntry.TABLE_NAME, null, cv);
+                }
             }
         });
 
@@ -200,9 +205,5 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 e.printStackTrace();
             }
         }
-    }
-
-    void addMovieToFavorites() {
-
     }
 }
