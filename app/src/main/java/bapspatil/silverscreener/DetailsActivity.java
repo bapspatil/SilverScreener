@@ -55,6 +55,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         setSupportActionBar(toolbar);
         FavsDbHelper mDbHelper = new FavsDbHelper(this);
         mDb = mDbHelper.getWritableDatabase();
+        Movie movie = getIntent().getParcelableExtra("movie");
 
         mRatingTextView = (TextView) findViewById(R.id.rating_value_tv);
         mDateTextView = (TextView) findViewById(R.id.date_value_tv);
@@ -63,6 +64,14 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mPosterImageView = (ImageView) findViewById(R.id.poster_image_view);
         mBackdropImageView = (ImageView) findViewById(R.id.backdrop_image_view);
         mFavoriteButton = (Button) findViewById(R.id.fav_button);
+
+        String[] movieTitle = {movie.getTitle()};
+        Cursor cursor = mDb.rawQuery("SELECT * FROM " + FavsContract.FavoritesEntry.TABLE_NAME + " WHERE " + FavsContract.FavoritesEntry.COLUMN_TITLE + " = ?", movieTitle);
+        if (cursor.getCount() == 0)
+            mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite_border);
+        else
+            mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite);
+        cursor.close();
         mFavoriteButton.setOnClickListener(new View.OnClickListener() {
             Movie movie = getIntent().getParcelableExtra("movie");
             String[] movieTitle = {movie.getTitle()};
@@ -91,19 +100,15 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mReviewAdapter = new ReviewRecyclerViewAdapter(mContext, mReviewAuthors, mReviewContents);
         mReviewRecyclerView.setAdapter(mReviewAdapter);
 
-        Movie movie;
-        Intent receivedIntent = getIntent();
-        if (receivedIntent.hasExtra("movie")) {
-            movie = receivedIntent.getParcelableExtra("movie");
-            mRatingTextView.setText(movie.getRating());
-            mDateTextView.setText(movie.getDate());
-            mTitleTextView.setText(movie.getTitle());
-            mPlotTextView.setText(movie.getPlot());
-            Picasso.with(getApplicationContext()).load(movie.getPosterPath()).into(mPosterImageView);
-            Picasso.with(getApplicationContext()).load(movie.getBackdropPath()).into(mBackdropImageView);
-            (new GetTheTrailersTask()).execute(movie.getId());
-            (new GetTheReviewsTask()).execute(movie.getId());
-        }
+        mRatingTextView.setText(movie.getRating());
+        mDateTextView.setText(movie.getDate());
+        mTitleTextView.setText(movie.getTitle());
+        mPlotTextView.setText(movie.getPlot());
+        Picasso.with(getApplicationContext()).load(movie.getPosterPath()).into(mPosterImageView);
+        Picasso.with(getApplicationContext()).load(movie.getBackdropPath()).into(mBackdropImageView);
+        (new GetTheTrailersTask()).execute(movie.getId());
+        (new GetTheReviewsTask()).execute(movie.getId());
+
     }
 
     @Override
