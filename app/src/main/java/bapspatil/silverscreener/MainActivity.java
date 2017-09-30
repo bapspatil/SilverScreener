@@ -77,7 +77,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
     }
@@ -92,9 +93,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         startActivity(startDetailsActivity, options.toBundle());
     }
 
-
-
-
     private class GetTheMoviesTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -103,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
             if (!Connection.hasNetwork(mContext)) {
                 cancel(true);
                 mProgressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(mContext,"No Internet Connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "No Internet Connection", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -127,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         @Override
         protected void onPostExecute(String jsonResponse) {
             movieArray.clear();
-                mProgressBar.setVisibility(View.INVISIBLE);
+            mProgressBar.setVisibility(View.INVISIBLE);
             try {
                 JSONObject jsonMoviesObject = new JSONObject(jsonResponse);
                 JSONArray jsonMoviesArray = jsonMoviesObject.getJSONArray("results");

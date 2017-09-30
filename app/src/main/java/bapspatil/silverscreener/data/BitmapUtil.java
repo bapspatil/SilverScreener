@@ -2,6 +2,7 @@ package bapspatil.silverscreener.data;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
 import java.io.ByteArrayOutputStream;
 
 public class BitmapUtil {
@@ -17,5 +18,12 @@ public class BitmapUtil {
     public static Bitmap getImage(byte[] image) {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
+
+    // Add image to database
+    /*public void addImageToDatabase(SQLiteDatabase database, byte[] image) {
+        ContentValues cv = new ContentValues();
+        cv.put(FavoritesContract.FavoritesEntry.COLUMN_POSTER, image);
+        database.insert(FavoritesContract.FavoritesEntry.TABLE_NAME, null, cv);
+    }*/
 
 }

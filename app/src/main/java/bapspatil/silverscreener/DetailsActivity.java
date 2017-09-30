@@ -1,7 +1,9 @@
 package bapspatil.silverscreener;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +25,9 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.ArrayList;
 
+import bapspatil.silverscreener.data.FavoritesContract;
+import bapspatil.silverscreener.data.FavoritesDbHelper;
+
 public class DetailsActivity extends AppCompatActivity implements TrailerRecyclerViewAdapter.ItemClickListener {
 
 
@@ -37,6 +42,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     private ArrayList<String> mTrailerPaths = new ArrayList<String>();
     private ArrayList<String> mReviewAuthors = new ArrayList<String>();
     private ArrayList<String> mReviewContents = new ArrayList<String>();
+    private SQLiteDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         Toolbar toolbar = (Toolbar) findViewById(R.id.details_toolbar);
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
+        FavoritesDbHelper mDbHelper = new FavoritesDbHelper(this);
+        mDb = mDbHelper.getWritableDatabase();
 
         mRatingTextView = (TextView) findViewById(R.id.rating_value_tv);
         mDateTextView = (TextView) findViewById(R.id.date_value_tv);
@@ -57,7 +65,14 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mFavoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                return;
+                Movie movie = getIntent().getParcelableExtra("movie");
+                ContentValues cv = new ContentValues();
+                cv.put(FavoritesContract.FavoritesEntry._ID, movie.getId());
+                cv.put(FavoritesContract.FavoritesEntry.COLUMN_TITLE, movie.getTitle());
+                cv.put(FavoritesContract.FavoritesEntry.COLUMN_PLOT, movie.getPlot());
+                cv.put(FavoritesContract.FavoritesEntry.COLUMN_RATING, movie.getRating());
+                cv.put(FavoritesContract.FavoritesEntry.COLUMN_DATE, movie.getDate());
+                mDb.insert(FavoritesContract.FavoritesEntry.TABLE_NAME, null, cv);
             }
         });
 
