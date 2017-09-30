@@ -186,4 +186,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             }
         }
     }
+
+    void addMovieToFavorites() {
+
+    }
 }

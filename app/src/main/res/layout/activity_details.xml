@@ -38,6 +38,7 @@
                     android:id="@+id/poster_image_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:transitionName="posterTransition"
                     android:contentDescription="This is a poster for the movie."
                     android:scaleType="centerCrop"
                     tools:srcCompat="@color/colorAccent" />

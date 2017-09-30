@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -81,12 +83,13 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     }
 
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(int position, ImageView posterImageView) {
         Movie movie;
         movie = movieArray.get(position);
         Intent startDetailsActivity = new Intent(mContext, DetailsActivity.class);
         startDetailsActivity.putExtra("movie", movie);
-        startActivity(startDetailsActivity);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, posterImageView, "posterTransition");
+        startActivity(startDetailsActivity, options.toBundle());
     }
 
 

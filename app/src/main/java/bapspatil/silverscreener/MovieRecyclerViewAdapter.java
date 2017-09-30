@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 
@@ -17,7 +19,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     private ItemClickListener mClickListener;
 
     interface ItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(int position, ImageView posterImageView);
     }
 
     MovieRecyclerViewAdapter(Context context, ArrayList<Movie> movieArrayList, ItemClickListener itemClickListener) {
@@ -58,7 +60,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
         @Override
         public void onClick(View v) {
             if (mClickListener != null)
-                mClickListener.onItemClick(getAdapterPosition());
+                mClickListener.onItemClick(getAdapterPosition(), mPosterImageView);
         }
     }
 }
