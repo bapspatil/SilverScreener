@@ -3,7 +3,6 @@ package bapspatil.silverscreener;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -64,17 +63,18 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mBackdropImageView = (ImageView) findViewById(R.id.backdrop_image_view);
         mFavoriteButton = (Button) findViewById(R.id.fav_button);
         mFavoriteButton.setOnClickListener(new View.OnClickListener() {
+            boolean isFavorited = false;
             @Override
             public void onClick(View v) {
-                boolean isFavorited;
                 Movie movie = getIntent().getParcelableExtra("movie");
-                Cursor cursor = mDb.rawQuery("SELECT * FROM " + FavsContract.FavoritesEntry.TABLE_NAME + " WHERE " + FavsContract.FavoritesEntry.COLUMN_TITLE + " = " + movie.getTitle(), null);
-                isFavorited = cursor.getCount() != 0;
-                cursor.close();
-                if(isFavorited)
+                if(isFavorited) {
                     deleteMovieFromFavorites(movie);
-                else
+                    isFavorited = false;
+                }
+                else {
                     addMovieToFavorites(movie);
+                    isFavorited = true;
+                }
             }
         });
 
@@ -212,9 +212,11 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         cv.put(FavsContract.FavoritesEntry.COLUMN_RATING, movie.getRating());
         cv.put(FavsContract.FavoritesEntry.COLUMN_DATE, movie.getDate());
         mDb.insert(FavsContract.FavoritesEntry.TABLE_NAME, null, cv);
+        Toast.makeText(mContext, "Movie added to Favorites! :-)", Toast.LENGTH_SHORT).show();
     }
 
     void deleteMovieFromFavorites(Movie movie) {
         mDb.delete(FavsContract.FavoritesEntry.TABLE_NAME, FavsContract.FavoritesEntry.COLUMN_TITLE + " = " + movie.getTitle(), null);
+        Toast.makeText(mContext, "Movie removed from Favorites! :-(", Toast.LENGTH_SHORT).show();
     }
 }
