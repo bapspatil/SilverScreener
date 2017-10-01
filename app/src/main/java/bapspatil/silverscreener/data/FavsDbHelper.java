@@ -15,18 +15,18 @@ public class FavsDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String SQL_CREATE_FAVORITES_TABLE = "CREATE TABLE " + FavsContract.FavoritesEntry.TABLE_NAME + " (" +
-                FavsContract.FavoritesEntry._ID + " INTEGER PRIMARY KEY," +
-                FavsContract.FavoritesEntry.COLUMN_TITLE + " TEXT NOT NULL," +
-                FavsContract.FavoritesEntry.COLUMN_PLOT + " TEXT NOT NULL," +
-                FavsContract.FavoritesEntry.COLUMN_RATING + " TEXT NOT NULL," +
-                FavsContract.FavoritesEntry.COLUMN_DATE + " TEXT NOT NULL)";
+        final String SQL_CREATE_FAVORITES_TABLE = "CREATE TABLE " + FavsContract.FavsEntry.TABLE_NAME + " (" +
+                FavsContract.FavsEntry.COLUMN_ID + " INTEGER PRIMARY KEY," +
+                FavsContract.FavsEntry.COLUMN_TITLE + " TEXT NOT NULL," +
+                FavsContract.FavsEntry.COLUMN_PLOT + " TEXT NOT NULL," +
+                FavsContract.FavsEntry.COLUMN_RATING + " TEXT NOT NULL," +
+                FavsContract.FavsEntry.COLUMN_DATE + " TEXT NOT NULL)";
         db.execSQL(SQL_CREATE_FAVORITES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + FavsContract.FavoritesEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FavsContract.FavsEntry.TABLE_NAME);
         onCreate(db);
     }
 

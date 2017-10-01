@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.ArrayList;
 
+import bapspatil.silverscreener.data.Connection;
 import it.gmariotti.recyclerview.adapter.SlideInBottomAnimatorAdapter;
 
 public class MainActivity extends AppCompatActivity implements MovieRecyclerViewAdapter.ItemClickListener {

@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.ArrayList;
 
+import bapspatil.silverscreener.data.Connection;
 import bapspatil.silverscreener.data.FavsContract;
 import bapspatil.silverscreener.data.FavsDbHelper;
 
@@ -68,12 +69,13 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mFavoriteButton = (Button) findViewById(R.id.fav_button);
 
         String[] movieTitle = {movie.getTitle()};
-        Cursor cursor = mDb.rawQuery("SELECT * FROM " + FavsContract.FavoritesEntry.TABLE_NAME + " WHERE " + FavsContract.FavoritesEntry.COLUMN_TITLE + " = ?", movieTitle);
+        Cursor cursor = mDb.rawQuery("SELECT * FROM " + FavsContract.FavsEntry.TABLE_NAME + " WHERE " + FavsContract.FavsEntry.COLUMN_TITLE + " = ?", movieTitle);
         if (cursor.getCount() == 0)
             mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite_border);
         else
             mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite);
         cursor.close();
+
         mFavoriteButton.setOnClickListener(new View.OnClickListener() {
             Movie movie = getIntent().getParcelableExtra("movie");
             String[] movieTitle = {movie.getTitle()};
@@ -81,8 +83,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             @Override
             public void onClick(View v) {
                 bounceAnimation();
-
-                Cursor cursor = mDb.rawQuery("SELECT * FROM " + FavsContract.FavoritesEntry.TABLE_NAME + " WHERE " + FavsContract.FavoritesEntry.COLUMN_TITLE + " = ?", movieTitle);
+                Cursor cursor = mDb.rawQuery("SELECT * FROM " + FavsContract.FavsEntry.TABLE_NAME + " WHERE " + FavsContract.FavsEntry.COLUMN_TITLE + " = ?", movieTitle);
                 if (cursor.getCount() == 0) {
                     addMovieToFavorites(movie);
                     mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite);
@@ -227,17 +228,17 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     void addMovieToFavorites(Movie movie) {
         Toast.makeText(mContext, "Movie added to Favorites! :-)", Toast.LENGTH_SHORT).show();
         ContentValues cv = new ContentValues();
-        cv.put(FavsContract.FavoritesEntry._ID, movie.getId());
-        cv.put(FavsContract.FavoritesEntry.COLUMN_TITLE, movie.getTitle());
-        cv.put(FavsContract.FavoritesEntry.COLUMN_PLOT, movie.getPlot());
-        cv.put(FavsContract.FavoritesEntry.COLUMN_RATING, movie.getRating());
-        cv.put(FavsContract.FavoritesEntry.COLUMN_DATE, movie.getDate());
-        mDb.insert(FavsContract.FavoritesEntry.TABLE_NAME, null, cv);
+        cv.put(FavsContract.FavsEntry.COLUMN_ID, movie.getId());
+        cv.put(FavsContract.FavsEntry.COLUMN_TITLE, movie.getTitle());
+        cv.put(FavsContract.FavsEntry.COLUMN_PLOT, movie.getPlot());
+        cv.put(FavsContract.FavsEntry.COLUMN_RATING, movie.getRating());
+        cv.put(FavsContract.FavsEntry.COLUMN_DATE, movie.getDate());
+        mDb.insert(FavsContract.FavsEntry.TABLE_NAME, null, cv);
     }
 
     void deleteMovieFromFavorites(Movie movie) {
         Toast.makeText(mContext, "Movie removed from Favorites! :-(", Toast.LENGTH_SHORT).show();
         String[] movieTitle = {movie.getTitle()};
-        mDb.delete(FavsContract.FavoritesEntry.TABLE_NAME, FavsContract.FavoritesEntry.COLUMN_TITLE + " = ?", movieTitle);
+        mDb.delete(FavsContract.FavsEntry.TABLE_NAME, FavsContract.FavsEntry.COLUMN_TITLE + " = ?", movieTitle);
     }
 }

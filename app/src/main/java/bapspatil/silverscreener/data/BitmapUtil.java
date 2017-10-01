@@ -22,8 +22,8 @@ public class BitmapUtil {
     // Add image to database
     /*public void addImageToDatabase(SQLiteDatabase database, byte[] image) {
         ContentValues cv = new ContentValues();
-        cv.put(FavsContract.FavoritesEntry.COLUMN_POSTER, image);
-        database.insert(FavsContract.FavoritesEntry.TABLE_NAME, null, cv);
+        cv.put(FavsContract.FavsEntry.COLUMN_POSTER, image);
+        database.insert(FavsContract.FavsEntry.TABLE_NAME, null, cv);
     }*/
 
 }
