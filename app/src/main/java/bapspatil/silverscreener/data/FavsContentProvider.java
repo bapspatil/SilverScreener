@@ -9,9 +9,12 @@ import android.support.annotation.Nullable;
 
 public class FavsContentProvider extends ContentProvider {
 
+    private FavsDbHelper mFavsDbHelper;
+
     @Override
     public boolean onCreate() {
-        return false;
+        mFavsDbHelper = new FavsDbHelper(getContext());
+        return true;
     }
 
     @Nullable
