@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -78,6 +80,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
             @Override
             public void onClick(View v) {
+                bounceAnimation();
+
                 Cursor cursor = mDb.rawQuery("SELECT * FROM " + FavsContract.FavoritesEntry.TABLE_NAME + " WHERE " + FavsContract.FavoritesEntry.COLUMN_TITLE + " = ?", movieTitle);
                 if (cursor.getCount() == 0) {
                     addMovieToFavorites(movie);
@@ -87,6 +91,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite_border);
                 }
                 cursor.close();
+
             }
         });
 
@@ -210,6 +215,13 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 e.printStackTrace();
             }
         }
+    }
+
+    void bounceAnimation() {
+        final Animation myAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce);
+        BounceAnimationInterpolator interpolator = new BounceAnimationInterpolator(0.2, 20);
+        myAnim.setInterpolator(interpolator);
+        mFavoriteButton.startAnimation(myAnim);
     }
 
     void addMovieToFavorites(Movie movie) {
