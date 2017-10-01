@@ -228,7 +228,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     void addMovieToFavorites(Movie movie) {
         Toast.makeText(mContext, "Movie added to Favorites! :-)", Toast.LENGTH_SHORT).show();
         ContentValues cv = new ContentValues();
-        cv.put(FavsContract.FavsEntry.COLUMN_ID, movie.getId());
+        cv.put(FavsContract.FavsEntry._ID, String.valueOf(movie.getId()));
         cv.put(FavsContract.FavsEntry.COLUMN_TITLE, movie.getTitle());
         cv.put(FavsContract.FavsEntry.COLUMN_PLOT, movie.getPlot());
         cv.put(FavsContract.FavsEntry.COLUMN_RATING, movie.getRating());

@@ -16,7 +16,7 @@ public class FavsDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_FAVORITES_TABLE = "CREATE TABLE " + FavsContract.FavsEntry.TABLE_NAME + " (" +
-                FavsContract.FavsEntry.COLUMN_ID + " INTEGER PRIMARY KEY," +
+                FavsContract.FavsEntry._ID + " INTEGER PRIMARY KEY, " +
                 FavsContract.FavsEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 FavsContract.FavsEntry.COLUMN_PLOT + " TEXT NOT NULL, " +
                 FavsContract.FavsEntry.COLUMN_RATING + " TEXT NOT NULL, " +
