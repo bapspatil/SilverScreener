@@ -59,8 +59,14 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, columns);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        if(savedInstanceState != null)
-            movieArray = savedInstanceState.getParcelableArrayList("moviesParcel");
+        if(savedInstanceState != null) {
+            movieArray.clear();
+            for(int i = 0; i < savedInstanceState.getInt("noOfMovies"); i++) {
+                Movie movie;
+                movie = savedInstanceState.getParcelable("movieParcel" + i);
+                movieArray.add(movie);
+            }
+        }
 
         mAdapter = new MovieRecyclerViewAdapter(mContext, movieArray, this);
         SlideInBottomAnimatorAdapter animatorAdapter = new SlideInBottomAnimatorAdapter(mAdapter, mRecyclerView);
@@ -113,12 +119,17 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
 
     }
 
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("moviesParcel", movieArray);
+        int numberOfMovies = movieArray.size();
+        for(int i = 0; i < numberOfMovies; i++) {
+            Movie movie = new Movie();
+            outState.putParcelable("movieParcel" + i, movie);
+        }
+        outState.putInt("noOfMovies", numberOfMovies);
         super.onSaveInstanceState(outState);
     }
+
 
     @Override
     public void onItemClick(int position, ImageView posterImageView) {
