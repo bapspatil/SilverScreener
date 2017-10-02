@@ -121,7 +121,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             Glide.with(mContext)
                     .load(movie.getPosterPath())
                     .asBitmap()
-                    .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL) {
+                    .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -148,7 +148,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     .fallback(R.drawable.no_internet_placeholder)
                     .into(mPosterImageView);
         }
-        if(Connection.hasNetwork(mContext)) {
+        if (Connection.hasNetwork(mContext)) {
             Glide.with(mContext)
                     .load(movie.getBackdropPath())
                     .centerCrop()
@@ -161,10 +161,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     .centerCrop()
                     .into(mBackdropImageView);
         }
-
         (new GetTheTrailersTask()).execute(movie.getId());
         (new GetTheReviewsTask()).execute(movie.getId());
-
     }
 
     @Override
