@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -17,9 +18,20 @@
             android:id="@+id/poster_image_view"
             android:layout_width="200dp"
             android:layout_height="300dp"
-            android:transitionName="posterTransition"
             android:contentDescription="@string/poster_iv_info"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:transitionName="posterTransition" />
+
+        <TextView
+            android:id="@+id/offline_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="22dp"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            tools:text="Very Long Title Of Movie" />
 
     </android.support.v7.widget.CardView>
 

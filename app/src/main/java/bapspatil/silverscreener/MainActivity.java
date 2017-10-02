@@ -40,7 +40,9 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     private String MOVIE_POSTER_URL = "http://image.tmdb.org/t/p/w500";
     private String MOVIE_BACKDROP_URL = "http://image.tmdb.org/t/p/w780";
     private Context mContext;
-    public GetTheMoviesTask getTheMoviesTask;
+    private GetTheMoviesTask getTheMoviesTask;
+    private GetTheFavsTask getTheFavsTask;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         mRecyclerView.setAdapter(animatorAdapter);
 
         getTheMoviesTask = new GetTheMoviesTask();
-        getTheMoviesTask.execute(MOVIE_URL_POPULAR);
+        getTheFavsTask = new GetTheFavsTask();
 
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -71,12 +73,14 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                 String selected = parent.getItemAtPosition(position).toString();
                 getTheMoviesTask.cancel(true);
                 getTheMoviesTask = new GetTheMoviesTask();
+                getTheFavsTask.cancel(true);
+                getTheFavsTask = new GetTheFavsTask();
                 if (selected.equals("Most Popular")) {
                     getTheMoviesTask.execute(MOVIE_URL_POPULAR);
                 } else if (selected.equals("Highest Rated")) {
                     getTheMoviesTask.execute(MOVIE_URL_RATED);
                 } else {
-
+                    getTheFavsTask.execute();
                 }
             }
 
@@ -85,19 +89,21 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
             }
         });
 
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 String selected = mSpinner.getSelectedItem().toString();
                 getTheMoviesTask.cancel(true);
                 getTheMoviesTask = new GetTheMoviesTask();
+                getTheFavsTask.cancel(true);
+                getTheFavsTask = new GetTheFavsTask();
                 if (selected.equals("Most Popular")) {
                     getTheMoviesTask.execute(MOVIE_URL_POPULAR);
                 } else if (selected.equals("Highest Rated")) {
                     getTheMoviesTask.execute(MOVIE_URL_RATED);
                 } else {
-
+                    getTheFavsTask.execute();
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -177,12 +183,10 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         @Override
         protected void onPreExecute() {
             mProgressBar.setVisibility(View.VISIBLE);
-            Toast.makeText(mContext, "Showing your favorites...", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         protected Cursor doInBackground(Void... params) {
-            // TODO Add query for favs from MainActivity here
             Cursor cursor;
             try {
                 cursor = getContentResolver().query(FavsContract.FavsEntry.CONTENT_URI,
@@ -201,27 +205,23 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         protected void onPostExecute(Cursor cursor) {
             movieArray.clear();
             mProgressBar.setVisibility(View.INVISIBLE);
-            /*try {
-                JSONObject jsonMoviesObject = new JSONObject(jsonResponse);
-                JSONArray jsonMoviesArray = jsonMoviesObject.getJSONArray("results");
-                for (int i = 0; i < jsonMoviesArray.length(); i++) {
-                    JSONObject jsonMovie = jsonMoviesArray.getJSONObject(i);
+            if(cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                for (int i = 0; i < cursor.getCount(); i++) {
                     Movie movie = new Movie();
-                    movie.setPosterPath(MOVIE_POSTER_URL + jsonMovie.getString("poster_path"));
-                    movie.setBackdropPath(MOVIE_BACKDROP_URL + jsonMovie.getString("backdrop_path"));
-                    movie.setTitle(jsonMovie.getString("title"));
-                    movie.setPlot(jsonMovie.getString("overview"));
-                    movie.setDate(jsonMovie.getString("release_date"));
-                    movie.setId(jsonMovie.getInt("id"));
-                    movie.setRating(jsonMovie.getString("vote_average"));
+                    movie.setId(cursor.getInt(cursor.getColumnIndex(FavsContract.FavsEntry._ID)));
+                    movie.setTitle(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_TITLE)));
+                    movie.setDate(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_DATE)));
+                    movie.setPlot(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_PLOT)));
+                    movie.setRating(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_RATING)));
                     movieArray.add(movie);
                     mAdapter.notifyDataSetChanged();
+                    cursor.moveToNext();
                 }
-
-            } catch (Exception e) {
-                Toast.makeText(mContext, "Error in the movie data fetched!", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }*/
+            } else {
+                mAdapter.notifyDataSetChanged();
+                Toast.makeText(mContext, "No favorites!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

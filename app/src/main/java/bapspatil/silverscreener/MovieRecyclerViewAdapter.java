@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -37,6 +38,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         Movie theMovie = mMoviesArrayList.get(position);
+        holder.mOfflineTextView.setText(theMovie.getTitle());
         Glide.with(mContext)
                 .load(theMovie.getPosterPath())
                 .error(R.drawable.no_internet_placeholder)
@@ -52,10 +54,12 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView mPosterImageView;
+        TextView mOfflineTextView;
 
         MovieViewHolder(View itemView) {
             super(itemView);
             mPosterImageView = (ImageView) itemView.findViewById(R.id.poster_image_view);
+            mOfflineTextView = (TextView) itemView.findViewById(R.id.offline_title_tv);
             itemView.setOnClickListener(this);
         }
 
