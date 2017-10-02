@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,7 +31,6 @@ import it.gmariotti.recyclerview.adapter.SlideInBottomAnimatorAdapter;
 public class MainActivity extends AppCompatActivity implements MovieRecyclerViewAdapter.ItemClickListener {
 
     private MovieRecyclerViewAdapter mAdapter;
-    private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
     private ArrayList<Movie> movieArray = new ArrayList<>();
     private String MOVIE_URL_POPULAR = "http://api.themoviedb.org/3/movie/popular";
@@ -56,9 +54,13 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
 
         mProgressBar = (ProgressBar) findViewById(R.id.loading_indicator);
         final Spinner mSpinner = (Spinner) findViewById(R.id.sort_spinner);
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movies);
+        MovieRecyclerView mRecyclerView = (MovieRecyclerView) findViewById(R.id.rv_movies);
         int columns = 2;
-        mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, columns));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, columns);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+
+        if(savedInstanceState != null)
+            movieArray = savedInstanceState.getParcelableArrayList("moviesParcel");
 
         mAdapter = new MovieRecyclerViewAdapter(mContext, movieArray, this);
         SlideInBottomAnimatorAdapter animatorAdapter = new SlideInBottomAnimatorAdapter(mAdapter, mRecyclerView);
@@ -109,6 +111,13 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
             }
         });
 
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("moviesParcel", movieArray);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -206,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         protected void onPostExecute(Cursor cursor) {
             movieArray.clear();
             mProgressBar.setVisibility(View.INVISIBLE);
-            if(cursor.getCount() != 0) {
+            if (cursor.getCount() != 0) {
                 cursor.moveToFirst();
                 for (int i = 0; i < cursor.getCount(); i++) {
                     Movie movie = new Movie();
