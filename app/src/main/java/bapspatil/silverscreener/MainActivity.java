@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         Toast.makeText(mContext, "App developed by Bapusaheb Patil", Toast.LENGTH_SHORT).show();
 
         mProgressBar = (ProgressBar) findViewById(R.id.loading_indicator);
-        Spinner mSpinner = (Spinner) findViewById(R.id.sort_spinner);
+        final Spinner mSpinner = (Spinner) findViewById(R.id.sort_spinner);
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_movies);
         int columns = 2;
         mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, columns));
@@ -79,6 +80,24 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                String selected = mSpinner.getSelectedItem().toString();
+                String stringURL;
+                if (selected.equals("Most Popular")) {
+                    stringURL = MOVIE_URL_POPULAR;
+                } else {
+                    stringURL = MOVIE_URL_RATED;
+                }
+                getTheMoviesTask.cancel(true);
+                getTheMoviesTask = new GetTheMoviesTask();
+                getTheMoviesTask.execute(stringURL);
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -148,8 +167,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                 Toast.makeText(mContext, "Error in the movie data fetched!", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
-
         }
-
     }
+
 }

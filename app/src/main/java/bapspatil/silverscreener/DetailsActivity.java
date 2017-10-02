@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView;
 
 import org.json.JSONArray;
@@ -110,8 +110,18 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mDateTextView.setText(movie.getDate());
         mTitleTextView.setText(movie.getTitle());
         mPlotTextView.setText(movie.getPlot());
-        Picasso.with(getApplicationContext()).load(movie.getPosterPath()).into(mPosterImageView);
-        Picasso.with(getApplicationContext()).load(movie.getBackdropPath()).into(mBackdropImageView);
+        Glide.with(getApplicationContext())
+                .load(movie.getPosterPath())
+                .centerCrop()
+                .error(R.drawable.no_internet_placeholder)
+                .fallback(R.drawable.no_internet_placeholder)
+                .into(mPosterImageView);
+        Glide.with(getApplicationContext())
+                .load(movie.getBackdropPath())
+                .centerCrop()
+                .error(R.drawable.no_internet_placeholder)
+                .fallback(R.drawable.no_internet_placeholder)
+                .into(mBackdropImageView);
         (new GetTheTrailersTask()).execute(movie.getId());
         (new GetTheReviewsTask()).execute(movie.getId());
 
