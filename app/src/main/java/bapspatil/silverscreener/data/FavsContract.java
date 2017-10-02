@@ -20,6 +20,7 @@ public class FavsContract {
         public static final String COLUMN_DATE = "date";
         public static final String COLUMN_POSTER = "poster";
         public static final String COLUMN_POSTERPATH = "posterpath";
+        public static final String COLUMN_BACKDROPPATH = "backdroppath";
 
     }
 

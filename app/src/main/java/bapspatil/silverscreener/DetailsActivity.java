@@ -148,12 +148,19 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     .fallback(R.drawable.no_internet_placeholder)
                     .into(mPosterImageView);
         }
-        Glide.with(mContext)
-                .load(movie.getBackdropPath())
-                .centerCrop()
-                .error(R.drawable.no_internet_placeholder_landscape)
-                .fallback(R.drawable.no_internet_placeholder_landscape)
-                .into(mBackdropImageView);
+        if(Connection.hasNetwork(mContext)) {
+            Glide.with(mContext)
+                    .load(movie.getBackdropPath())
+                    .centerCrop()
+                    .error(R.drawable.no_internet_placeholder_landscape)
+                    .fallback(R.drawable.no_internet_placeholder_landscape)
+                    .into(mBackdropImageView);
+        } else {
+            Glide.with(mContext)
+                    .load(R.drawable.no_internet_placeholder_landscape)
+                    .centerCrop()
+                    .into(mBackdropImageView);
+        }
 
         (new GetTheTrailersTask()).execute(movie.getId());
         (new GetTheReviewsTask()).execute(movie.getId());
@@ -325,6 +332,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         cv.put(FavsContract.FavsEntry.COLUMN_RATING, movie.getRating());
         cv.put(FavsContract.FavsEntry.COLUMN_DATE, movie.getDate());
         cv.put(FavsContract.FavsEntry.COLUMN_POSTERPATH, movie.getPosterPath());
+        cv.put(FavsContract.FavsEntry.COLUMN_BACKDROPPATH, movie.getBackdropPath());
         cv.put(FavsContract.FavsEntry.COLUMN_POSTER, imageBytes);
         Uri uri = getContentResolver().insert(FavsContract.FavsEntry.CONTENT_URI, cv);
         if (uri != null)

@@ -217,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                     movie.setRating(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_RATING)));
                     movie.setPosterBytes(cursor.getBlob(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_POSTER)));
                     movie.setPosterPath(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_POSTERPATH)));
+                    movie.setBackdropPath(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_BACKDROPPATH)));
                     movieArray.add(movie);
                     mAdapter.notifyDataSetChanged();
                     cursor.moveToNext();
