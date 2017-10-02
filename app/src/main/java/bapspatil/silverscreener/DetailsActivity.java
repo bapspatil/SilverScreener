@@ -4,13 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -30,7 +30,6 @@ import java.util.ArrayList;
 
 import bapspatil.silverscreener.data.Connection;
 import bapspatil.silverscreener.data.FavsContract;
-import bapspatil.silverscreener.data.FavsDbHelper;
 
 public class DetailsActivity extends AppCompatActivity implements TrailerRecyclerViewAdapter.ItemClickListener {
 
@@ -46,7 +45,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     private ArrayList<String> mTrailerPaths = new ArrayList<>();
     private ArrayList<String> mReviewAuthors = new ArrayList<>();
     private ArrayList<String> mReviewContents = new ArrayList<>();
-    private SQLiteDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +54,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         Toolbar toolbar = (Toolbar) findViewById(R.id.details_toolbar);
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
-        FavsDbHelper mDbHelper = new FavsDbHelper(this);
-        mDb = mDbHelper.getWritableDatabase();
         Movie movie = getIntent().getParcelableExtra("movie");
 
         mRatingTextView = (TextView) findViewById(R.id.rating_value_tv);
@@ -69,7 +65,11 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mFavoriteButton = (Button) findViewById(R.id.fav_button);
 
         String[] movieTitle = {movie.getTitle()};
-        Cursor cursor = mDb.rawQuery("SELECT * FROM " + FavsContract.FavsEntry.TABLE_NAME + " WHERE " + FavsContract.FavsEntry.COLUMN_TITLE + " = ?", movieTitle);
+        Cursor cursor = getContentResolver().query(FavsContract.FavsEntry.CONTENT_URI,
+                null,
+                FavsContract.FavsEntry.COLUMN_TITLE + " = ?",
+                movieTitle,
+                null);
         if (cursor.getCount() == 0)
             mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite_border);
         else
@@ -78,21 +78,15 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
         mFavoriteButton.setOnClickListener(new View.OnClickListener() {
             Movie movie = getIntent().getParcelableExtra("movie");
-            String[] movieTitle = {movie.getTitle()};
 
             @Override
             public void onClick(View v) {
                 bounceAnimation();
-                Cursor cursor = mDb.rawQuery("SELECT * FROM " + FavsContract.FavsEntry.TABLE_NAME + " WHERE " + FavsContract.FavsEntry.COLUMN_TITLE + " = ?", movieTitle);
-                if (cursor.getCount() == 0) {
-                    addMovieToFavorites(movie);
-                    mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite);
-                } else {
-                    deleteMovieFromFavorites(movie);
-                    mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite_border);
-                }
-                cursor.close();
-
+                AddRemoveFavoritesTask addRemoveFavoritesTask = new AddRemoveFavoritesTask();
+                if (addRemoveFavoritesTask.getStatus() == AsyncTask.Status.RUNNING)
+                    return;
+                else
+                    addRemoveFavoritesTask.execute(movie);
             }
         });
 
@@ -119,8 +113,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         Glide.with(getApplicationContext())
                 .load(movie.getBackdropPath())
                 .centerCrop()
-                .error(R.drawable.no_internet_placeholder)
-                .fallback(R.drawable.no_internet_placeholder)
+                .error(R.drawable.no_internet_placeholder_landscape)
+                .fallback(R.drawable.no_internet_placeholder_landscape)
                 .into(mBackdropImageView);
         (new GetTheTrailersTask()).execute(movie.getId());
         (new GetTheReviewsTask()).execute(movie.getId());
@@ -132,6 +126,46 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         Uri youtubeUri = Uri.parse(stringUrlTrailerClicked);
         Intent openYoutube = new Intent(Intent.ACTION_VIEW, youtubeUri);
         startActivity(openYoutube);
+    }
+
+    private class AddRemoveFavoritesTask extends AsyncTask<Movie, Void, Cursor> {
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+
+        @Override
+        protected Cursor doInBackground(Movie... movie) {
+            String title = movie[0].getTitle();
+            String[] movieTitle = {title};
+            Cursor cursor = getContentResolver().query(FavsContract.FavsEntry.CONTENT_URI,
+                    null,
+                    FavsContract.FavsEntry.COLUMN_TITLE + "=?",
+                    movieTitle,
+                    null);
+            if (cursor != null) {
+                if (cursor.getCount() == 0) {
+                    addMovieToFavorites(movie[0]);
+                } else {
+                    deleteMovieFromFavorites(movie[0]);
+                }
+                cursor.close();
+            }
+            return cursor;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            if (cursor != null)
+                if (cursor.getCount() == 0) {
+                    Toast.makeText(mContext, "Movie added to Favorites! :-)", Toast.LENGTH_SHORT).show();
+                    mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite);
+                } else {
+                    Toast.makeText(mContext, "Movie removed from Favorites! :-(", Toast.LENGTH_SHORT).show();
+                    mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite_border);
+                }
+        }
     }
 
     private class GetTheTrailersTask extends AsyncTask<Integer, Void, String> {
@@ -228,6 +262,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         }
     }
 
+
     void bounceAnimation() {
         final Animation myAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce);
         BounceAnimationInterpolator interpolator = new BounceAnimationInterpolator(0.2, 20);
@@ -236,19 +271,22 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     }
 
     void addMovieToFavorites(Movie movie) {
-        Toast.makeText(mContext, "Movie added to Favorites! :-)", Toast.LENGTH_SHORT).show();
         ContentValues cv = new ContentValues();
         cv.put(FavsContract.FavsEntry._ID, String.valueOf(movie.getId()));
         cv.put(FavsContract.FavsEntry.COLUMN_TITLE, movie.getTitle());
         cv.put(FavsContract.FavsEntry.COLUMN_PLOT, movie.getPlot());
         cv.put(FavsContract.FavsEntry.COLUMN_RATING, movie.getRating());
         cv.put(FavsContract.FavsEntry.COLUMN_DATE, movie.getDate());
-        mDb.insert(FavsContract.FavsEntry.TABLE_NAME, null, cv);
+        Uri uri = getContentResolver().insert(FavsContract.FavsEntry.CONTENT_URI, cv);
+        if (uri != null)
+            Log.d("Add Fav", "Uri add: " + uri.toString());
     }
 
     void deleteMovieFromFavorites(Movie movie) {
-        Toast.makeText(mContext, "Movie removed from Favorites! :-(", Toast.LENGTH_SHORT).show();
-        String[] movieTitle = {movie.getTitle()};
-        mDb.delete(FavsContract.FavsEntry.TABLE_NAME, FavsContract.FavsEntry.COLUMN_TITLE + " = ?", movieTitle);
+        String movieId = String.valueOf(movie.getId());
+        Uri uri = FavsContract.FavsEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(movieId).build();
+        getContentResolver().delete(uri, null, null);
+        Log.d("Remove Fav", "Uri delete: " + uri.toString());
     }
 }
