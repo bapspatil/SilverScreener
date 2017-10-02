@@ -44,6 +44,5 @@ dependencies {
     compile 'com.github.gabrielemariotti.recyclerview:recyclerview-animators:0.3.0-SNAPSHOT@aar'
     compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.github.takusemba:multisnaprecyclerview:1.0.2'
-    compile 'com.facebook.stetho:stetho:1.5.0'
     testCompile 'junit:junit:4.12'
 }
