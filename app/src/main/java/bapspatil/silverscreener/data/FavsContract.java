@@ -18,6 +18,8 @@ public class FavsContract {
         public static final String COLUMN_PLOT = "plot";
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_POSTER = "poster";
+        public static final String COLUMN_POSTERPATH = "posterpath";
 
     }
 

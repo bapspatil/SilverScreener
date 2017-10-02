@@ -9,6 +9,7 @@ public class Movie implements Parcelable {
 
     private String posterPath, title, plot, date, rating, backdropPath;
     private ArrayList<String> trailerTitles, trailerPaths, reviewAuthors, reviewContents;
+    private byte[] posterBytes;
     private int id;
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -35,6 +36,7 @@ public class Movie implements Parcelable {
         this.trailerPaths = in.createStringArrayList();
         this.reviewAuthors = in.createStringArrayList();
         this.reviewContents = in.createStringArrayList();
+        this.posterBytes = in.createByteArray();
     }
 
     Movie() {
@@ -47,6 +49,14 @@ public class Movie implements Parcelable {
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
+    }
+
+    public byte[] getPosterBytes() {
+        return posterBytes;
+    }
+
+    public void setPosterBytes(byte[] posterBytes) {
+        this.posterBytes = posterBytes;
     }
 
     public String getTitle() {
@@ -97,32 +107,6 @@ public class Movie implements Parcelable {
         this.backdropPath = backdropPath;
     }
 
-    public void addTrailerInfo(String title, String path) {
-        trailerTitles.add(title);
-        trailerPaths.add("https://www.youtube.com/watch?v=" + path);
-    }
-
-    public void addReviewInfo(String author, String content) {
-        reviewAuthors.add(author);
-        reviewContents.add(content);
-    }
-
-    public ArrayList<String> getTrailerTitles() {
-        return trailerTitles;
-    }
-
-    public ArrayList<String> getTrailerPaths() {
-        return trailerPaths;
-    }
-
-    public ArrayList<String> getReviewAuthors() {
-        return reviewAuthors;
-    }
-
-    public ArrayList<String> getReviewContents() {
-        return reviewContents;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -141,5 +125,6 @@ public class Movie implements Parcelable {
         dest.writeStringList(this.trailerPaths);
         dest.writeStringList(this.reviewAuthors);
         dest.writeStringList(this.reviewContents);
+        dest.writeByteArray(this.posterBytes);
     }
 }

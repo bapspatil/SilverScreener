@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                 cancel(true);
                 mProgressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(mContext, "No Internet Connection", Toast.LENGTH_SHORT).show();
+
             }
         }
 
@@ -214,6 +215,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                     movie.setDate(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_DATE)));
                     movie.setPlot(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_PLOT)));
                     movie.setRating(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_RATING)));
+                    movie.setPosterBytes(cursor.getBlob(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_POSTER)));
+                    movie.setPosterPath(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_POSTERPATH)));
                     movieArray.add(movie);
                     mAdapter.notifyDataSetChanged();
                     cursor.moveToNext();

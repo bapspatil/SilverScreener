@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,13 +21,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import bapspatil.silverscreener.data.Connection;
 import bapspatil.silverscreener.data.FavsContract;
@@ -34,7 +40,7 @@ import bapspatil.silverscreener.data.FavsContract;
 public class DetailsActivity extends AppCompatActivity implements TrailerRecyclerViewAdapter.ItemClickListener {
 
 
-    private TextView mRatingTextView, mDateTextView, mTitleTextView, mPlotTextView;
+    private TextView mRatingTextView, mDateTextView, mTitleTextView, mPlotTextView, mReviewsLabel0, mReviewsLabel1, mTrailersLabel0, mTrailersLabel1;
     private ImageView mPosterImageView, mBackdropImageView;
     private MultiSnapRecyclerView mTrailerRecyclerView, mReviewRecyclerView;
     private TrailerRecyclerViewAdapter mTrailerAdapter;
@@ -45,6 +51,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     private ArrayList<String> mTrailerPaths = new ArrayList<>();
     private ArrayList<String> mReviewAuthors = new ArrayList<>();
     private ArrayList<String> mReviewContents = new ArrayList<>();
+    private byte[] imageBytes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +61,12 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         Toolbar toolbar = (Toolbar) findViewById(R.id.details_toolbar);
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
+        mTrailersLabel0 = (TextView) findViewById(R.id.trailer_label_tv);
+        mTrailersLabel1 = (TextView) findViewById(R.id.trailers_hint_tv);
+        mReviewsLabel0 = (TextView) findViewById(R.id.reviews_label_tv);
+        mReviewsLabel1 = (TextView) findViewById(R.id.reviews_swipe_hint_tv);
         Movie movie = getIntent().getParcelableExtra("movie");
+
 
         mRatingTextView = (TextView) findViewById(R.id.rating_value_tv);
         mDateTextView = (TextView) findViewById(R.id.date_value_tv);
@@ -104,18 +116,45 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mDateTextView.setText(movie.getDate());
         mTitleTextView.setText(movie.getTitle());
         mPlotTextView.setText(movie.getPlot());
-        Glide.with(getApplicationContext())
-                .load(movie.getPosterPath())
-                .centerCrop()
-                .error(R.drawable.no_internet_placeholder)
-                .fallback(R.drawable.no_internet_placeholder)
-                .into(mPosterImageView);
-        Glide.with(getApplicationContext())
+
+        try {
+            Glide.with(mContext)
+                    .load(movie.getPosterPath())
+                    .asBitmap()
+                    .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL) {
+                        @Override
+                        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            imageBytes = stream.toByteArray();
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (movie.getPosterBytes() != null) {
+            Glide.with(getApplicationContext())
+                    .load(movie.getPosterBytes())
+                    .centerCrop()
+                    .error(R.drawable.no_internet_placeholder)
+                    .fallback(R.drawable.no_internet_placeholder)
+                    .into(mPosterImageView);
+        } else {
+            Glide.with(mContext)
+                    .load(movie.getPosterPath())
+                    .centerCrop()
+                    .error(R.drawable.no_internet_placeholder)
+                    .fallback(R.drawable.no_internet_placeholder)
+                    .into(mPosterImageView);
+        }
+        Glide.with(mContext)
                 .load(movie.getBackdropPath())
                 .centerCrop()
                 .error(R.drawable.no_internet_placeholder_landscape)
                 .fallback(R.drawable.no_internet_placeholder_landscape)
                 .into(mBackdropImageView);
+
         (new GetTheTrailersTask()).execute(movie.getId());
         (new GetTheReviewsTask()).execute(movie.getId());
 
@@ -146,7 +185,11 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     null);
             if (cursor != null) {
                 if (cursor.getCount() == 0) {
-                    addMovieToFavorites(movie[0]);
+                    try {
+                        addMovieToFavorites(movie[0]);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     deleteMovieFromFavorites(movie[0]);
                 }
@@ -175,6 +218,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             if (!Connection.hasNetwork(mContext)) {
                 cancel(true);
                 Toast.makeText(mContext, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                mTrailersLabel0.setVisibility(View.INVISIBLE);
+                mTrailersLabel1.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -222,6 +267,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             if (!Connection.hasNetwork(mContext)) {
                 cancel(true);
                 Toast.makeText(mContext, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                mReviewsLabel0.setVisibility(View.INVISIBLE);
+                mReviewsLabel1.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -270,13 +317,15 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mFavoriteButton.startAnimation(myAnim);
     }
 
-    void addMovieToFavorites(Movie movie) {
+    void addMovieToFavorites(Movie movie) throws ExecutionException, InterruptedException {
         ContentValues cv = new ContentValues();
         cv.put(FavsContract.FavsEntry._ID, String.valueOf(movie.getId()));
         cv.put(FavsContract.FavsEntry.COLUMN_TITLE, movie.getTitle());
         cv.put(FavsContract.FavsEntry.COLUMN_PLOT, movie.getPlot());
         cv.put(FavsContract.FavsEntry.COLUMN_RATING, movie.getRating());
         cv.put(FavsContract.FavsEntry.COLUMN_DATE, movie.getDate());
+        cv.put(FavsContract.FavsEntry.COLUMN_POSTERPATH, movie.getPosterPath());
+        cv.put(FavsContract.FavsEntry.COLUMN_POSTER, imageBytes);
         Uri uri = getContentResolver().insert(FavsContract.FavsEntry.CONTENT_URI, cv);
         if (uri != null)
             Log.d("Add Fav", "Uri add: " + uri.toString());

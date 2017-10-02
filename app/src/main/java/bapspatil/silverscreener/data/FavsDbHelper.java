@@ -20,7 +20,9 @@ public class FavsDbHelper extends SQLiteOpenHelper {
                 FavsContract.FavsEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 FavsContract.FavsEntry.COLUMN_PLOT + " TEXT NOT NULL, " +
                 FavsContract.FavsEntry.COLUMN_RATING + " TEXT NOT NULL, " +
-                FavsContract.FavsEntry.COLUMN_DATE + " TEXT NOT NULL);";
+                FavsContract.FavsEntry.COLUMN_DATE + " TEXT NOT NULL, " +
+                FavsContract.FavsEntry.COLUMN_POSTER + " BLOB, " +
+                FavsContract.FavsEntry.COLUMN_POSTERPATH + " TEXT);";
         db.execSQL(SQL_CREATE_FAVORITES_TABLE);
     }
 
