@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="8dp"
+            android:background="#212121"
             android:elevation="8dp"
             android:entries="@array/sort_criteria"
             android:gravity="center"
