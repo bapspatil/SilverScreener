@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -42,6 +43,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
     private TextView mRatingTextView, mDateTextView, mTitleTextView, mPlotTextView, mReviewsLabel0, mReviewsLabel1, mTrailersLabel0, mTrailersLabel1;
     private ImageView mPosterImageView, mBackdropImageView;
+    private CardView noReviewsCardView;
     private MultiSnapRecyclerView mTrailerRecyclerView, mReviewRecyclerView;
     private TrailerRecyclerViewAdapter mTrailerAdapter;
     private ReviewRecyclerViewAdapter mReviewAdapter;
@@ -65,6 +67,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mTrailersLabel1 = (TextView) findViewById(R.id.trailers_hint_tv);
         mReviewsLabel0 = (TextView) findViewById(R.id.reviews_label_tv);
         mReviewsLabel1 = (TextView) findViewById(R.id.reviews_swipe_hint_tv);
+        noReviewsCardView = (CardView) findViewById(R.id.no_reviews_cv);
         Movie movie = getIntent().getParcelableExtra("movie");
 
 
@@ -83,9 +86,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 movieTitle,
                 null);
         if (cursor.getCount() == 0)
-            mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite_border);
+            mFavoriteButton.setBackgroundResource(R.mipmap.ic_favorite_border);
         else
-            mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite);
+            mFavoriteButton.setBackgroundResource(R.mipmap.ic_favorite);
         cursor.close();
 
         mFavoriteButton.setOnClickListener(new View.OnClickListener() {
@@ -208,10 +211,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             if (cursor != null)
                 if (cursor.getCount() == 0) {
                     Toast.makeText(mContext, "Movie added to Favorites! :-)", Toast.LENGTH_SHORT).show();
-                    mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite);
+                    mFavoriteButton.setBackgroundResource(R.mipmap.ic_favorite);
                 } else {
                     Toast.makeText(mContext, "Movie removed from Favorites! :-(", Toast.LENGTH_SHORT).show();
-                    mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite_border);
+                    mFavoriteButton.setBackgroundResource(R.mipmap.ic_favorite_border);
                 }
         }
     }
@@ -301,11 +304,18 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             try {
                 JSONObject jsonReviewsObject = new JSONObject(jsonResponse);
                 JSONArray jsonReviewsArray = jsonReviewsObject.getJSONArray("results");
-                for (int i = 0; i < jsonReviewsArray.length(); i++) {
-                    JSONObject jsonReview = jsonReviewsArray.getJSONObject(i);
-                    mReviewAuthors.add(jsonReview.getString("author"));
-                    mReviewContents.add(jsonReview.getString("content"));
-                    mReviewAdapter.notifyDataSetChanged();
+                if(jsonReviewsArray.length() != 0) {
+                    for (int i = 0; i < jsonReviewsArray.length(); i++) {
+                        JSONObject jsonReview = jsonReviewsArray.getJSONObject(i);
+                        mReviewAuthors.add(jsonReview.getString("author"));
+                        mReviewContents.add(jsonReview.getString("content"));
+                        mReviewAdapter.notifyDataSetChanged();
+                    }
+                    noReviewsCardView.setVisibility(View.INVISIBLE);
+                    mReviewRecyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    noReviewsCardView.setVisibility(View.VISIBLE);
+                    mReviewRecyclerView.setVisibility(View.INVISIBLE);
                 }
             } catch (Exception e) {
                 Toast.makeText(mContext, "Error in the review data fetched!", Toast.LENGTH_SHORT).show();

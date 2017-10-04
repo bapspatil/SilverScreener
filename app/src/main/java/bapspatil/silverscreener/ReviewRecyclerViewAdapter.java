@@ -29,12 +29,8 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
     @Override
     public void onBindViewHolder(ReviewItemViewHolder holder, int position) {
         String reviewAuthor = mReviewAuthors.get(position);
-        if (reviewAuthor == null)
-            holder.reviewAuthorTextView.setText("Either you're not connected to the internet or no one bothered to write user reviews for this movie!");
-        else {
-            holder.reviewAuthorTextView.setText(reviewAuthor);
-            holder.reviewContentTextView.setText(mReviewContents.get(position));
-        }
+        holder.reviewAuthorTextView.setText(reviewAuthor);
+        holder.reviewContentTextView.setText(mReviewContents.get(position));
     }
 
     @Override

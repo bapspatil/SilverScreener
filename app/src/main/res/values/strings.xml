@@ -5,6 +5,7 @@
     <string name="highest_rated">Top Rated</string>
     <string name="spinner">Sort By</string>
     <string name="backdrop_iv_info">Backdrop of the movie</string>
+    <string name="no_reviews">Looks like no one bothered to write reviews for this movie! :-P</string>
 
     <string-array name="sort_criteria">
         <item>Most Popular</item>
