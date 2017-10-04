@@ -2,6 +2,7 @@ package bapspatil.silverscreener;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         final Spinner mSpinner = (Spinner) findViewById(R.id.sort_spinner);
         MovieRecyclerView mRecyclerView = (MovieRecyclerView) findViewById(R.id.rv_movies);
         int columns = 2;
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            columns = 4;
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, columns);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 

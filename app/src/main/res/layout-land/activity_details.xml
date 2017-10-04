@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="bapspatil.silverscreener.DetailsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/details_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="230dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#212121"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <ImageView
+                    android:id="@+id/poster_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="This is a poster for the movie."
+                    android:scaleType="centerCrop"
+                    android:transitionName="posterTransition"
+                    tools:srcCompat="@color/colorAccent" />
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/title_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:textColor="#FFF"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    tools:text="A Very Long Title Of The Movie" />
+
+                <TextView
+                    android:id="@+id/plot_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:textColor="#FFF"
+                    android:textSize="12sp"
+                    tools:text="This is gonna be a plot synopsis of the movie. This data will be fetched by the TMDB API. And this will contain info of the movie script." />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/rating_label_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:gravity="center|bottom"
+                    android:text="RATING"
+                    android:textColor="#FFF"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/rating_value_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textColor="#FFF"
+                    android:textSize="44sp"
+                    tools:text="10.0" />
+
+                <TextView
+                    android:id="@+id/date_label_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:gravity="center|bottom"
+                    android:text="RELEASE DATE"
+                    android:textColor="#FFF"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/date_value_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:textColor="#FFF"
+                    android:textSize="26sp"
+                    tools:text="12/13/1989" />
+
+                <Button
+                    android:id="@+id/fav_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:background="@mipmap/ic_favorite_border" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/trailer_label_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:text="TRAILERS"
+                    android:textColor="#FFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/trailers_hint_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:text="(SWIPE SIDEWAYS TO SEE MORE TRAILERS)"
+                    android:textColor="#FFF"
+                    android:textSize="12sp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp">
+
+                    <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
+                        android:id="@+id/rv_trailers"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:elevation="8dp"
+                        app:msrv_gravity="center"
+                        app:msrv_snap_count="1" />
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="#212121"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="4dp">
+
+                        <ImageView
+                            android:id="@+id/backdrop_image_view"
+                            android:layout_width="300dp"
+                            android:layout_height="169dp"
+                            android:contentDescription="@string/backdrop_iv_info"
+                            android:scaleType="centerCrop" />
+
+                    </android.support.v7.widget.CardView>
+
+
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/reviews_label_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:text="USER REVIEWS"
+                    android:textColor="#FFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/reviews_swipe_hint_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:text="(SWIPE SIDEWAYS TO SEE MORE REVIEWS)"
+                    android:textColor="#FFF"
+                    android:textSize="12sp" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
+                        android:id="@+id/rv_reviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:msrv_gravity="center"
+                        app:msrv_snap_count="1" />
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/no_reviews_cv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="12dp"
+                        android:visibility="invisible"
+                        app:cardBackgroundColor="#212121"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="4dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:padding="8dp"
+                            android:text="@string/no_reviews"
+                            android:textColor="#FFF"
+                            android:textSize="12sp" />
+                    </android.support.v7.widget.CardView>
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
