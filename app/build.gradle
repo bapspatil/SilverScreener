@@ -7,8 +7,8 @@ android {
         applicationId "bapspatil.silverscreener"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 1
-        versionName "one"
+        versionCode 2
+        versionName "two"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
