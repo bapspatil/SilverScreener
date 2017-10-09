@@ -63,14 +63,13 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         Toolbar toolbar = (Toolbar) findViewById(R.id.details_toolbar);
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
+        Movie movie = getIntent().getParcelableExtra("movie");
+
         mTrailersLabel0 = (TextView) findViewById(R.id.trailer_label_tv);
         mTrailersLabel1 = (TextView) findViewById(R.id.trailers_hint_tv);
         mReviewsLabel0 = (TextView) findViewById(R.id.reviews_label_tv);
         mReviewsLabel1 = (TextView) findViewById(R.id.reviews_swipe_hint_tv);
         noReviewsCardView = (CardView) findViewById(R.id.no_reviews_cv);
-        Movie movie = getIntent().getParcelableExtra("movie");
-
-
         mRatingTextView = (TextView) findViewById(R.id.rating_value_tv);
         mDateTextView = (TextView) findViewById(R.id.date_value_tv);
         mTitleTextView = (TextView) findViewById(R.id.title_tv);
@@ -78,48 +77,13 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mPosterImageView = (ImageView) findViewById(R.id.poster_image_view);
         mBackdropImageView = (ImageView) findViewById(R.id.backdrop_image_view);
         mFavoriteButton = (Button) findViewById(R.id.fav_button);
-
-        String[] movieTitle = {movie.getTitle()};
-        Cursor cursor = getContentResolver().query(FavsContract.FavsEntry.CONTENT_URI,
-                null,
-                FavsContract.FavsEntry.COLUMN_TITLE + " = ?",
-                movieTitle,
-                null);
-        if (cursor.getCount() == 0)
-            mFavoriteButton.setBackgroundResource(R.mipmap.ic_favorite_border);
-        else
-            mFavoriteButton.setBackgroundResource(R.mipmap.ic_favorite);
-        cursor.close();
-
-        mFavoriteButton.setOnClickListener(new View.OnClickListener() {
-            Movie movie = getIntent().getParcelableExtra("movie");
-
-            @Override
-            public void onClick(View v) {
-                bounceAnimation();
-                AddRemoveFavoritesTask addRemoveFavoritesTask = new AddRemoveFavoritesTask();
-                if (addRemoveFavoritesTask.getStatus() == AsyncTask.Status.RUNNING)
-                    return;
-                else
-                    addRemoveFavoritesTask.execute(movie);
-            }
-        });
-
         mTrailerRecyclerView = (MultiSnapRecyclerView) findViewById(R.id.rv_trailers);
-        mTrailerRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
-        mTrailerAdapter = new TrailerRecyclerViewAdapter(mContext, mTrailerTitles, mTrailerPaths, this);
-        mTrailerRecyclerView.setAdapter(mTrailerAdapter);
-
         mReviewRecyclerView = (MultiSnapRecyclerView) findViewById(R.id.rv_reviews);
-        mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
-        mReviewAdapter = new ReviewRecyclerViewAdapter(mContext, mReviewAuthors, mReviewContents);
-        mReviewRecyclerView.setAdapter(mReviewAdapter);
 
         mRatingTextView.setText(movie.getRating());
         mDateTextView.setText(movie.getDate());
         mTitleTextView.setText(movie.getTitle());
         mPlotTextView.setText(movie.getPlot());
-
         try {
             Glide.with(mContext)
                     .load(movie.getPosterPath())
@@ -135,7 +99,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         if (movie.getPosterBytes() != null) {
             Glide.with(getApplicationContext())
                     .load(movie.getPosterBytes())
@@ -164,6 +127,31 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     .centerCrop()
                     .into(mBackdropImageView);
         }
+
+        (new CheckIfFavoritedTask()).execute(movie);
+
+        mFavoriteButton.setOnClickListener(new View.OnClickListener() {
+            Movie movie = getIntent().getParcelableExtra("movie");
+
+            @Override
+            public void onClick(View v) {
+                bounceAnimation();
+                AddRemoveFavoritesTask addRemoveFavoritesTask = new AddRemoveFavoritesTask();
+                if (addRemoveFavoritesTask.getStatus() == AsyncTask.Status.RUNNING)
+                    return;
+                else
+                    addRemoveFavoritesTask.execute(movie);
+            }
+        });
+
+        mTrailerRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        mTrailerAdapter = new TrailerRecyclerViewAdapter(mContext, mTrailerTitles, mTrailerPaths, this);
+        mTrailerRecyclerView.setAdapter(mTrailerAdapter);
+
+        mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        mReviewAdapter = new ReviewRecyclerViewAdapter(mContext, mReviewAuthors, mReviewContents);
+        mReviewRecyclerView.setAdapter(mReviewAdapter);
+
         (new GetTheTrailersTask()).execute(movie.getId());
         (new GetTheReviewsTask()).execute(movie.getId());
     }
@@ -176,11 +164,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     }
 
     private class AddRemoveFavoritesTask extends AsyncTask<Movie, Void, Cursor> {
-
         @Override
         protected void onPreExecute() {
         }
-
 
         @Override
         protected Cursor doInBackground(Movie... movie) {
@@ -220,7 +206,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     }
 
     private class GetTheTrailersTask extends AsyncTask<Integer, Void, String> {
-
         @Override
         protected void onPreExecute() {
             if (!Connection.hasNetwork(mContext)) {
@@ -230,7 +215,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 mTrailersLabel1.setVisibility(View.INVISIBLE);
             }
         }
-
 
         @Override
         protected String doInBackground(Integer... params) {
@@ -269,7 +253,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     }
 
     private class GetTheReviewsTask extends AsyncTask<Integer, Void, String> {
-
         @Override
         protected void onPreExecute() {
             if (!Connection.hasNetwork(mContext)) {
@@ -279,7 +262,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 mReviewsLabel1.setVisibility(View.INVISIBLE);
             }
         }
-
 
         @Override
         protected String doInBackground(Integer... params) {
@@ -304,7 +286,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             try {
                 JSONObject jsonReviewsObject = new JSONObject(jsonResponse);
                 JSONArray jsonReviewsArray = jsonReviewsObject.getJSONArray("results");
-                if(jsonReviewsArray.length() != 0) {
+                if (jsonReviewsArray.length() != 0) {
                     for (int i = 0; i < jsonReviewsArray.length(); i++) {
                         JSONObject jsonReview = jsonReviewsArray.getJSONObject(i);
                         mReviewAuthors.add(jsonReview.getString("author"));
@@ -321,6 +303,31 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 Toast.makeText(mContext, "Error in the review data fetched!", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
+        }
+    }
+
+    private class CheckIfFavoritedTask extends AsyncTask<Movie, Void, Cursor> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Cursor doInBackground(Movie... movie) {
+            String title = movie[0].getTitle();
+            String[] movieTitle = {title};
+            return getContentResolver().query(FavsContract.FavsEntry.CONTENT_URI,
+                    null,
+                    FavsContract.FavsEntry.COLUMN_TITLE + "=?",
+                    movieTitle,
+                    null);
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            if (cursor.getCount() == 0)
+                mFavoriteButton.setBackgroundResource(R.mipmap.ic_favorite_border);
+            else
+                mFavoriteButton.setBackgroundResource(R.mipmap.ic_favorite);
         }
     }
 

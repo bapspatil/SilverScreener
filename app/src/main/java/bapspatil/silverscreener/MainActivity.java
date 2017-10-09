@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     private ArrayList<Movie> movieArray = new ArrayList<>();
     private String MOVIE_URL_POPULAR = "http://api.themoviedb.org/3/movie/popular";
     private String MOVIE_URL_RATED = "http://api.themoviedb.org/3/movie/top_rated";
-    private String MOVIE_POSTER_URL = "http://image.tmdb.org/t/p/w500";
-    private String MOVIE_BACKDROP_URL = "http://image.tmdb.org/t/p/w780";
+    private String MOVIE_POSTER_URL = "http://image.tmdb.org/t/p/w342";
+    private String MOVIE_BACKDROP_URL = "http://image.tmdb.org/t/p/w300";
     private Context mContext;
     private GetTheMoviesTask getTheMoviesTask;
     private GetTheFavsTask getTheFavsTask;
