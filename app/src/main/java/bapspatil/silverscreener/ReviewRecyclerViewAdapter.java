@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecyclerViewAdapter.ReviewItemViewHolder> {
 
     private ArrayList<String> mReviewAuthors, mReviewContents;
@@ -40,12 +43,12 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
     }
 
     class ReviewItemViewHolder extends RecyclerView.ViewHolder {
-        TextView reviewAuthorTextView, reviewContentTextView;
+        @BindView(R.id.review_author_tv) TextView reviewAuthorTextView;
+        @BindView(R.id.review_content_tv) TextView reviewContentTextView;
 
         ReviewItemViewHolder(View itemView) {
             super(itemView);
-            reviewAuthorTextView = (TextView) itemView.findViewById(R.id.review_author_tv);
-            reviewContentTextView = (TextView) itemView.findViewById(R.id.review_content_tv);
+            ButterKnife.bind(this, itemView);
         }
 
     }

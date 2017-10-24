@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecyclerViewAdapter.TrailerViewHolder> {
 
     private ArrayList<String> mTrailerTitles, mTrailerPaths;
@@ -47,11 +50,11 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
     }
 
     class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView trailerTitleTextView;
+        @BindView(R.id.trailer_title_tv) TextView trailerTitleTextView;
 
         TrailerViewHolder(View itemView) {
             super(itemView);
-            trailerTitleTextView = (TextView) itemView.findViewById(R.id.trailer_title_tv);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 
