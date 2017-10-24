@@ -11,6 +11,9 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder> {
 
@@ -61,11 +64,11 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView mPosterImageView;
+        @BindView(R.id.poster_image_view) ImageView mPosterImageView;
 
         MovieViewHolder(View itemView) {
             super(itemView);
-            mPosterImageView = (ImageView) itemView.findViewById(R.id.poster_image_view);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 
