@@ -27,12 +27,12 @@ import java.util.ArrayList;
 
 import bapspatil.silverscreener.data.Connection;
 import bapspatil.silverscreener.data.FavsContract;
+import butterknife.BindView;
 import it.gmariotti.recyclerview.adapter.SlideInBottomAnimatorAdapter;
 
 public class MainActivity extends AppCompatActivity implements MovieRecyclerViewAdapter.ItemClickListener {
 
     private MovieRecyclerViewAdapter mAdapter;
-    private ProgressBar mProgressBar;
     private ArrayList<Movie> movieArray = new ArrayList<>();
     private String MOVIE_URL_POPULAR = "http://api.themoviedb.org/3/movie/popular";
     private String MOVIE_URL_RATED = "http://api.themoviedb.org/3/movie/top_rated";
@@ -41,21 +41,22 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     private Context mContext;
     private GetTheMoviesTask getTheMoviesTask;
     private GetTheFavsTask getTheFavsTask;
-    private SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.main_toolbar) Toolbar toolbar;
+    @BindView(R.id.loading_indicator) ProgressBar mProgressBar;
+    @BindView(R.id.rv_movies) MovieRecyclerView mRecyclerView;
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
         Toast.makeText(mContext, "App developed by Bapusaheb Patil", Toast.LENGTH_SHORT).show();
 
-        mProgressBar = (ProgressBar) findViewById(R.id.loading_indicator);
         final Spinner mSpinner = (Spinner) findViewById(R.id.sort_spinner);
-        MovieRecyclerView mRecyclerView = (MovieRecyclerView) findViewById(R.id.rv_movies);
         int columns = 2;
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
             columns = 4;
@@ -100,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
             }
         });
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
