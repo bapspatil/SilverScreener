@@ -37,17 +37,13 @@ import java.util.concurrent.ExecutionException;
 
 import bapspatil.silverscreener.data.Connection;
 import bapspatil.silverscreener.data.FavsContract;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class DetailsActivity extends AppCompatActivity implements TrailerRecyclerViewAdapter.ItemClickListener {
 
-
-    private TextView mRatingTextView, mDateTextView, mTitleTextView, mPlotTextView, mReviewsLabel0, mReviewsLabel1, mTrailersLabel0, mTrailersLabel1;
-    private ImageView mPosterImageView, mBackdropImageView;
-    private CardView noReviewsCardView;
-    private MultiSnapRecyclerView mTrailerRecyclerView, mReviewRecyclerView;
     private TrailerRecyclerViewAdapter mTrailerAdapter;
     private ReviewRecyclerViewAdapter mReviewAdapter;
-    private Button mFavoriteButton;
     private Context mContext;
     private ArrayList<String> mTrailerTitles = new ArrayList<>();
     private ArrayList<String> mTrailerPaths = new ArrayList<>();
@@ -55,30 +51,31 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     private ArrayList<String> mReviewContents = new ArrayList<>();
     private byte[] imageBytes;
 
+    @BindView(R.id.details_toolbar) Toolbar toolbar;
+    @BindView(R.id.trailer_label_tv) TextView mTrailersLabel0;
+    @BindView(R.id.trailers_hint_tv) TextView mTrailersLabel1;
+    @BindView(R.id.reviews_label_tv) TextView mReviewsLabel0;
+    @BindView(R.id.reviews_swipe_hint_tv) TextView mReviewsLabel1;
+    @BindView(R.id.no_reviews_cv) CardView noReviewsCardView;
+    @BindView(R.id.rating_value_tv) TextView mRatingTextView;
+    @BindView(R.id.date_value_tv) TextView mDateTextView;
+    @BindView(R.id.title_tv) TextView mTitleTextView;
+    @BindView(R.id.plot_tv) TextView mPlotTextView;
+    @BindView(R.id.poster_image_view) ImageView mPosterImageView;
+    @BindView(R.id.backdrop_image_view) ImageView mBackdropImageView;
+    @BindView(R.id.rv_trailers) MultiSnapRecyclerView mTrailerRecyclerView;
+    @BindView(R.id.rv_reviews) MultiSnapRecyclerView mReviewRecyclerView;
+    @BindView(R.id.fav_button) Button mFavoriteButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        ButterKnife.bind(this);
         mContext = getApplicationContext();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.details_toolbar);
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
         Movie movie = getIntent().getParcelableExtra("movie");
-
-        mTrailersLabel0 = (TextView) findViewById(R.id.trailer_label_tv);
-        mTrailersLabel1 = (TextView) findViewById(R.id.trailers_hint_tv);
-        mReviewsLabel0 = (TextView) findViewById(R.id.reviews_label_tv);
-        mReviewsLabel1 = (TextView) findViewById(R.id.reviews_swipe_hint_tv);
-        noReviewsCardView = (CardView) findViewById(R.id.no_reviews_cv);
-        mRatingTextView = (TextView) findViewById(R.id.rating_value_tv);
-        mDateTextView = (TextView) findViewById(R.id.date_value_tv);
-        mTitleTextView = (TextView) findViewById(R.id.title_tv);
-        mPlotTextView = (TextView) findViewById(R.id.plot_tv);
-        mPosterImageView = (ImageView) findViewById(R.id.poster_image_view);
-        mBackdropImageView = (ImageView) findViewById(R.id.backdrop_image_view);
-        mFavoriteButton = (Button) findViewById(R.id.fav_button);
-        mTrailerRecyclerView = (MultiSnapRecyclerView) findViewById(R.id.rv_trailers);
-        mReviewRecyclerView = (MultiSnapRecyclerView) findViewById(R.id.rv_reviews);
 
         mRatingTextView.setText(movie.getRating());
         mDateTextView.setText(movie.getDate());

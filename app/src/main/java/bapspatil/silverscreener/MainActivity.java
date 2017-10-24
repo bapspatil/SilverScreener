@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import bapspatil.silverscreener.data.Connection;
 import bapspatil.silverscreener.data.FavsContract;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import it.gmariotti.recyclerview.adapter.SlideInBottomAnimatorAdapter;
 
 public class MainActivity extends AppCompatActivity implements MovieRecyclerViewAdapter.ItemClickListener {
@@ -46,17 +47,18 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     @BindView(R.id.loading_indicator) ProgressBar mProgressBar;
     @BindView(R.id.rv_movies) MovieRecyclerView mRecyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.sort_spinner) Spinner mSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         mContext = getApplicationContext();
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
         Toast.makeText(mContext, "App developed by Bapusaheb Patil", Toast.LENGTH_SHORT).show();
 
-        final Spinner mSpinner = (Spinner) findViewById(R.id.sort_spinner);
         int columns = 2;
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
             columns = 4;
