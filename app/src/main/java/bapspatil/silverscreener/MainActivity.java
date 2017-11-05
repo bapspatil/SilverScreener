@@ -7,16 +7,17 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     private ArrayList<Movie> movieArray = new ArrayList<>();
     private String MOVIE_URL_POPULAR = "http://api.themoviedb.org/3/movie/popular";
     private String MOVIE_URL_RATED = "http://api.themoviedb.org/3/movie/top_rated";
+    private String MOVIE_URL_UPCOMING = "http://api.themoviedb.org/3/movie/upcoming";
+    private String MOVIE_URL_NOW = "http://api.themoviedb.org/3/movie/now_playing";
     private String MOVIE_POSTER_URL = "http://image.tmdb.org/t/p/w342";
     private String MOVIE_BACKDROP_URL = "http://image.tmdb.org/t/p/w300";
     private Context mContext;
@@ -47,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     @BindView(R.id.loading_indicator) ProgressBar mProgressBar;
     @BindView(R.id.rv_movies) MovieRecyclerView mRecyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.sort_spinner) Spinner mSpinner;
+    @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +63,14 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         Toast.makeText(mContext, "App developed by Bapusaheb Patil", Toast.LENGTH_SHORT).show();
 
         int columns = 2;
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
             columns = 4;
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, columns);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             movieArray.clear();
-            for(int i = 0; i < savedInstanceState.getInt("noOfMovies"); i++) {
+            for (int i = 0; i < savedInstanceState.getInt("noOfMovies"); i++) {
                 Movie movie;
                 movie = savedInstanceState.getParcelable("movieParcel" + i);
                 movieArray.add(movie);
@@ -79,46 +82,44 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         mRecyclerView.setAdapter(animatorAdapter);
 
         getTheMoviesTask = new GetTheMoviesTask();
+        getTheMoviesTask.execute(MOVIE_URL_POPULAR);
         getTheFavsTask = new GetTheFavsTask();
 
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selected = parent.getItemAtPosition(position).toString();
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                String stringURL;
                 getTheMoviesTask.cancel(true);
                 getTheMoviesTask = new GetTheMoviesTask();
                 getTheFavsTask.cancel(true);
                 getTheFavsTask = new GetTheFavsTask();
-                if (selected.equals("Most Popular")) {
-                    getTheMoviesTask.execute(MOVIE_URL_POPULAR);
-                } else if (selected.equals("Highest Rated")) {
-                    getTheMoviesTask.execute(MOVIE_URL_RATED);
-                } else {
-                    getTheFavsTask.execute();
+                switch (item.getItemId()) {
+                    case R.id.action_popular:
+                        stringURL = MOVIE_URL_POPULAR;
+                        getTheMoviesTask.execute(stringURL);
+                        break;
+                    case R.id.action_rated:
+                        stringURL = MOVIE_URL_RATED;
+                        getTheMoviesTask.execute(stringURL);
+                        break;
+                    case R.id.action_upcoming:
+                        stringURL = MOVIE_URL_UPCOMING;
+                        getTheMoviesTask.execute(stringURL);
+                        break;
+                    case R.id.action_now:
+                        stringURL = MOVIE_URL_NOW;
+                        getTheMoviesTask.execute(stringURL);
+                        break;
+                    case R.id.action_favorites:
+                        getTheFavsTask.execute();
+                        break;
+                    default:
+                        stringURL = MOVIE_URL_POPULAR;
+                        getTheMoviesTask.cancel(true);
+                        getTheMoviesTask = new GetTheMoviesTask();
+                        getTheMoviesTask.execute(stringURL);
                 }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                String selected = mSpinner.getSelectedItem().toString();
-                getTheMoviesTask.cancel(true);
-                getTheMoviesTask = new GetTheMoviesTask();
-                getTheFavsTask.cancel(true);
-                getTheFavsTask = new GetTheFavsTask();
-                if (selected.equals("Most Popular")) {
-                    getTheMoviesTask.execute(MOVIE_URL_POPULAR);
-                } else if (selected.equals("Highest Rated")) {
-                    getTheMoviesTask.execute(MOVIE_URL_RATED);
-                } else {
-                    getTheFavsTask.execute();
-                }
-                swipeRefreshLayout.setRefreshing(false);
+                return true;
             }
         });
 
@@ -127,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         int numberOfMovies = movieArray.size();
-        for(int i = 0; i < numberOfMovies; i++) {
+        for (int i = 0; i < numberOfMovies; i++) {
             Movie movie = new Movie();
             outState.putParcelable("movieParcel" + i, movie);
         }
