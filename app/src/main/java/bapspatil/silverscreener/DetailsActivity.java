@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -55,7 +56,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @BindView(R.id.trailer_label_tv) TextView mTrailersLabel0;
     @BindView(R.id.trailers_hint_tv) TextView mTrailersLabel1;
     @BindView(R.id.reviews_label_tv) TextView mReviewsLabel0;
-    @BindView(R.id.reviews_swipe_hint_tv) TextView mReviewsLabel1;
     @BindView(R.id.no_reviews_cv) CardView noReviewsCardView;
     @BindView(R.id.rating_value_tv) TextView mRatingTextView;
     @BindView(R.id.date_value_tv) TextView mDateTextView;
@@ -64,7 +64,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @BindView(R.id.poster_image_view) ImageView mPosterImageView;
     @BindView(R.id.backdrop_image_view) ImageView mBackdropImageView;
     @BindView(R.id.rv_trailers) MultiSnapRecyclerView mTrailerRecyclerView;
-    @BindView(R.id.rv_reviews) MultiSnapRecyclerView mReviewRecyclerView;
+    @BindView(R.id.rv_reviews) RecyclerView mReviewRecyclerView;
     @BindView(R.id.fav_button) Button mFavoriteButton;
 
     @Override
@@ -145,7 +145,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mTrailerAdapter = new TrailerRecyclerViewAdapter(mContext, mTrailerTitles, mTrailerPaths, this);
         mTrailerRecyclerView.setAdapter(mTrailerAdapter);
 
-        mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.VERTICAL, false));
         mReviewAdapter = new ReviewRecyclerViewAdapter(mContext, mReviewAuthors, mReviewContents);
         mReviewRecyclerView.setAdapter(mReviewAdapter);
 
@@ -256,7 +256,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 cancel(true);
                 Toast.makeText(mContext, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 mReviewsLabel0.setVisibility(View.INVISIBLE);
-                mReviewsLabel1.setVisibility(View.INVISIBLE);
             }
         }
 
