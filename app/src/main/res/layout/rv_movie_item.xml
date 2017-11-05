@@ -9,8 +9,8 @@
         android:layout_width="185dp"
         android:layout_height="278dp"
         app:cardUseCompatPadding="true"
-        app:cardBackgroundColor="#212121"
-        app:cardCornerRadius="4dp"
+        app:cardBackgroundColor="@color/colorPrimary"
+        app:cardCornerRadius="8dp"
         app:cardElevation="12dp">
 
         <ImageView

@@ -32,8 +32,8 @@
                         style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
                         android:text="@string/app_name"
                         android:textColor="@color/colorAccent"/>
                 </FrameLayout>
@@ -112,15 +112,7 @@
                         android:textSize="26sp"
                         tools:text="12/13/1989"/>
 
-                    <!--<Button
-                        android:id="@+id/fav_button"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_gravity="center"
-                        android:background="@mipmap/ic_favorite_border"/>-->
-
                 </LinearLayout>
-
 
             </LinearLayout>
 
@@ -173,32 +165,10 @@
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp">
 
-                <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_trailers"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:elevation="8dp"
-                    app:msrv_gravity="center"
-                    app:msrv_snap_count="1"/>
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="8dp"
-                    app:cardBackgroundColor="#212121"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="4dp">
-
-                    <ImageView
-                        android:id="@+id/backdrop_image_view"
-                        android:layout_width="400dp"
-                        android:layout_height="225dp"
-                        android:contentDescription="@string/backdrop_iv_info"
-                        android:scaleType="centerCrop"/>
-
-                </android.support.v7.widget.CardView>
-
+                    android:layout_height="match_parent"/>
 
             </FrameLayout>
 

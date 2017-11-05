@@ -5,7 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -41,6 +45,14 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
             viewHolder.trailerTitleTextView.setText("Why aren't you connected to the internet? Or maybe there are no trailers for this movie...");
         else
             viewHolder.trailerTitleTextView.setText(title);
+
+        String thumbnailUrlStr = "https://img.youtube.com/vi/" + mTrailerPaths.get(position) + "/0.jpg";
+        Glide.with(mContext)
+                .load(thumbnailUrlStr)
+                .centerCrop()
+                .error(R.drawable.no_internet_placeholder_landscape)
+                .fallback(R.drawable.no_internet_placeholder_landscape)
+                .into(viewHolder.trailerThumbnailImageView);
     }
 
     @Override
@@ -51,6 +63,7 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
 
     class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.trailer_title_tv) TextView trailerTitleTextView;
+        @BindView(R.id.trailer_thumbnail_iv) ImageView trailerThumbnailImageView;
 
         TrailerViewHolder(View itemView) {
             super(itemView);

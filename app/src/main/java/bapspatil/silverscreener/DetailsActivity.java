@@ -28,7 +28,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -64,8 +63,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @BindView(R.id.title_tv) TextView mTitleTextView;
     @BindView(R.id.plot_tv) TextView mPlotTextView;
     @BindView(R.id.poster_image_view) ImageView mPosterImageView;
-    @BindView(R.id.backdrop_image_view) ImageView mBackdropImageView;
-    @BindView(R.id.rv_trailers) MultiSnapRecyclerView mTrailerRecyclerView;
+    @BindView(R.id.rv_trailers) RecyclerView mTrailerRecyclerView;
     @BindView(R.id.rv_reviews) RecyclerView mReviewRecyclerView;
     @BindView(R.id.fav_button) FloatingActionButton mFavoriteButton;
     @BindView(R.id.adview) AdView mAdView;
@@ -117,19 +115,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     .fallback(R.drawable.no_internet_placeholder)
                     .into(mPosterImageView);
         }
-        if (Connection.hasNetwork(mContext)) {
-            Glide.with(mContext)
-                    .load(movie.getBackdropPath())
-                    .centerCrop()
-                    .error(R.drawable.no_internet_placeholder_landscape)
-                    .fallback(R.drawable.no_internet_placeholder_landscape)
-                    .into(mBackdropImageView);
-        } else {
-            Glide.with(mContext)
-                    .load(R.drawable.no_internet_placeholder_landscape)
-                    .centerCrop()
-                    .into(mBackdropImageView);
-        }
 
         (new CheckIfFavoritedTask()).execute(movie);
 
@@ -161,7 +146,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
     @Override
     public void onItemClick(String stringUrlTrailerClicked) {
-        Uri youtubeUri = Uri.parse(stringUrlTrailerClicked);
+        Uri youtubeUri = Uri.parse("https://www.youtube.com/watch?v=" + stringUrlTrailerClicked);
         Intent openYoutube = new Intent(Intent.ACTION_VIEW, youtubeUri);
         startActivity(openYoutube);
     }
@@ -245,7 +230,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 for (int i = 0; i < jsonTrailersArray.length(); i++) {
                     JSONObject jsonTrailer = jsonTrailersArray.getJSONObject(i);
                     mTrailerTitles.add(jsonTrailer.getString("name"));
-                    mTrailerPaths.add("https://www.youtube.com/watch?v=" + jsonTrailer.getString("key"));
+                    mTrailerPaths.add(jsonTrailer.getString("key"));
                     mTrailerAdapter.notifyDataSetChanged();
                 }
             } catch (Exception e) {
@@ -349,7 +334,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         cv.put(FavsContract.FavsEntry.COLUMN_RATING, movie.getRating());
         cv.put(FavsContract.FavsEntry.COLUMN_DATE, movie.getDate());
         cv.put(FavsContract.FavsEntry.COLUMN_POSTERPATH, movie.getPosterPath());
-        cv.put(FavsContract.FavsEntry.COLUMN_BACKDROPPATH, movie.getBackdropPath());
         cv.put(FavsContract.FavsEntry.COLUMN_POSTER, imageBytes);
         Uri uri = getContentResolver().insert(FavsContract.FavsEntry.CONTENT_URI, cv);
         if (uri != null)

@@ -184,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                     JSONObject jsonMovie = jsonMoviesArray.getJSONObject(i);
                     Movie movie = new Movie();
                     movie.setPosterPath(MOVIE_POSTER_URL + jsonMovie.getString("poster_path"));
-                    movie.setBackdropPath(MOVIE_BACKDROP_URL + jsonMovie.getString("backdrop_path"));
                     movie.setTitle(jsonMovie.getString("title"));
                     movie.setPlot(jsonMovie.getString("overview"));
                     movie.setDate(jsonMovie.getString("release_date"));
@@ -241,7 +240,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                     movie.setRating(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_RATING)));
                     movie.setPosterBytes(cursor.getBlob(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_POSTER)));
                     movie.setPosterPath(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_POSTERPATH)));
-                    movie.setBackdropPath(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_BACKDROPPATH)));
                     movieArray.add(movie);
                     mAdapter.notifyDataSetChanged();
                     cursor.moveToNext();

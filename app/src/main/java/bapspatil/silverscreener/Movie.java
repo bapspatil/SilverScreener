@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Movie implements Parcelable {
 
-    private String posterPath, title, plot, date, rating, backdropPath;
+    private String posterPath, title, plot, date, rating;
     private ArrayList<String> trailerTitles, trailerPaths, reviewAuthors, reviewContents;
     private byte[] posterBytes;
     private int id;
@@ -31,7 +31,6 @@ public class Movie implements Parcelable {
         this.date = in.readString();
         this.rating = in.readString();
         this.id = in.readInt();
-        this.backdropPath = in.readString();
         this.trailerTitles = in.createStringArrayList();
         this.trailerPaths = in.createStringArrayList();
         this.reviewAuthors = in.createStringArrayList();
@@ -99,14 +98,6 @@ public class Movie implements Parcelable {
         this.rating = rating;
     }
 
-    public String getBackdropPath() {
-        return backdropPath;
-    }
-
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -120,7 +111,6 @@ public class Movie implements Parcelable {
         dest.writeString(this.date);
         dest.writeString(this.rating);
         dest.writeInt(this.id);
-        dest.writeString(this.backdropPath);
         dest.writeStringList(this.trailerTitles);
         dest.writeStringList(this.trailerPaths);
         dest.writeStringList(this.reviewAuthors);
