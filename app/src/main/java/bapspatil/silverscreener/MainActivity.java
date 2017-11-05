@@ -23,7 +23,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import bapspatil.silverscreener.data.Connection;
 import bapspatil.silverscreener.data.FavsContract;
@@ -40,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     private String MOVIE_URL_UPCOMING = "http://api.themoviedb.org/3/movie/upcoming";
     private String MOVIE_URL_NOW = "http://api.themoviedb.org/3/movie/now_playing";
     private String MOVIE_POSTER_URL = "http://image.tmdb.org/t/p/w342";
-    private String MOVIE_BACKDROP_URL = "http://image.tmdb.org/t/p/w300";
     private Context mContext;
     private GetTheMoviesTask getTheMoviesTask;
     private GetTheFavsTask getTheFavsTask;
@@ -186,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                     movie.setPosterPath(MOVIE_POSTER_URL + jsonMovie.getString("poster_path"));
                     movie.setTitle(jsonMovie.getString("title"));
                     movie.setPlot(jsonMovie.getString("overview"));
-                    movie.setDate(jsonMovie.getString("release_date"));
+                    movie.setDate(convertIntoProperDateFormat(jsonMovie.getString("release_date")));
                     movie.setId(jsonMovie.getInt("id"));
                     movie.setRating(jsonMovie.getString("vote_average"));
                     movieArray.add(movie);
@@ -235,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                     Movie movie = new Movie();
                     movie.setId(cursor.getInt(cursor.getColumnIndex(FavsContract.FavsEntry._ID)));
                     movie.setTitle(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_TITLE)));
-                    movie.setDate(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_DATE)));
+                    movie.setDate(convertIntoProperDateFormat(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_DATE))));
                     movie.setPlot(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_PLOT)));
                     movie.setRating(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_RATING)));
                     movie.setPosterBytes(cursor.getBlob(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_POSTER)));
@@ -253,4 +256,16 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         }
     }
 
+    private String convertIntoProperDateFormat(String jsonDate) {
+        DateFormat sourceDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+        Date date = null;
+        try {
+            date = sourceDateFormat.parse(jsonDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        DateFormat destDateFormat = new SimpleDateFormat("MMM dd\nYYYY");
+        String dateStr = destDateFormat.format(date);
+        return dateStr;
+    }
 }
