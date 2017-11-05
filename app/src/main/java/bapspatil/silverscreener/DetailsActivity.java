@@ -26,6 +26,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView;
 
 import org.json.JSONArray;
@@ -66,6 +68,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @BindView(R.id.rv_trailers) MultiSnapRecyclerView mTrailerRecyclerView;
     @BindView(R.id.rv_reviews) RecyclerView mReviewRecyclerView;
     @BindView(R.id.fav_button) FloatingActionButton mFavoriteButton;
+    @BindView(R.id.adview) AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
         Movie movie = getIntent().getParcelableExtra("movie");
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         mRatingTextView.setText(movie.getRating());
         mDateTextView.setText(movie.getDate());
@@ -356,5 +362,29 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         uri = uri.buildUpon().appendPath(movieId).build();
         getContentResolver().delete(uri, null, null);
         Log.d("Remove Fav", "Uri delete: " + uri.toString());
+    }
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 }
