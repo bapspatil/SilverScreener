@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     @BindView(R.id.main_toolbar) Toolbar toolbar;
     @BindView(R.id.loading_indicator) ProgressBar mProgressBar;
     @BindView(R.id.rv_movies) MovieRecyclerView mRecyclerView;
-    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
     @Override
