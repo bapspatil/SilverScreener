@@ -11,11 +11,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -137,12 +137,12 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
 
 
     @Override
-    public void onItemClick(int position, ImageView posterImageView) {
+    public void onItemClick(int position, CardView posterCardView) {
         Movie movie;
         movie = movieArray.get(position);
         Intent startDetailsActivity = new Intent(mContext, DetailsActivity.class);
         startDetailsActivity.putExtra("movie", movie);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, posterImageView, "posterTransition");
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, posterCardView, "posterTransition");
         startActivity(startDetailsActivity, options.toBundle());
     }
 
