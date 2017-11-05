@@ -8,3 +8,5 @@
 /captures
 .externalNativeBuild
 /gradle.properties
+app/release/
+app/src/main/res/layout-land/
