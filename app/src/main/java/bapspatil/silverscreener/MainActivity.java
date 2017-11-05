@@ -30,7 +30,7 @@ import bapspatil.silverscreener.data.Connection;
 import bapspatil.silverscreener.data.FavsContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import it.gmariotti.recyclerview.adapter.SlideInBottomAnimatorAdapter;
+import it.gmariotti.recyclerview.adapter.ScaleInAnimatorAdapter;
 
 public class MainActivity extends AppCompatActivity implements MovieRecyclerViewAdapter.ItemClickListener {
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         }
 
         mAdapter = new MovieRecyclerViewAdapter(mContext, movieArray, this);
-        SlideInBottomAnimatorAdapter animatorAdapter = new SlideInBottomAnimatorAdapter(mAdapter, mRecyclerView);
+        ScaleInAnimatorAdapter<MovieRecyclerViewAdapter.MovieViewHolder> animatorAdapter = new ScaleInAnimatorAdapter<>(mAdapter, mRecyclerView);
         mRecyclerView.setAdapter(animatorAdapter);
 
         getTheMoviesTask = new GetTheMoviesTask();
@@ -115,8 +115,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                         break;
                     default:
                         stringURL = MOVIE_URL_POPULAR;
-                        getTheMoviesTask.cancel(true);
-                        getTheMoviesTask = new GetTheMoviesTask();
                         getTheMoviesTask.execute(stringURL);
                 }
                 return true;
@@ -152,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         @Override
         protected void onPreExecute() {
             mProgressBar.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
             if (!Connection.hasNetwork(mContext)) {
                 cancel(true);
                 mProgressBar.setVisibility(View.INVISIBLE);
@@ -180,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         @Override
         protected void onPostExecute(String jsonResponse) {
             movieArray.clear();
-            mProgressBar.setVisibility(View.INVISIBLE);
             try {
                 JSONObject jsonMoviesObject = new JSONObject(jsonResponse);
                 JSONArray jsonMoviesArray = jsonMoviesObject.getJSONArray("results");
@@ -202,6 +200,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                 Toast.makeText(mContext, "Error in the movie data fetched!", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -210,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         @Override
         protected void onPreExecute() {
             mProgressBar.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -231,7 +232,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         @Override
         protected void onPostExecute(Cursor cursor) {
             movieArray.clear();
-            mProgressBar.setVisibility(View.INVISIBLE);
             if (cursor.getCount() != 0) {
                 cursor.moveToFirst();
                 for (int i = 0; i < cursor.getCount(); i++) {
@@ -252,6 +252,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                 mAdapter.notifyDataSetChanged();
                 Toast.makeText(mContext, "No favorites!", Toast.LENGTH_SHORT).show();
             }
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 
