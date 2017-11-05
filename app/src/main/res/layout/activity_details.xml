@@ -15,6 +15,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:descendantFocusability="blocksDescendants"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -109,8 +110,8 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:textColor="#FFF"
-                        android:textSize="26sp"
-                        tools:text="12/13/1989"/>
+                        android:textSize="24sp"
+                        tools:text="Jan 24\n1998"/>
 
                 </LinearLayout>
 
@@ -165,7 +166,7 @@
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp">
 
-                <android.support.v7.widget.RecyclerView
+                <bapspatil.silverscreener.MovieRecyclerView
                     android:id="@+id/rv_trailers"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
@@ -189,7 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.RecyclerView
+                <bapspatil.silverscreener.MovieRecyclerView
                     android:id="@+id/rv_reviews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

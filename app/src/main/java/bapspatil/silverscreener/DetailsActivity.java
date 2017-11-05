@@ -12,7 +12,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -63,8 +62,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @BindView(R.id.title_tv) TextView mTitleTextView;
     @BindView(R.id.plot_tv) TextView mPlotTextView;
     @BindView(R.id.poster_image_view) ImageView mPosterImageView;
-    @BindView(R.id.rv_trailers) RecyclerView mTrailerRecyclerView;
-    @BindView(R.id.rv_reviews) RecyclerView mReviewRecyclerView;
+    @BindView(R.id.rv_trailers) MovieRecyclerView mTrailerRecyclerView;
+    @BindView(R.id.rv_reviews) MovieRecyclerView mReviewRecyclerView;
     @BindView(R.id.fav_button) FloatingActionButton mFavoriteButton;
     @BindView(R.id.adview) AdView mAdView;
 
@@ -77,9 +76,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
         Movie movie = getIntent().getParcelableExtra("movie");
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
 
         mRatingTextView.setText(movie.getRating());
         mDateTextView.setText(movie.getDate());
@@ -142,6 +138,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
         (new GetTheTrailersTask()).execute(movie.getId());
         (new GetTheReviewsTask()).execute(movie.getId());
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override
@@ -281,7 +279,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                         mReviewAdapter.notifyDataSetChanged();
                     }
                     noReviewsCardView.setVisibility(View.INVISIBLE);
-                    mReviewRecyclerView.setVisibility(View.VISIBLE);
                 } else {
                     noReviewsCardView.setVisibility(View.VISIBLE);
                     mReviewRecyclerView.setVisibility(View.INVISIBLE);
