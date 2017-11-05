@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                     Movie movie = new Movie();
                     movie.setId(cursor.getInt(cursor.getColumnIndex(FavsContract.FavsEntry._ID)));
                     movie.setTitle(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_TITLE)));
-                    movie.setDate(convertIntoProperDateFormat(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_DATE))));
+                    movie.setDate(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_DATE)));
                     movie.setPlot(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_PLOT)));
                     movie.setRating(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_RATING)));
                     movie.setPosterBytes(cursor.getBlob(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_POSTER)));
