@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +18,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,7 +65,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @BindView(R.id.backdrop_image_view) ImageView mBackdropImageView;
     @BindView(R.id.rv_trailers) MultiSnapRecyclerView mTrailerRecyclerView;
     @BindView(R.id.rv_reviews) RecyclerView mReviewRecyclerView;
-    @BindView(R.id.fav_button) Button mFavoriteButton;
+    @BindView(R.id.fav_button) FloatingActionButton mFavoriteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,10 +194,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             if (cursor != null)
                 if (cursor.getCount() == 0) {
                     Toast.makeText(mContext, "Movie added to Favorites! :-)", Toast.LENGTH_SHORT).show();
-                    mFavoriteButton.setBackgroundResource(R.mipmap.ic_favorite);
+                    mFavoriteButton.setImageResource(R.drawable.ic_favorite);
                 } else {
                     Toast.makeText(mContext, "Movie removed from Favorites! :-(", Toast.LENGTH_SHORT).show();
-                    mFavoriteButton.setBackgroundResource(R.mipmap.ic_favorite_border);
+                    mFavoriteButton.setImageResource(R.drawable.ic_favorite_border);
                 }
         }
     }
@@ -321,9 +321,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         @Override
         protected void onPostExecute(Cursor cursor) {
             if (cursor.getCount() == 0)
-                mFavoriteButton.setBackgroundResource(R.mipmap.ic_favorite_border);
+                mFavoriteButton.setImageResource(R.drawable.ic_favorite_border);
             else
-                mFavoriteButton.setBackgroundResource(R.mipmap.ic_favorite);
+                mFavoriteButton.setImageResource(R.drawable.ic_favorite);
         }
     }
 
