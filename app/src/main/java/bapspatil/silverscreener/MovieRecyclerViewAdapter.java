@@ -45,15 +45,15 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
             Glide.with(mContext)
                     .load(theMovie.getPosterBytes())
                     .centerCrop()
-                    .error(R.drawable.no_internet_placeholder)
-                    .fallback(R.drawable.no_internet_placeholder)
+                    .error(R.drawable.tmdb_placeholder)
+                    .fallback(R.drawable.tmdb_placeholder)
                     .into(holder.mPosterImageView);
         } else {
             Glide.with(mContext)
                     .load(theMovie.getPosterPath())
                     .centerCrop()
-                    .error(R.drawable.no_internet_placeholder)
-                    .fallback(R.drawable.no_internet_placeholder)
+                    .error(R.drawable.tmdb_placeholder)
+                    .fallback(R.drawable.tmdb_placeholder)
                     .into(holder.mPosterImageView);
         }
     }

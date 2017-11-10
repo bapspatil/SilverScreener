@@ -50,8 +50,8 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
         Glide.with(mContext)
                 .load(thumbnailUrlStr)
                 .centerCrop()
-                .error(R.drawable.no_internet_placeholder_landscape)
-                .fallback(R.drawable.no_internet_placeholder_landscape)
+                .error(R.drawable.cursor_search)
+                .fallback(R.drawable.cursor_search)
                 .into(viewHolder.trailerThumbnailImageView);
     }
 
