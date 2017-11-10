@@ -14,10 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     @BindView(R.id.loading_indicator) ProgressBar mProgressBar;
     @BindView(R.id.rv_movies) MovieRecyclerView mRecyclerView;
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
+    @BindView(R.id.search_view) MaterialSearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +123,34 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                         getTheMoviesTask.execute(stringURL);
                 }
                 return true;
+            }
+        });
+
+        searchView = findViewById(R.id.search_view);
+        searchView.setCursorDrawable(R.drawable.cursor_search);
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                SearchTask searchTask = new SearchTask();
+                searchTask.execute(query);
+                searchView.closeSearch();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                bottomNavigationView.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                bottomNavigationView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -256,6 +288,71 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         }
     }
 
+    private class SearchTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            mProgressBar.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
+            if (!Connection.hasNetwork(mContext)) {
+                cancel(true);
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mRecyclerView.setVisibility(View.INVISIBLE);
+                Toast.makeText(mContext, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            Uri builtUri = Uri.parse("https://api.themoviedb.org/3/search/movie").buildUpon()
+                    .appendQueryParameter("api_key", BuildConfig.TMDB_API_TOKEN)
+                    .appendQueryParameter("language", "en-US")
+                    .appendQueryParameter("query", strings[0])
+                    .build();
+            String jsonResponse;
+            try {
+                jsonResponse = Connection.getResponseFromHttpUrl(new URL(builtUri.toString()));
+                return jsonResponse;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String jsonResponse) {
+            movieArray.clear();
+            try {
+                JSONObject jsonMoviesObject = new JSONObject(jsonResponse);
+                JSONArray jsonMoviesArray = jsonMoviesObject.getJSONArray("results");
+                if(jsonMoviesArray.length() == 0) {
+                    Toast.makeText(mContext, "No movies found!", Toast.LENGTH_LONG).show();
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    return;
+                }
+                else {
+                    for (int i = 0; i < jsonMoviesArray.length(); i++) {
+                        JSONObject jsonMovie = jsonMoviesArray.getJSONObject(i);
+                        Movie movie = new Movie();
+                        movie.setPosterPath(MOVIE_POSTER_URL + jsonMovie.getString("poster_path"));
+                        movie.setTitle(jsonMovie.getString("title"));
+                        movie.setPlot(jsonMovie.getString("overview"));
+                        movie.setDate(convertIntoProperDateFormat(jsonMovie.getString("release_date")));
+                        movie.setId(jsonMovie.getInt("id"));
+                        movie.setRating(jsonMovie.getString("vote_average"));
+                        movieArray.add(movie);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+            } catch (Exception e) {
+                Toast.makeText(mContext, "Error in the movie data fetched!", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
     private String convertIntoProperDateFormat(String jsonDate) {
         DateFormat sourceDateFormat = new SimpleDateFormat("YYYY-MM-dd");
         Date date = null;
@@ -267,5 +364,23 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         DateFormat destDateFormat = new SimpleDateFormat("MMM dd\nYYYY");
         String dateStr = destDateFormat.format(date);
         return dateStr;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
+
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (searchView.isSearchOpen())
+            searchView.closeSearch();
+        else
+            super.onBackPressed();
     }
 }
