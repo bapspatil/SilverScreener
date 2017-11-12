@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+
 import java.util.ArrayList;
 
 import bapspatil.silverscreener.R;
 import bapspatil.silverscreener.model.Movie;
+import bapspatil.silverscreener.network.RetrofitAPI;
 import bapspatil.silverscreener.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,13 +51,15 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
                     .centerCrop()
                     .error(R.drawable.tmdb_placeholder)
                     .fallback(R.drawable.tmdb_placeholder)
+                    .transition(new DrawableTransitionOptions().crossFade())
                     .into(holder.mPosterImageView);
         } else {
             GlideApp.with(mContext)
-                    .load(theMovie.getPosterPath())
+                    .load(RetrofitAPI.POSTER_BASE_URL + theMovie.getPosterPath())
                     .centerCrop()
                     .error(R.drawable.tmdb_placeholder)
                     .fallback(R.drawable.tmdb_placeholder)
+                    .transition(new DrawableTransitionOptions().crossFade())
                     .into(holder.mPosterImageView);
         }
     }

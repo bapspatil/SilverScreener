@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
@@ -32,7 +33,11 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import bapspatil.silverscreener.BuildConfig;
@@ -43,6 +48,7 @@ import bapspatil.silverscreener.data.FavsContract;
 import bapspatil.silverscreener.model.Movie;
 import bapspatil.silverscreener.model.MovieRecyclerView;
 import bapspatil.silverscreener.network.Connection;
+import bapspatil.silverscreener.network.RetrofitAPI;
 import bapspatil.silverscreener.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,73 +89,75 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         Movie movie = getIntent().getParcelableExtra("movie");
 
         mRatingTextView.setText(movie.getRating());
-        mDateTextView.setText(movie.getDate());
+        mDateTextView.setText(prettifyDate(movie.getDate()));
         mTitleTextView.setText(movie.getTitle());
         mPlotTextView.setText(movie.getPlot());
 
-        GlideApp.with(mContext)
-                .load(movie.getPosterPath())
-                .centerCrop()
-                .into(new Target<Drawable>() {
-                    @Override
-                    public void onLoadStarted(@Nullable Drawable placeholder) {
+        if (Connection.hasNetwork(mContext)) {
+            GlideApp.with(mContext)
+                    .load(movie.getPosterPath())
+                    .centerCrop()
+                    .into(new Target<Drawable>() {
+                        @Override
+                        public void onLoadStarted(@Nullable Drawable placeholder) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        @Override
+                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                        Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        imageBytes = stream.toByteArray();
-                    }
+                        @Override
+                        public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                            Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            imageBytes = stream.toByteArray();
+                        }
 
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                    }
+                        }
 
-                    @Override
-                    public void getSize(SizeReadyCallback cb) {
+                        @Override
+                        public void getSize(SizeReadyCallback cb) {
 
-                    }
+                        }
 
-                    @Override
-                    public void removeCallback(SizeReadyCallback cb) {
+                        @Override
+                        public void removeCallback(SizeReadyCallback cb) {
 
-                    }
+                        }
 
-                    @Override
-                    public void setRequest(@Nullable Request request) {
+                        @Override
+                        public void setRequest(@Nullable Request request) {
 
-                    }
+                        }
 
-                    @Nullable
-                    @Override
-                    public Request getRequest() {
-                        return null;
-                    }
+                        @Nullable
+                        @Override
+                        public Request getRequest() {
+                            return null;
+                        }
 
-                    @Override
-                    public void onStart() {
+                        @Override
+                        public void onStart() {
 
-                    }
+                        }
 
-                    @Override
-                    public void onStop() {
+                        @Override
+                        public void onStop() {
 
-                    }
+                        }
 
-                    @Override
-                    public void onDestroy() {
+                        @Override
+                        public void onDestroy() {
 
-                    }
-                });
+                        }
+                    });
+        }
 
         if (movie.getPosterBytes() != null) {
             GlideApp.with(getApplicationContext())
@@ -157,13 +165,15 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     .error(R.drawable.no_internet_placeholder)
                     .fallback(R.drawable.no_internet_placeholder)
                     .centerCrop()
+                    .transition(new DrawableTransitionOptions().crossFade())
                     .into(mPosterImageView);
         } else {
             GlideApp.with(mContext)
-                    .load(movie.getPosterPath())
+                    .load(RetrofitAPI.POSTER_BASE_URL + movie.getPosterPath())
                     .error(R.drawable.no_internet_placeholder)
                     .fallback(R.drawable.no_internet_placeholder)
                     .centerCrop()
+                    .transition(new DrawableTransitionOptions().crossFade())
                     .into(mPosterImageView);
         }
 
@@ -388,5 +398,19 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         getContentResolver().delete(uri, null, null);
         Log.d("Remove Fav", "Uri delete: " + uri.toString());
     }
+
+    private String prettifyDate(String jsonDate) {
+        DateFormat sourceDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+        Date date = null;
+        try {
+            date = sourceDateFormat.parse(jsonDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        DateFormat destDateFormat = new SimpleDateFormat("MMM dd\nYYYY");
+        String dateStr = destDateFormat.format(date);
+        return dateStr;
+    }
+
 
 }

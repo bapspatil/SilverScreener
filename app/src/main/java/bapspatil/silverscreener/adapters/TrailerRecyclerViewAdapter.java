@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+
 import java.util.ArrayList;
 
 import bapspatil.silverscreener.R;
@@ -52,6 +54,7 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
                 .error(R.drawable.cursor_search)
                 .fallback(R.drawable.cursor_search)
                 .centerCrop()
+                .transition(new DrawableTransitionOptions().crossFade())
                 .into(viewHolder.trailerThumbnailImageView);
     }
 
