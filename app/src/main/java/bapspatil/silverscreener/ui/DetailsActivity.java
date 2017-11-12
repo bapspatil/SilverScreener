@@ -28,11 +28,7 @@ import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,13 +43,21 @@ import bapspatil.silverscreener.adapters.TrailerRecyclerViewAdapter;
 import bapspatil.silverscreener.data.FavsContract;
 import bapspatil.silverscreener.model.Movie;
 import bapspatil.silverscreener.model.MovieRecyclerView;
+import bapspatil.silverscreener.model.Review;
+import bapspatil.silverscreener.model.TMDBReviewResponse;
+import bapspatil.silverscreener.model.TMDBTrailerResponse;
+import bapspatil.silverscreener.model.Trailer;
 import bapspatil.silverscreener.network.Connection;
 import bapspatil.silverscreener.network.RetrofitAPI;
 import bapspatil.silverscreener.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailsActivity extends AppCompatActivity implements TrailerRecyclerViewAdapter.ItemClickListener {
+    private static final int TRAILERS_DETAILS_TYPE = 0, REVIEWS_DETAILS_TYPE = 1;
 
     private TrailerRecyclerViewAdapter mTrailerAdapter;
     private ReviewRecyclerViewAdapter mReviewAdapter;
@@ -200,8 +204,63 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mReviewAdapter = new ReviewRecyclerViewAdapter(mContext, mReviewAuthors, mReviewContents);
         mReviewRecyclerView.setAdapter(mReviewAdapter);
 
-        (new GetTheTrailersTask()).execute(movie.getId());
-        (new GetTheReviewsTask()).execute(movie.getId());
+        fetchDetails(movie.getId(), TRAILERS_DETAILS_TYPE);
+        fetchDetails(movie.getId(), REVIEWS_DETAILS_TYPE);
+    }
+
+    private void fetchDetails(int movieId, int detailsType) {
+        mTrailerRecyclerView.setVisibility(View.INVISIBLE);
+        mReviewRecyclerView.setVisibility(View.INVISIBLE);
+        RetrofitAPI retrofitAPI = RetrofitAPI.retrofit.create(RetrofitAPI.class);
+        switch (detailsType) {
+            case TRAILERS_DETAILS_TYPE:
+                Call<TMDBTrailerResponse> trailerResponseCall = retrofitAPI.getTrailers(movieId, BuildConfig.TMDB_API_TOKEN, "en-US");
+                trailerResponseCall.enqueue(new Callback<TMDBTrailerResponse>() {
+                    @Override
+                    public void onResponse(Call<TMDBTrailerResponse> call, Response<TMDBTrailerResponse> response) {
+                        TMDBTrailerResponse tmdbTrailerResponse = response.body();
+                        mTrailerTitles.clear();
+                        mTrailerPaths.clear();
+                        for (Trailer trailer: tmdbTrailerResponse.getResults()) {
+                            mTrailerTitles.add(trailer.getName());
+                            mTrailerPaths.add(trailer.getKey());
+                        }
+                        mTrailerAdapter.notifyDataSetChanged();
+                        mTrailerRecyclerView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFailure(Call<TMDBTrailerResponse> call, Throwable t) {
+                        mTrailerRecyclerView.setVisibility(View.GONE);
+                        mTrailersLabel0.setVisibility(View.GONE);
+                        mTrailersLabel1.setVisibility(View.GONE);
+                    }
+                });
+                break;
+            case REVIEWS_DETAILS_TYPE:
+                Call<TMDBReviewResponse> reviewResponseCall = retrofitAPI.getReviews(movieId, BuildConfig.TMDB_API_TOKEN, "en-US");
+                reviewResponseCall.enqueue(new Callback<TMDBReviewResponse>() {
+                    @Override
+                    public void onResponse(Call<TMDBReviewResponse> call, Response<TMDBReviewResponse> response) {
+                        TMDBReviewResponse tmdbReviewResponse = response.body();
+                        mReviewAuthors.clear();
+                        mReviewContents.clear();
+                        for (Review review: tmdbReviewResponse.getResults()) {
+                            mReviewAuthors.add(review.getAuthor());
+                            mReviewContents.add(review.getContent());
+                        }
+                        mReviewAdapter.notifyDataSetChanged();
+                        mReviewRecyclerView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFailure(Call<TMDBReviewResponse> call, Throwable t) {
+                        mReviewRecyclerView.setVisibility(View.GONE);
+                        mReviewsLabel0.setVisibility(View.GONE);
+                    }
+                });
+                break;
+        }
     }
 
     @Override
@@ -250,105 +309,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     Toast.makeText(mContext, "Movie removed from Favorites! :-(", Toast.LENGTH_SHORT).show();
                     mFavoriteButton.setImageResource(R.drawable.ic_favorite_border);
                 }
-        }
-    }
-
-    private class GetTheTrailersTask extends AsyncTask<Integer, Void, String> {
-        @Override
-        protected void onPreExecute() {
-            if (!Connection.hasNetwork(mContext)) {
-                cancel(true);
-                Toast.makeText(mContext, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                mTrailersLabel0.setVisibility(View.INVISIBLE);
-                mTrailersLabel1.setVisibility(View.INVISIBLE);
-            }
-        }
-
-        @Override
-        protected String doInBackground(Integer... params) {
-            Uri builtUriTrailers = Uri.parse("https://api.themoviedb.org/3/movie/" + params[0] + "/videos").buildUpon()
-                    .appendQueryParameter("api_key", BuildConfig.TMDB_API_TOKEN)
-                    .appendQueryParameter("language", "en-US")
-                    .build();
-            String jsonResponseTrailers;
-            try {
-                jsonResponseTrailers = Connection.getResponseFromHttpUrl(new URL(builtUriTrailers.toString()));
-                return jsonResponseTrailers;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String jsonResponse) {
-            mTrailerPaths.clear();
-            mTrailerTitles.clear();
-            try {
-                JSONObject jsonTrailersObject = new JSONObject(jsonResponse);
-                JSONArray jsonTrailersArray = jsonTrailersObject.getJSONArray("results");
-                for (int i = 0; i < jsonTrailersArray.length(); i++) {
-                    JSONObject jsonTrailer = jsonTrailersArray.getJSONObject(i);
-                    mTrailerTitles.add(jsonTrailer.getString("name"));
-                    mTrailerPaths.add(jsonTrailer.getString("key"));
-                    mTrailerAdapter.notifyDataSetChanged();
-                }
-            } catch (Exception e) {
-                Toast.makeText(mContext, "Error in the trailer data fetched!", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private class GetTheReviewsTask extends AsyncTask<Integer, Void, String> {
-        @Override
-        protected void onPreExecute() {
-            if (!Connection.hasNetwork(mContext)) {
-                cancel(true);
-                Toast.makeText(mContext, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                mReviewsLabel0.setVisibility(View.INVISIBLE);
-            }
-        }
-
-        @Override
-        protected String doInBackground(Integer... params) {
-            Uri builtUriReviews = Uri.parse("https://api.themoviedb.org/3/movie/" + params[0] + "/reviews").buildUpon()
-                    .appendQueryParameter("api_key", BuildConfig.TMDB_API_TOKEN)
-                    .appendQueryParameter("language", "en-US")
-                    .build();
-            String jsonResponseReviews;
-            try {
-                jsonResponseReviews = Connection.getResponseFromHttpUrl(new URL(builtUriReviews.toString()));
-                return jsonResponseReviews;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String jsonResponse) {
-            mReviewAuthors.clear();
-            mReviewContents.clear();
-            try {
-                JSONObject jsonReviewsObject = new JSONObject(jsonResponse);
-                JSONArray jsonReviewsArray = jsonReviewsObject.getJSONArray("results");
-                if (jsonReviewsArray.length() != 0) {
-                    for (int i = 0; i < jsonReviewsArray.length(); i++) {
-                        JSONObject jsonReview = jsonReviewsArray.getJSONObject(i);
-                        mReviewAuthors.add(jsonReview.getString("author"));
-                        mReviewContents.add(jsonReview.getString("content"));
-                        mReviewAdapter.notifyDataSetChanged();
-                    }
-                    noReviewsCardView.setVisibility(View.INVISIBLE);
-                } else {
-                    noReviewsCardView.setVisibility(View.VISIBLE);
-                    mReviewRecyclerView.setVisibility(View.INVISIBLE);
-                }
-            } catch (Exception e) {
-                Toast.makeText(mContext, "Error in the review data fetched!", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
         }
     }
 
