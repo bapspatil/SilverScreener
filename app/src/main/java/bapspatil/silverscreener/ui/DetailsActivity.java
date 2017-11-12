@@ -1,5 +1,6 @@
 package bapspatil.silverscreener.ui;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -277,6 +278,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         startActivity(openYoutube);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class AddRemoveFavoritesTask extends AsyncTask<Movie, Void, Cursor> {
         @Override
         protected void onPreExecute() {
@@ -319,6 +321,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class CheckIfFavoritedTask extends AsyncTask<Movie, Void, Cursor> {
         @Override
         protected void onPreExecute() {
