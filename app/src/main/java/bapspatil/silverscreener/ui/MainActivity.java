@@ -1,11 +1,8 @@
 package bapspatil.silverscreener.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -27,7 +24,7 @@ import java.util.ArrayList;
 import bapspatil.silverscreener.BuildConfig;
 import bapspatil.silverscreener.R;
 import bapspatil.silverscreener.adapters.MovieRecyclerViewAdapter;
-import bapspatil.silverscreener.data.FavsContract;
+import bapspatil.silverscreener.data.RealmDataSource;
 import bapspatil.silverscreener.model.Movie;
 import bapspatil.silverscreener.model.MovieRecyclerView;
 import bapspatil.silverscreener.model.TMDBResponse;
@@ -45,13 +42,14 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     private MovieRecyclerViewAdapter mAdapter;
     private ArrayList<Movie> movieArray = new ArrayList<>();
     private Context mContext;
-    private GetTheFavsTask getTheFavsTask;
 
     @BindView(R.id.main_toolbar) Toolbar toolbar;
     @BindView(R.id.loading_indicator) ProgressBar mProgressBar;
     @BindView(R.id.rv_movies) MovieRecyclerView mRecyclerView;
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
     @BindView(R.id.search_view) MaterialSearchView searchView;
+
+    private RealmDataSource dataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
         Toast.makeText(mContext, "App developed by Bapusaheb Patil", Toast.LENGTH_SHORT).show();
+
+        dataSource = new RealmDataSource();
+        dataSource.open();
 
         int columns = 2;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -83,13 +84,10 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         mRecyclerView.setAdapter(animatorAdapter);
 
         fetchMovies(POPULAR_TASK, null);
-        getTheFavsTask = new GetTheFavsTask();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                getTheFavsTask.cancel(true);
-                getTheFavsTask = new GetTheFavsTask();
                 switch (item.getItemId()) {
                     case R.id.action_popular:
                         fetchMovies(POPULAR_TASK, null);
@@ -104,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                         fetchMovies(NOW_PLAYING_TASK, null);
                         break;
                     case R.id.action_favorites:
-                        getTheFavsTask.execute();
+                        fetchFavs();
                         break;
                     default:
                         fetchMovies(POPULAR_TASK, null);
@@ -186,6 +184,16 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         });
     }
 
+    private void fetchFavs() {
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        movieArray.clear();
+        movieArray.addAll(dataSource.getAllFavMovies());
+        mAdapter.notifyDataSetChanged();
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.INVISIBLE);
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         int numberOfMovies = movieArray.size();
@@ -208,58 +216,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         startActivity(startDetailsActivity, options.toBundle());
     }
 
-    @SuppressLint("StaticFieldLeak")
-    private class GetTheFavsTask extends AsyncTask<Void, Void, Cursor> {
-
-        @Override
-        protected void onPreExecute() {
-            mProgressBar.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        protected Cursor doInBackground(Void... params) {
-            Cursor cursor;
-            try {
-                cursor = getContentResolver().query(FavsContract.FavsEntry.CONTENT_URI,
-                        null,
-                        null,
-                        null,
-                        null);
-                return cursor;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Cursor cursor) {
-            movieArray.clear();
-            if (cursor.getCount() != 0) {
-                cursor.moveToFirst();
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    Movie movie = new Movie();
-                    movie.setId(cursor.getInt(cursor.getColumnIndex(FavsContract.FavsEntry._ID)));
-                    movie.setTitle(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_TITLE)));
-                    movie.setDate(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_DATE)));
-                    movie.setPlot(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_PLOT)));
-                    movie.setRating(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_RATING)));
-                    movie.setPosterBytes(cursor.getBlob(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_POSTER)));
-                    movie.setPosterPath(cursor.getString(cursor.getColumnIndex(FavsContract.FavsEntry.COLUMN_POSTERPATH)));
-                    movieArray.add(movie);
-                    mAdapter.notifyDataSetChanged();
-                    cursor.moveToNext();
-                }
-            } else {
-                mAdapter.notifyDataSetChanged();
-                Toast.makeText(mContext, "No favorites!", Toast.LENGTH_SHORT).show();
-            }
-            mProgressBar.setVisibility(View.INVISIBLE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -276,5 +232,11 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
             searchView.closeSearch();
         else
             super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dataSource.close();
     }
 }
