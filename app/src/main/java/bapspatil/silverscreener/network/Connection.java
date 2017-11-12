@@ -1,4 +1,4 @@
-package bapspatil.silverscreener.data;
+package bapspatil.silverscreener.network;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

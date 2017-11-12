@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:background="#212121"
     android:layout_height="match_parent"
-    tools:context="bapspatil.silverscreener.SplashScreenActivity">
+    tools:context="bapspatil.silverscreener.ui.SplashScreenActivity">
 
     <ImageView
         android:id="@+id/splash_iv"

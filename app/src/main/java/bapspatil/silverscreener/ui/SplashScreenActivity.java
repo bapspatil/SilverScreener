@@ -1,10 +1,12 @@
-package bapspatil.silverscreener;
+package bapspatil.silverscreener.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import bapspatil.silverscreener.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 

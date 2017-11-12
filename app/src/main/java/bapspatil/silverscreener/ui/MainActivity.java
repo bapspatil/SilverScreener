@@ -1,4 +1,4 @@
-package bapspatil.silverscreener;
+package bapspatil.silverscreener.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,8 +32,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import bapspatil.silverscreener.data.Connection;
+import bapspatil.silverscreener.BuildConfig;
+import bapspatil.silverscreener.R;
+import bapspatil.silverscreener.adapters.MovieRecyclerViewAdapter;
+import bapspatil.silverscreener.network.Connection;
 import bapspatil.silverscreener.data.FavsContract;
+import bapspatil.silverscreener.model.Movie;
+import bapspatil.silverscreener.model.MovieRecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.gmariotti.recyclerview.adapter.ScaleInAnimatorAdapter;

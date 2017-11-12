@@ -1,4 +1,4 @@
-package bapspatil.silverscreener;
+package bapspatil.silverscreener.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -24,7 +24,7 @@ public class Movie implements Parcelable {
         }
     };
 
-    Movie(Parcel in) {
+    public Movie(Parcel in) {
         this.posterPath = in.readString();
         this.title = in.readString();
         this.plot = in.readString();
@@ -38,7 +38,7 @@ public class Movie implements Parcelable {
         this.posterBytes = in.createByteArray();
     }
 
-    Movie() {
+    public Movie() {
 
     }
 

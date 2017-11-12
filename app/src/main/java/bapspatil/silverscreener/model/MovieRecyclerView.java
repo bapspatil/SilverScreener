@@ -1,4 +1,4 @@
-package bapspatil.silverscreener;
+package bapspatil.silverscreener.model;
 
 import android.content.Context;
 import android.os.Bundle;

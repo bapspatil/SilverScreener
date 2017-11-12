@@ -1,4 +1,4 @@
-package bapspatil.silverscreener;
+package bapspatil.silverscreener.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 
+import bapspatil.silverscreener.R;
+import bapspatil.silverscreener.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -21,11 +21,11 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
     private Context mContext;
     private ItemClickListener mClickListener;
 
-    interface ItemClickListener {
+    public interface ItemClickListener {
         void onItemClick(String stringUrlTrailerClicked);
     }
 
-    TrailerRecyclerViewAdapter(Context context, ArrayList<String> trailerTitles, ArrayList<String> trailerPaths, ItemClickListener itemClickListener) {
+    public TrailerRecyclerViewAdapter(Context context, ArrayList<String> trailerTitles, ArrayList<String> trailerPaths, ItemClickListener itemClickListener) {
         this.mContext = context;
         this.mClickListener = itemClickListener;
         this.mTrailerTitles = trailerTitles;
@@ -47,11 +47,11 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
             viewHolder.trailerTitleTextView.setText(title);
 
         String thumbnailUrlStr = "https://img.youtube.com/vi/" + mTrailerPaths.get(position) + "/0.jpg";
-        Glide.with(mContext)
+        GlideApp.with(mContext)
                 .load(thumbnailUrlStr)
-                .centerCrop()
                 .error(R.drawable.cursor_search)
                 .fallback(R.drawable.cursor_search)
+                .centerCrop()
                 .into(viewHolder.trailerThumbnailImageView);
     }
 
@@ -61,7 +61,7 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
         else return mTrailerTitles.size();
     }
 
-    class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.trailer_title_tv) TextView trailerTitleTextView;
         @BindView(R.id.trailer_thumbnail_iv) ImageView trailerThumbnailImageView;
 

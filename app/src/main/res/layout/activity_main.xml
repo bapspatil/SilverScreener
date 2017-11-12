@@ -49,7 +49,7 @@
             android:layout_height="0dp"
             android:layout_weight="9">
 
-            <bapspatil.silverscreener.MovieRecyclerView
+            <bapspatil.silverscreener.model.MovieRecyclerView
                 android:id="@+id/rv_movies"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

@@ -1,4 +1,4 @@
-package bapspatil.silverscreener;
+package bapspatil.silverscreener.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import bapspatil.silverscreener.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -17,7 +18,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
     private ArrayList<String> mReviewAuthors, mReviewContents;
     private Context mContext;
 
-    ReviewRecyclerViewAdapter(Context context, ArrayList<String> reviewAuthors, ArrayList<String> reviewContents) {
+    public ReviewRecyclerViewAdapter(Context context, ArrayList<String> reviewAuthors, ArrayList<String> reviewContents) {
         this.mContext = context;
         this.mReviewAuthors = reviewAuthors;
         this.mReviewContents = reviewContents;
@@ -42,7 +43,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
         else return mReviewAuthors.size();
     }
 
-    class ReviewItemViewHolder extends RecyclerView.ViewHolder {
+    public class ReviewItemViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.review_author_tv) TextView reviewAuthorTextView;
         @BindView(R.id.review_content_tv) TextView reviewContentTextView;
 

@@ -1,4 +1,4 @@
-package bapspatil.silverscreener;
+package bapspatil.silverscreener.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -8,10 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 
+import bapspatil.silverscreener.R;
+import bapspatil.silverscreener.model.Movie;
+import bapspatil.silverscreener.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -22,11 +23,11 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     private Context mContext;
     private ItemClickListener mClickListener;
 
-    interface ItemClickListener {
+    public interface ItemClickListener {
         void onItemClick(int position, CardView posterCardView);
     }
 
-    MovieRecyclerViewAdapter(Context context, ArrayList<Movie> movieArrayList, ItemClickListener itemClickListener) {
+    public MovieRecyclerViewAdapter(Context context, ArrayList<Movie> movieArrayList, ItemClickListener itemClickListener) {
         this.mContext = context;
         this.mMoviesArrayList = movieArrayList;
         this.mClickListener = itemClickListener;
@@ -42,14 +43,14 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         Movie theMovie = mMoviesArrayList.get(position);
         if(theMovie.getPosterBytes() != null) {
-            Glide.with(mContext)
+            GlideApp.with(mContext)
                     .load(theMovie.getPosterBytes())
                     .centerCrop()
                     .error(R.drawable.tmdb_placeholder)
                     .fallback(R.drawable.tmdb_placeholder)
                     .into(holder.mPosterImageView);
         } else {
-            Glide.with(mContext)
+            GlideApp.with(mContext)
                     .load(theMovie.getPosterPath())
                     .centerCrop()
                     .error(R.drawable.tmdb_placeholder)
@@ -64,7 +65,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
         else return mMoviesArrayList.size();
     }
 
-    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.poster_image_view) ImageView mPosterImageView;
         @BindView(R.id.poster_card_view) CardView mPosterCardView;
 

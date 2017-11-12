@@ -1,13 +1,16 @@
-package bapspatil.silverscreener;
+package bapspatil.silverscreener.ui;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -15,16 +18,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.Request;
+import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,8 +35,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import bapspatil.silverscreener.data.Connection;
+import bapspatil.silverscreener.BuildConfig;
+import bapspatil.silverscreener.R;
+import bapspatil.silverscreener.adapters.ReviewRecyclerViewAdapter;
+import bapspatil.silverscreener.adapters.TrailerRecyclerViewAdapter;
 import bapspatil.silverscreener.data.FavsContract;
+import bapspatil.silverscreener.model.Movie;
+import bapspatil.silverscreener.model.MovieRecyclerView;
+import bapspatil.silverscreener.network.Connection;
+import bapspatil.silverscreener.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -78,34 +86,84 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mDateTextView.setText(movie.getDate());
         mTitleTextView.setText(movie.getTitle());
         mPlotTextView.setText(movie.getPlot());
-        try {
-            Glide.with(mContext)
-                    .load(movie.getPosterPath())
-                    .asBitmap()
-                    .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
-                        @Override
-                        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                            imageBytes = stream.toByteArray();
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        GlideApp.with(mContext)
+                .load(movie.getPosterPath())
+                .centerCrop()
+                .into(new Target<Drawable>() {
+                    @Override
+                    public void onLoadStarted(@Nullable Drawable placeholder) {
+
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                        Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        imageBytes = stream.toByteArray();
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+
+                    @Override
+                    public void getSize(SizeReadyCallback cb) {
+
+                    }
+
+                    @Override
+                    public void removeCallback(SizeReadyCallback cb) {
+
+                    }
+
+                    @Override
+                    public void setRequest(@Nullable Request request) {
+
+                    }
+
+                    @Nullable
+                    @Override
+                    public Request getRequest() {
+                        return null;
+                    }
+
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onStop() {
+
+                    }
+
+                    @Override
+                    public void onDestroy() {
+
+                    }
+                });
+
         if (movie.getPosterBytes() != null) {
-            Glide.with(getApplicationContext())
+            GlideApp.with(getApplicationContext())
                     .load(movie.getPosterBytes())
-                    .centerCrop()
                     .error(R.drawable.no_internet_placeholder)
                     .fallback(R.drawable.no_internet_placeholder)
+                    .centerCrop()
                     .into(mPosterImageView);
         } else {
-            Glide.with(mContext)
+            GlideApp.with(mContext)
                     .load(movie.getPosterPath())
-                    .centerCrop()
                     .error(R.drawable.no_internet_placeholder)
                     .fallback(R.drawable.no_internet_placeholder)
+                    .centerCrop()
                     .into(mPosterImageView);
         }
 
@@ -116,7 +174,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
             @Override
             public void onClick(View v) {
-                bounceAnimation();
                 AddRemoveFavoritesTask addRemoveFavoritesTask = new AddRemoveFavoritesTask();
                 if (addRemoveFavoritesTask.getStatus() == AsyncTask.Status.RUNNING)
                     return;
@@ -308,14 +365,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             else
                 mFavoriteButton.setImageResource(R.drawable.ic_favorite);
         }
-    }
-
-
-    void bounceAnimation() {
-        final Animation myAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce);
-        BounceAnimationInterpolator interpolator = new BounceAnimationInterpolator(0.2, 20);
-        myAnim.setInterpolator(interpolator);
-        mFavoriteButton.startAnimation(myAnim);
     }
 
     void addMovieToFavorites(Movie movie) throws ExecutionException, InterruptedException {

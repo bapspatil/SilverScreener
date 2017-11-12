@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="bapspatil.silverscreener.DetailsActivity">
+    tools:context="bapspatil.silverscreener.ui.DetailsActivity">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nested_scrollview"
@@ -166,7 +166,7 @@
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp">
 
-                <bapspatil.silverscreener.MovieRecyclerView
+                <bapspatil.silverscreener.model.MovieRecyclerView
                     android:id="@+id/rv_trailers"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
@@ -190,7 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <bapspatil.silverscreener.MovieRecyclerView
+                <bapspatil.silverscreener.model.MovieRecyclerView
                     android:id="@+id/rv_reviews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
