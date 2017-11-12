@@ -3,14 +3,20 @@ package bapspatil.silverscreener.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class Movie implements Parcelable {
 
-    private String posterPath, title, plot, date, rating;
+    @SerializedName("poster_path") private String posterPath;
+    @SerializedName("title") private String title;
+    @SerializedName("overview") private String plot;
+    @SerializedName("release_date") String date;
+    @SerializedName("vote_average") String rating;
+    @SerializedName("id") private int id;
     private ArrayList<String> trailerTitles, trailerPaths, reviewAuthors, reviewContents;
     private byte[] posterBytes;
-    private int id;
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         @Override
