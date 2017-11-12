@@ -209,54 +209,61 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     }
 
     private void fetchDetails(int movieId, int detailsType) {
-        mTrailerRecyclerView.setVisibility(View.INVISIBLE);
-        mReviewRecyclerView.setVisibility(View.INVISIBLE);
         RetrofitAPI retrofitAPI = RetrofitAPI.retrofit.create(RetrofitAPI.class);
         switch (detailsType) {
             case TRAILERS_DETAILS_TYPE:
+                mTrailerRecyclerView.setVisibility(View.GONE);
+                mTrailersLabel0.setVisibility(View.GONE);
+                mTrailersLabel1.setVisibility(View.GONE);
                 Call<TMDBTrailerResponse> trailerResponseCall = retrofitAPI.getTrailers(movieId, BuildConfig.TMDB_API_TOKEN, "en-US");
                 trailerResponseCall.enqueue(new Callback<TMDBTrailerResponse>() {
                     @Override
                     public void onResponse(Call<TMDBTrailerResponse> call, Response<TMDBTrailerResponse> response) {
                         TMDBTrailerResponse tmdbTrailerResponse = response.body();
-                        mTrailerTitles.clear();
-                        mTrailerPaths.clear();
-                        for (Trailer trailer: tmdbTrailerResponse.getResults()) {
-                            mTrailerTitles.add(trailer.getName());
-                            mTrailerPaths.add(trailer.getKey());
+                        if (tmdbTrailerResponse.getResults().size() != 0) {
+                            mTrailerTitles.clear();
+                            mTrailerPaths.clear();
+                            for (Trailer trailer : tmdbTrailerResponse.getResults()) {
+                                mTrailerTitles.add(trailer.getName());
+                                mTrailerPaths.add(trailer.getKey());
+                            }
+                            mTrailerAdapter.notifyDataSetChanged();
+                            mTrailerRecyclerView.setVisibility(View.VISIBLE);
+                            mTrailersLabel0.setVisibility(View.VISIBLE);
+                            mTrailersLabel1.setVisibility(View.VISIBLE);
                         }
-                        mTrailerAdapter.notifyDataSetChanged();
-                        mTrailerRecyclerView.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onFailure(Call<TMDBTrailerResponse> call, Throwable t) {
-                        mTrailerRecyclerView.setVisibility(View.GONE);
-                        mTrailersLabel0.setVisibility(View.GONE);
-                        mTrailersLabel1.setVisibility(View.GONE);
+
                     }
                 });
                 break;
             case REVIEWS_DETAILS_TYPE:
+                mReviewsLabel0.setVisibility(View.GONE);
+                mReviewRecyclerView.setVisibility(View.GONE);
                 Call<TMDBReviewResponse> reviewResponseCall = retrofitAPI.getReviews(movieId, BuildConfig.TMDB_API_TOKEN, "en-US");
                 reviewResponseCall.enqueue(new Callback<TMDBReviewResponse>() {
                     @Override
                     public void onResponse(Call<TMDBReviewResponse> call, Response<TMDBReviewResponse> response) {
                         TMDBReviewResponse tmdbReviewResponse = response.body();
-                        mReviewAuthors.clear();
-                        mReviewContents.clear();
-                        for (Review review: tmdbReviewResponse.getResults()) {
-                            mReviewAuthors.add(review.getAuthor());
-                            mReviewContents.add(review.getContent());
+                        if (tmdbReviewResponse.getResults().size() != 0) {
+                            mReviewAuthors.clear();
+                            mReviewContents.clear();
+                            for (Review review : tmdbReviewResponse.getResults()) {
+                                mReviewAuthors.add(review.getAuthor());
+                                mReviewContents.add(review.getContent());
+                            }
+                            mReviewAdapter.notifyDataSetChanged();
+                            mReviewRecyclerView.setVisibility(View.VISIBLE);
+                            mReviewsLabel0.setVisibility(View.VISIBLE);
                         }
-                        mReviewAdapter.notifyDataSetChanged();
-                        mReviewRecyclerView.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onFailure(Call<TMDBReviewResponse> call, Throwable t) {
-                        mReviewRecyclerView.setVisibility(View.GONE);
-                        mReviewsLabel0.setVisibility(View.GONE);
+
                     }
                 });
                 break;
