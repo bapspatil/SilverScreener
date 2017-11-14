@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
+import org.aviran.cookiebar2.CookieBar;
 
 import java.util.ArrayList;
 
@@ -59,7 +62,11 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         mContext = getApplicationContext();
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
-        Toast.makeText(mContext, "App developed by Bapusaheb Patil", Toast.LENGTH_SHORT).show();
+        CookieBar.Build(MainActivity.this)
+                .setLayoutGravity(Gravity.BOTTOM)
+                .setBackgroundColor(R.color.colorPrimaryDark)
+                .setTitle("App developed by Bapusaheb Patil")
+                .show();
 
         dataSource = new RealmDataSource();
         dataSource.open();

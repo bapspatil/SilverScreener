@@ -8,8 +8,8 @@ android {
         applicationId "bapspatil.silverscreener"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 4
-        versionName "one.two"
+        versionCode 5
+        versionName "one.two.one"
     }
     buildTypes {
         release {
