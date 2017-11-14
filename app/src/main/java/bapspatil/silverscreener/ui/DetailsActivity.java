@@ -16,13 +16,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+
+import org.aviran.cookiebar2.CookieBar;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
@@ -42,7 +43,6 @@ import bapspatil.silverscreener.model.Review;
 import bapspatil.silverscreener.model.TMDBReviewResponse;
 import bapspatil.silverscreener.model.TMDBTrailerResponse;
 import bapspatil.silverscreener.model.Trailer;
-import bapspatil.silverscreener.network.Connection;
 import bapspatil.silverscreener.network.RetrofitAPI;
 import bapspatil.silverscreener.utils.GlideApp;
 import butterknife.BindView;
@@ -214,7 +214,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
     private void favButtonInit(final int id) {
         Movie checkedMovie = dataSource.findMovieWithId(id);
-        if(checkedMovie == null)
+        if (checkedMovie == null)
             mFavoriteButton.setImageResource(R.drawable.ic_favorite_border);
         else
             mFavoriteButton.setImageResource(R.drawable.ic_favorite);
@@ -222,81 +222,87 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             @Override
             public void onClick(View view) {
                 Movie transactedMovie = dataSource.findMovieWithId(id);
-                if(transactedMovie == null) {
+                if (transactedMovie == null) {
                     tempMovie = mMovie;
-                    if (Connection.hasNetwork(mContext)) {
-                        GlideApp.with(mContext)
-                                .load(tempMovie.getPosterPath())
-                                .centerCrop()
-                                .into(new Target<Drawable>() {
-                                    @Override
-                                    public void onLoadStarted(@Nullable Drawable placeholder) {
+                    GlideApp.with(mContext)
+                            .load(tempMovie.getPosterPath())
+                            .centerCrop()
+                            .into(new Target<Drawable>() {
+                                @Override
+                                public void onLoadStarted(@Nullable Drawable placeholder) {
 
-                                    }
+                                }
 
-                                    @Override
-                                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                                @Override
+                                public void onLoadFailed(@Nullable Drawable errorDrawable) {
 
-                                    }
+                                }
 
-                                    @Override
-                                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                                        Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
-                                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                                        imageBytes = stream.toByteArray();
-                                    }
+                                @Override
+                                public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                                    Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                                    imageBytes = stream.toByteArray();
+                                }
 
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                                @Override
+                                public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                                    }
+                                }
 
-                                    @Override
-                                    public void getSize(SizeReadyCallback cb) {
+                                @Override
+                                public void getSize(SizeReadyCallback cb) {
 
-                                    }
+                                }
 
-                                    @Override
-                                    public void removeCallback(SizeReadyCallback cb) {
+                                @Override
+                                public void removeCallback(SizeReadyCallback cb) {
 
-                                    }
+                                }
 
-                                    @Override
-                                    public void setRequest(@Nullable Request request) {
+                                @Override
+                                public void setRequest(@Nullable Request request) {
 
-                                    }
+                                }
 
-                                    @Nullable
-                                    @Override
-                                    public Request getRequest() {
-                                        return null;
-                                    }
+                                @Nullable
+                                @Override
+                                public Request getRequest() {
+                                    return null;
+                                }
 
-                                    @Override
-                                    public void onStart() {
+                                @Override
+                                public void onStart() {
 
-                                    }
+                                }
 
-                                    @Override
-                                    public void onStop() {
+                                @Override
+                                public void onStop() {
 
-                                    }
+                                }
 
-                                    @Override
-                                    public void onDestroy() {
+                                @Override
+                                public void onDestroy() {
 
-                                    }
-                                });
-                    }
+                                }
+                            });
                     tempMovie.setPosterBytes(imageBytes);
                     dataSource.addMovieToFavs(tempMovie);
                     mFavoriteButton.setImageResource(R.drawable.ic_favorite);
-                    Toast.makeText(mContext, "Movie added to favorites!", Toast.LENGTH_LONG).show();
+                    CookieBar.Build(DetailsActivity.this)
+                            .setBackgroundColor(android.R.color.holo_blue_dark)
+                            .setTitle("Movie added to favorites!")
+                            .setMessage("You can now see the details, even when offline, in your Favorites.")
+                            .show();
                 } else {
+                    CookieBar.Build(DetailsActivity.this)
+                            .setBackgroundColor(android.R.color.holo_red_dark)
+                            .setTitle("Movie removed from favorites!")
+                            .setMessage("But did you really have to? :-(")
+                            .show();
                     dataSource.deleteMovieFromFavs(transactedMovie);
                     mFavoriteButton.setImageResource(R.drawable.ic_favorite_border);
-                    Toast.makeText(mContext, "Movie removed from favorites!", Toast.LENGTH_LONG).show();
                 }
             }
         });
