@@ -94,7 +94,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         dataSource.open();
 
         mRatingTextView.setText(mMovie.getRating());
-        mDateTextView.setText(prettifyDate(mMovie.getDate()));
+        if (mMovie.getDate() != null || mMovie.getDate().equals(""))
+            mDateTextView.setText(prettifyDate(mMovie.getDate()));
         mTitleTextView.setText(mMovie.getTitle());
         mPlotTextView.setText(mMovie.getPlot());
 
