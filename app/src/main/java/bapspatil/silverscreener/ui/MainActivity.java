@@ -34,7 +34,7 @@ import bapspatil.silverscreener.model.TMDBResponse;
 import bapspatil.silverscreener.network.RetrofitAPI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import it.gmariotti.recyclerview.adapter.ScaleInAnimatorAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,8 +87,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         }
 
         mAdapter = new MovieRecyclerViewAdapter(mContext, movieArray, this);
-        ScaleInAnimatorAdapter<MovieRecyclerViewAdapter.MovieViewHolder> animatorAdapter = new ScaleInAnimatorAdapter<>(mAdapter, mRecyclerView);
-        mRecyclerView.setAdapter(animatorAdapter);
+        mRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
 
         fetchMovies(POPULAR_TASK, null);
 
