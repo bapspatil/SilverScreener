@@ -57,6 +57,8 @@
             <bapspatil.silverscreener.model.MovieRecyclerView
                 android:id="@+id/rv_movies"
                 android:layout_width="match_parent"
+                android:scrollbars="vertical"
+                android:scrollbarThumbVertical="@color/colorAccent"
                 android:layout_height="match_parent"/>
 
             <ProgressBar
