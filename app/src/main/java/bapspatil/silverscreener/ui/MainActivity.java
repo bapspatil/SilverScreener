@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
 
         searchView = findViewById(R.id.search_view);
         searchView.setCursorDrawable(R.drawable.cursor_search);
-        searchView.setTextColor(R.color.white);
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
