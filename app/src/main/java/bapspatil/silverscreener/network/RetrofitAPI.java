@@ -16,8 +16,9 @@ import retrofit2.http.Query;
 
 public interface RetrofitAPI {
 
-    public static final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/w342";
-    public static final String BASE_URL = "https://api.themoviedb.org/3/";
+    String POSTER_BASE_URL = "http://image.tmdb.org/t/p/w342";
+    String BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w500";
+    String BASE_URL = "https://api.themoviedb.org/3/";
 
     @GET("movie/{type}")
     Call<TMDBResponse> getMovies(@Path("type") String TYPE, @Query("api_key") String API_KEY, @Query("language") String LANGUAGE, @Query("page") int PAGE);

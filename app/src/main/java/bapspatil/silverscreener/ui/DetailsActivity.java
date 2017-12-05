@@ -8,10 +8,14 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -64,6 +68,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     private byte[] imageBytes;
     Movie tempMovie, mMovie;
 
+    @BindView(R.id.appbar) AppBarLayout appBarLayout;
+    @BindView(R.id.collapsing_toolbar_layout) CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.trailer_label_tv) TextView mTrailersLabel0;
     @BindView(R.id.trailers_hint_tv) TextView mTrailersLabel1;
@@ -88,7 +94,20 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         unbinder = ButterKnife.bind(this);
         mContext = getApplicationContext();
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mMovie = getIntent().getParcelableExtra("movie");
+        collapsingToolbarLayout.setTitle(mMovie.getTitle());
+        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+        collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(android.R.color.white));
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (Math.abs(verticalOffset) - appBarLayout.getTotalScrollRange() == 0)
+                    mPosterImageView.setVisibility(View.GONE);
+                else
+                    mPosterImageView.setVisibility(View.VISIBLE);
+            }
+        });
 
         dataSource = new RealmDataSource();
         dataSource.open();
@@ -100,7 +119,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mPlotTextView.setText(mMovie.getPlot());
 
         GlideApp.with(getApplicationContext())
-                .load(RetrofitAPI.POSTER_BASE_URL + mMovie.getBackdropPath())
+                .load(RetrofitAPI.BACKDROP_BASE_URL + mMovie.getBackdropPath())
                 .centerCrop()
                 .placeholder(R.drawable.tmdb_placeholder_land)
                 .error(R.drawable.tmdb_placeholder_land)
@@ -111,7 +130,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             GlideApp.with(getApplicationContext())
                     .load(mMovie.getPosterBytes())
                     .centerCrop()
-                    .placeholder(R.drawable.tmdb_placeholder)
                     .error(R.drawable.tmdb_placeholder)
                     .fallback(R.drawable.tmdb_placeholder)
                     .transition(new DrawableTransitionOptions().crossFade())
@@ -119,7 +137,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         } else {
             GlideApp.with(mContext)
                     .load(RetrofitAPI.POSTER_BASE_URL + mMovie.getPosterPath())
-                    .placeholder(R.drawable.tmdb_placeholder)
                     .error(R.drawable.tmdb_placeholder)
                     .fallback(R.drawable.tmdb_placeholder)
                     .centerCrop()
@@ -317,6 +334,16 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

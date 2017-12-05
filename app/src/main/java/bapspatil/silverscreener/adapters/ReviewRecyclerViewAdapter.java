@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -51,6 +52,13 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
                 holder.reviewContentTextView.toggle();
             }
         });
+        holder.reviewLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.reviewExpandButton.setImageResource(holder.reviewContentTextView.isExpanded() ? R.drawable.ic_expand_more_white_24dp : R.drawable.ic_expand_less_white_24dp);
+                holder.reviewContentTextView.toggle();
+            }
+        });
     }
 
     @Override
@@ -63,6 +71,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
         @BindView(R.id.review_author_tv) TextView reviewAuthorTextView;
         @BindView(R.id.review_content_tv) ExpandableTextView reviewContentTextView;
         @BindView(R.id.review_expand_button) ImageButton reviewExpandButton;
+        @BindView(R.id.review_linear_layout) LinearLayout reviewLinearLayout;
 
         ReviewItemViewHolder(View itemView) {
             super(itemView);
