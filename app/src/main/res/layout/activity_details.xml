@@ -100,11 +100,11 @@
                     android:id="@+id/tagline_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="28dp"
+                    android:gravity="center"
                     android:textColor="@color/white"
                     android:textSize="16sp"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
                     tools:text="An even longer tagline of the movie."/>
 
                 <LinearLayout
@@ -127,10 +127,11 @@
                             android:id="@+id/rating_label_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="RATING"
                             android:layout_gravity="center_horizontal"
+                            android:text="RATING"
                             android:textColor="@color/white"
                             android:textSize="12sp"/>
+
                         <TextView
                             android:id="@+id/rating_value_tv"
                             android:layout_width="wrap_content"
@@ -153,8 +154,8 @@
                             android:id="@+id/date_label_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="RELEASE"
                             android:layout_gravity="center_horizontal"
+                            android:text="RELEASE"
                             android:textColor="@color/white"
                             android:textSize="12sp"/>
 
@@ -162,11 +163,11 @@
                             android:id="@+id/date_value_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="16dp"
+                            android:gravity="center"
                             android:textColor="@color/white"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             tools:text="Dec 13\n1989"/>
                     </FrameLayout>
 
@@ -189,9 +190,9 @@
                             android:id="@+id/director_value_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:layout_marginTop="16dp"
                             android:gravity="center"
-                            android:layout_gravity="center_horizontal"
                             android:textColor="@color/white"
                             android:textSize="20sp"
                             tools:text="Steven Spielberg"/>
@@ -217,8 +218,8 @@
                             android:id="@+id/votes_label_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="VOTES"
                             android:layout_gravity="center_horizontal"
+                            android:text="VOTES"
                             android:textColor="@color/white"
                             android:textSize="12sp"/>
 
@@ -231,8 +232,6 @@
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             tools:text="1313"/>
-
-
                     </FrameLayout>
 
                     <FrameLayout
@@ -302,9 +301,27 @@
                     tools:text="This is gonna be a plot synopsis of the movie. This data will be fetched by the TMDB API. And this will contain info of the movie script."/>
 
                 <TextView
+                    android:id="@+id/genres_label_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:text="GENRES"
+                    android:textColor="#FFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/genres_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:nestedScrollingEnabled="true"/>
+
+                <TextView
                     android:id="@+id/trailer_label_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:paddingEnd="24dp"
                     android:paddingStart="24dp"
                     android:text="TRAILERS"
@@ -340,6 +357,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/cast"
                     android:textColor="#FFF"
                     android:textSize="14sp"
@@ -390,6 +408,8 @@
                         android:layout_marginBottom="16dp"
                         android:nestedScrollingEnabled="false"/>
                 </FrameLayout>
+
+
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </android.support.v4.widget.NestedScrollView>

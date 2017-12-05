@@ -41,11 +41,13 @@ import java.util.Date;
 import bapspatil.silverscreener.BuildConfig;
 import bapspatil.silverscreener.R;
 import bapspatil.silverscreener.adapters.CastRecyclerViewAdapter;
+import bapspatil.silverscreener.adapters.GenresRecyclerViewAdapter;
 import bapspatil.silverscreener.adapters.ReviewRecyclerViewAdapter;
 import bapspatil.silverscreener.adapters.TrailerRecyclerViewAdapter;
 import bapspatil.silverscreener.data.RealmDataSource;
 import bapspatil.silverscreener.model.Cast;
 import bapspatil.silverscreener.model.Crew;
+import bapspatil.silverscreener.model.GenresItem;
 import bapspatil.silverscreener.model.Movie;
 import bapspatil.silverscreener.model.MovieRecyclerView;
 import bapspatil.silverscreener.model.Review;
@@ -68,11 +70,13 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
     private TrailerRecyclerViewAdapter mTrailerAdapter;
     private ReviewRecyclerViewAdapter mReviewAdapter;
+    private GenresRecyclerViewAdapter mGenreAdapter;
     private Context mContext;
     private ArrayList<String> mTrailerTitles = new ArrayList<>();
     private ArrayList<String> mTrailerPaths = new ArrayList<>();
     private ArrayList<String> mReviewAuthors = new ArrayList<>();
     private ArrayList<String> mReviewContents = new ArrayList<>();
+    private ArrayList<GenresItem> mGenres = new ArrayList<>();
     private byte[] imageBytes;
     Movie tempMovie, mMovie;
 
@@ -97,6 +101,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @BindView(R.id.votes_value_tv) TextView mVotesTextView;
     @BindView(R.id.minutes_value_tv) TextView mMinutesTextView;
     @BindView(R.id.imdb_value_tv) ImageButton mImdbButton;
+    @BindView(R.id.genres_rv) RecyclerView mGenresRecyclerView;
 
     private RealmDataSource dataSource;
     private Unbinder unbinder;
@@ -170,6 +175,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.VERTICAL, false));
         mReviewAdapter = new ReviewRecyclerViewAdapter(mContext, mReviewAuthors, mReviewContents);
         mReviewRecyclerView.setAdapter(mReviewAdapter);
+
+        mGenresRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        mGenreAdapter = new GenresRecyclerViewAdapter(mContext, mGenres);
+        mGenresRecyclerView.setAdapter(mGenreAdapter);
 
         fetchDetails(mMovie.getId(), TRAILERS_DETAILS_TYPE);
         fetchDetails(mMovie.getId(), REVIEWS_DETAILS_TYPE);
@@ -318,14 +327,21 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                                 Toast.makeText(mContext, "Movie isn't there on IMDB. Here is a Google search for it instead!", Toast.LENGTH_LONG).show();
                                 uri = Uri.parse("https://www.google.com/search?q=" + tmdbDetailsResponse.getTitle());
                             }
-                            Intent actorMoviesIntent = new Intent(Intent.ACTION_VIEW, uri);
-                            startActivity(actorMoviesIntent);
+                            Intent imdbIntent = new Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(imdbIntent);
                         } catch (Exception e) {
-                            // Who doesn't have Google? Or a browser?
                             e.printStackTrace();
                         }
                     }
                 });
+                if(tmdbDetailsResponse.getGenres() != null && tmdbDetailsResponse.getGenres().size() != 0) {
+                    mGenres.clear();
+                    mGenres.addAll(tmdbDetailsResponse.getGenres());
+                    mGenreAdapter.notifyDataSetChanged();
+                } else {
+                    (findViewById(R.id.genres_label_tv)).setVisibility(View.GONE);
+                    mGenresRecyclerView.setVisibility(View.GONE);
+                }
             }
 
             @Override
