@@ -1,6 +1,7 @@
 package bapspatil.silverscreener.network;
 
 import bapspatil.silverscreener.model.TMDBCreditsResponse;
+import bapspatil.silverscreener.model.TMDBDetailsResponse;
 import bapspatil.silverscreener.model.TMDBResponse;
 import bapspatil.silverscreener.model.TMDBReviewResponse;
 import bapspatil.silverscreener.model.TMDBTrailerResponse;
@@ -35,6 +36,9 @@ public interface RetrofitAPI {
 
     @GET("movie/{movie_id}/credits")
     Call<TMDBCreditsResponse> getCredits(@Path("movie_id") int MOVIE_ID, @Query("api_key") String API_KEY);
+
+    @GET("movie/{movie_id}")
+    Call<TMDBDetailsResponse> getDetails(@Path("movie_id") int MOVIE_ID, @Query("api_key") String API_KEY, @Query("language") String LANGUAGE);
 
 
     public static Retrofit retrofit = new Retrofit.Builder()

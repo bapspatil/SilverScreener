@@ -96,6 +96,17 @@
                     android:textStyle="bold"
                     tools:text="A Very Long Title Of The Movie"/>
 
+                <TextView
+                    android:id="@+id/tagline_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    tools:text="An even longer tagline of the movie."/>
+
                 <LinearLayout
                     android:id="@+id/release_info"
                     android:layout_width="match_parent"
@@ -117,17 +128,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="RATING"
+                            android:layout_gravity="center_horizontal"
                             android:textColor="@color/white"
                             android:textSize="12sp"/>
-
                         <TextView
                             android:id="@+id/rating_value_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:layout_marginTop="24dp"
                             android:textColor="@color/white"
                             android:textSize="26sp"
                             tools:text="10.0"/>
+
                     </FrameLayout>
 
                     <FrameLayout
@@ -141,6 +154,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="RELEASE"
+                            android:layout_gravity="center_horizontal"
                             android:textColor="@color/white"
                             android:textSize="12sp"/>
 
@@ -148,6 +162,8 @@
                             android:id="@+id/date_value_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_gravity="center_horizontal"
                             android:layout_marginTop="16dp"
                             android:textColor="@color/white"
                             android:textSize="20sp"
@@ -164,6 +180,7 @@
                             android:id="@+id/director_label_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:text="DIRECTOR"
                             android:textColor="@color/white"
                             android:textSize="12sp"/>
@@ -173,9 +190,100 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
+                            android:gravity="center"
+                            android:layout_gravity="center_horizontal"
                             android:textColor="@color/white"
                             android:textSize="20sp"
                             tools:text="Steven Spielberg"/>
+                    </FrameLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/more_release_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/votes_label_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="VOTES"
+                            android:layout_gravity="center_horizontal"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/votes_value_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="26dp"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            tools:text="1313"/>
+
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:layout_weight="1.2">
+
+                        <TextView
+                            android:id="@+id/minutes_label_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="MINUTES"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/minutes_value_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="24dp"
+                            android:textColor="@color/white"
+                            android:textSize="26sp"
+                            tools:text="133"/>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:layout_weight="2">
+
+                        <TextView
+                            android:id="@+id/imdb_label_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="IMDB"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"/>
+
+                        <ImageButton
+                            android:id="@+id/imdb_value_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="16dp"
+                            android:background="@android:color/transparent"
+                            android:src="@mipmap/imdb_icon"/>
                     </FrameLayout>
                 </LinearLayout>
 

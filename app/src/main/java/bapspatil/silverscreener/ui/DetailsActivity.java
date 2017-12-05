@@ -18,8 +18,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.Request;
@@ -48,6 +50,7 @@ import bapspatil.silverscreener.model.Movie;
 import bapspatil.silverscreener.model.MovieRecyclerView;
 import bapspatil.silverscreener.model.Review;
 import bapspatil.silverscreener.model.TMDBCreditsResponse;
+import bapspatil.silverscreener.model.TMDBDetailsResponse;
 import bapspatil.silverscreener.model.TMDBReviewResponse;
 import bapspatil.silverscreener.model.TMDBTrailerResponse;
 import bapspatil.silverscreener.model.Trailer;
@@ -90,6 +93,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @BindView(R.id.backdrop_iv) ImageView mBackdropImageView;
     @BindView(R.id.director_value_tv) TextView mDirectorTextView;
     @BindView(R.id.cast_rv) RecyclerView mCastRecyclerView;
+    @BindView(R.id.tagline_tv) TextView mTaglineTextView;
+    @BindView(R.id.votes_value_tv) TextView mVotesTextView;
+    @BindView(R.id.minutes_value_tv) TextView mMinutesTextView;
+    @BindView(R.id.imdb_value_tv) ImageButton mImdbButton;
 
     private RealmDataSource dataSource;
     private Unbinder unbinder;
@@ -125,6 +132,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mTitleTextView.setText(mMovie.getTitle());
         mPlotTextView.setText(mMovie.getPlot());
         fetchCredits();
+        fetchMoreDetails();
+
 
         GlideApp.with(getApplicationContext())
                 .load(RetrofitAPI.BACKDROP_BASE_URL + mMovie.getBackdropPath())
@@ -278,6 +287,50 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             @Override
             public void onFailure(Call<TMDBCreditsResponse> call, Throwable t) {
                 // Why bother doing anything here?
+            }
+        });
+    }
+
+    private void fetchMoreDetails() {
+        RetrofitAPI retrofitAPI = RetrofitAPI.retrofit.create(RetrofitAPI.class);
+        Call<TMDBDetailsResponse> detailsResponseCall = retrofitAPI.getDetails(mMovie.getId(), BuildConfig.TMDB_API_TOKEN, "en-US");
+        detailsResponseCall.enqueue(new Callback<TMDBDetailsResponse>() {
+            @Override
+            public void onResponse(Call<TMDBDetailsResponse> call, Response<TMDBDetailsResponse> response) {
+                final TMDBDetailsResponse tmdbDetailsResponse = response.body();
+                String tagline = tmdbDetailsResponse.getTagline();
+                if(tagline != null && !tagline.equals("")) {
+                    mTaglineTextView.setText(tagline);
+                } else {
+                    mTaglineTextView.setVisibility(View.GONE);
+                }
+                mVotesTextView.setText(String.valueOf(tmdbDetailsResponse.getVoteCount()));
+                mMinutesTextView.setText(String.valueOf(tmdbDetailsResponse.getRuntime()));
+                mImdbButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String imdbId = tmdbDetailsResponse.getImdbId();
+                        try {
+                            Uri uri;
+                            if(imdbId != null && !imdbId.equals(""))
+                            uri = Uri.parse("http://www.imdb.com/title/" + imdbId + "/");
+                            else {
+                                Toast.makeText(mContext, "Movie isn't there on IMDB. Here is a Google search for it instead!", Toast.LENGTH_LONG).show();
+                                uri = Uri.parse("https://www.google.com/search?q=" + tmdbDetailsResponse.getTitle());
+                            }
+                            Intent actorMoviesIntent = new Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(actorMoviesIntent);
+                        } catch (Exception e) {
+                            // Who doesn't have Google? Or a browser?
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<TMDBDetailsResponse> call, Throwable t) {
+                // Why bother doing anything here
             }
         });
     }
