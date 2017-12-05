@@ -22,10 +22,9 @@
         <activity
             android:name=".ui.DetailsActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.Details"
             android:parentActivityName=".ui.MainActivity"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Details"/>
         <activity
             android:name=".ui.SplashScreenActivity"
             android:launchMode="singleTop"
@@ -38,7 +37,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
+        <activity android:name=".ui.AboutMeActivity">
+        </activity>
     </application>
 
 </manifest>

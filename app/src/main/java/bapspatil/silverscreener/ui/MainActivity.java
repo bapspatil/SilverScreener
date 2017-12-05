@@ -219,6 +219,19 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_about_me:
+                Intent intentToAboutMe = new Intent(this, AboutMeActivity.class);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out);
+                startActivity(intentToAboutMe, options.toBundle());
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         if (searchView.isSearchOpen())
             searchView.closeSearch();
