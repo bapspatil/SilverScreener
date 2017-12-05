@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,12 +38,16 @@ import java.util.Date;
 
 import bapspatil.silverscreener.BuildConfig;
 import bapspatil.silverscreener.R;
+import bapspatil.silverscreener.adapters.CastRecyclerViewAdapter;
 import bapspatil.silverscreener.adapters.ReviewRecyclerViewAdapter;
 import bapspatil.silverscreener.adapters.TrailerRecyclerViewAdapter;
 import bapspatil.silverscreener.data.RealmDataSource;
+import bapspatil.silverscreener.model.Cast;
+import bapspatil.silverscreener.model.Crew;
 import bapspatil.silverscreener.model.Movie;
 import bapspatil.silverscreener.model.MovieRecyclerView;
 import bapspatil.silverscreener.model.Review;
+import bapspatil.silverscreener.model.TMDBCreditsResponse;
 import bapspatil.silverscreener.model.TMDBReviewResponse;
 import bapspatil.silverscreener.model.TMDBTrailerResponse;
 import bapspatil.silverscreener.model.Trailer;
@@ -83,6 +88,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @BindView(R.id.rv_reviews) MovieRecyclerView mReviewRecyclerView;
     @BindView(R.id.fav_button) FloatingActionButton mFavoriteButton;
     @BindView(R.id.backdrop_iv) ImageView mBackdropImageView;
+    @BindView(R.id.director_value_tv) TextView mDirectorTextView;
+    @BindView(R.id.cast_rv) RecyclerView mCastRecyclerView;
 
     private RealmDataSource dataSource;
     private Unbinder unbinder;
@@ -117,6 +124,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             mDateTextView.setText(prettifyDate(mMovie.getDate()));
         mTitleTextView.setText(mMovie.getTitle());
         mPlotTextView.setText(mMovie.getPlot());
+        fetchCredits();
 
         GlideApp.with(getApplicationContext())
                 .load(RetrofitAPI.BACKDROP_BASE_URL + mMovie.getBackdropPath())
@@ -218,6 +226,60 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 });
                 break;
         }
+    }
+
+    private void fetchCredits() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mCastRecyclerView.setLayoutManager(layoutManager);
+
+        final ArrayList<Cast> castList = new ArrayList<>();
+        final CastRecyclerViewAdapter mCastAdapter = new CastRecyclerViewAdapter(this, castList, new CastRecyclerViewAdapter.OnActorClickHandler() {
+            @Override
+            public void onActorClicked(String actorName) {
+                try {
+                    Uri uri = Uri.parse("https://www.google.com/search?q=" + actorName + " movies");
+                    Intent actorMoviesIntent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(actorMoviesIntent);
+                } catch (Exception e) {
+                    // Who doesn't have Google? Or a browser?
+                    e.printStackTrace();
+                }
+            }
+        });
+        mCastRecyclerView.setAdapter(mCastAdapter);
+
+        RetrofitAPI retrofitAPI = RetrofitAPI.retrofit.create(RetrofitAPI.class);
+        final Call<TMDBCreditsResponse> creditsCall = retrofitAPI.getCredits(mMovie.getId(), BuildConfig.TMDB_API_TOKEN);
+        creditsCall.enqueue(new Callback<TMDBCreditsResponse>() {
+            @Override
+            public void onResponse(Call<TMDBCreditsResponse> call, Response<TMDBCreditsResponse> response) {
+                TMDBCreditsResponse creditsResponse = response.body();
+
+                // Get cast info
+                castList.clear();
+                if (creditsResponse.getCast().size() != 0) {
+                    castList.addAll(creditsResponse.getCast());
+                    mCastAdapter.notifyDataSetChanged();
+                } else {
+                    TextView mCastLabelTextView = findViewById(R.id.cast_label_tv);
+                    mCastLabelTextView.setVisibility(View.GONE);
+                    mCastRecyclerView.setVisibility(View.GONE);
+                }
+
+                // Get director info
+                for(Crew crew: creditsResponse.getCrew()) {
+                    if(crew.getJob().equals("Director")) {
+                        mDirectorTextView.setText(crew.getName());
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TMDBCreditsResponse> call, Throwable t) {
+                // Why bother doing anything here?
+            }
+        });
     }
 
     @Override

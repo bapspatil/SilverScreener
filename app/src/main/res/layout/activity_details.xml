@@ -228,6 +228,30 @@
                 </FrameLayout>
 
                 <TextView
+                    android:id="@+id/cast_label_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:text="@string/cast"
+                    android:textColor="#FFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="8dp">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/cast_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="true"/>
+                </FrameLayout>
+
+
+                <TextView
                     android:id="@+id/reviews_label_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

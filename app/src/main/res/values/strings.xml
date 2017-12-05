@@ -8,6 +8,8 @@
     <string name="no_reviews">Looks like no one bothered to write reviews for this movie! :-P</string>
     <string name="search_title">Search</string>
     <string name="reviews">REVIEWS</string>
+    <string name="cast">CAST</string>
+    <string name="cast_images">Cast Images</string>
 
     <string-array name="sort_criteria">
         <item>Most Popular</item>
