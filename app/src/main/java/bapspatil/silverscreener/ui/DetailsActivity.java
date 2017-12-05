@@ -61,6 +61,7 @@ import bapspatil.silverscreener.model.TMDBResponse;
 import bapspatil.silverscreener.model.TMDBReviewResponse;
 import bapspatil.silverscreener.model.TMDBTrailerResponse;
 import bapspatil.silverscreener.model.Trailer;
+import bapspatil.silverscreener.network.Connection;
 import bapspatil.silverscreener.network.RetrofitAPI;
 import bapspatil.silverscreener.utils.GlideApp;
 import butterknife.BindView;
@@ -147,9 +148,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             mDateTextView.setText(prettifyDate(mMovie.getDate()));
         mTitleTextView.setText(mMovie.getTitle());
         mPlotTextView.setText(mMovie.getPlot());
-        fetchCredits();
-        fetchMoreDetails();
-
+        favButtonInit(mMovie.getId());
         GlideApp.with(getApplicationContext())
                 .load(RetrofitAPI.BACKDROP_BASE_URL + mMovie.getBackdropPath())
                 .centerCrop()
@@ -176,36 +175,55 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     .into(mPosterImageView);
         }
 
-        favButtonInit(mMovie.getId());
+        if(!Connection.hasNetwork(mContext)) {
+            (findViewById(R.id.tagline_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.similar_label_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.cast_label_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.votes_label_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.votes_value_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.minutes_label_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.minutes_value_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.imdb_label_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.imdb_value_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.director_label_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.director_value_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.genres_label_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.trailers_hint_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.trailer_label_tv)).setVisibility(View.GONE);
+            (findViewById(R.id.reviews_label_tv)).setVisibility(View.GONE);
+        } else {
+            fetchCredits();
+            fetchMoreDetails();
 
-        mTrailerRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
-        mTrailerAdapter = new TrailerRecyclerViewAdapter(mContext, mTrailerTitles, mTrailerPaths, this);
-        mTrailerRecyclerView.setAdapter(mTrailerAdapter);
+            mTrailerRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
+            mTrailerAdapter = new TrailerRecyclerViewAdapter(mContext, mTrailerTitles, mTrailerPaths, this);
+            mTrailerRecyclerView.setAdapter(mTrailerAdapter);
 
-        mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.VERTICAL, false));
-        mReviewAdapter = new ReviewRecyclerViewAdapter(mContext, mReviewAuthors, mReviewContents);
-        mReviewRecyclerView.setAdapter(mReviewAdapter);
+            mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.VERTICAL, false));
+            mReviewAdapter = new ReviewRecyclerViewAdapter(mContext, mReviewAuthors, mReviewContents);
+            mReviewRecyclerView.setAdapter(mReviewAdapter);
 
-        mGenresRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
-        mGenreAdapter = new GenresRecyclerViewAdapter(mContext, mGenres);
-        mGenresRecyclerView.setAdapter(mGenreAdapter);
+            mGenresRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
+            mGenreAdapter = new GenresRecyclerViewAdapter(mContext, mGenres);
+            mGenresRecyclerView.setAdapter(mGenreAdapter);
 
-        mSimilarMoviesRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
-        mSimilarMoviesAdapter = new MovieRecyclerViewAdapter(mContext, mSimilarMovies, new MovieRecyclerViewAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(int position, ImageView posterImageView) {
-                CookieBar.Build(DetailsActivity.this)
-                        .setBackgroundColor(android.R.color.holo_green_dark)
-                        .setTitle(mSimilarMovies.get(position).getTitle())
-                        .setMessage("Rating: " + mSimilarMovies.get(position).getRating() + " \nRelease: " + mSimilarMovies.get(position).getDate())
-                        .show();
-            }
-        });
-        mSimilarMoviesRecyclerView.setAdapter(mSimilarMoviesAdapter);
+            mSimilarMoviesRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
+            mSimilarMoviesAdapter = new MovieRecyclerViewAdapter(mContext, mSimilarMovies, new MovieRecyclerViewAdapter.ItemClickListener() {
+                @Override
+                public void onItemClick(int position, ImageView posterImageView) {
+                    CookieBar.Build(DetailsActivity.this)
+                            .setBackgroundColor(android.R.color.holo_green_dark)
+                            .setTitle(mSimilarMovies.get(position).getTitle())
+                            .setMessage("Rating: " + mSimilarMovies.get(position).getRating() + " \nRelease: " + mSimilarMovies.get(position).getDate())
+                            .show();
+                }
+            });
+            mSimilarMoviesRecyclerView.setAdapter(mSimilarMoviesAdapter);
 
-        fetchDetails(mMovie.getId(), TRAILERS_DETAILS_TYPE);
-        fetchDetails(mMovie.getId(), REVIEWS_DETAILS_TYPE);
-        fetchSimilarMovies(mMovie.getId());
+            fetchDetails(mMovie.getId(), TRAILERS_DETAILS_TYPE);
+            fetchDetails(mMovie.getId(), REVIEWS_DETAILS_TYPE);
+            fetchSimilarMovies(mMovie.getId());
+        }
         startPostponedEnterTransition();
     }
 
@@ -326,8 +344,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     castList.addAll(creditsResponse.getCast());
                     mCastAdapter.notifyDataSetChanged();
                 } else {
-                    TextView mCastLabelTextView = findViewById(R.id.cast_label_tv);
-                    mCastLabelTextView.setVisibility(View.GONE);
+                    (findViewById(R.id.cast_label_tv)).setVisibility(View.GONE);
                     mCastRecyclerView.setVisibility(View.GONE);
                 }
 
