@@ -28,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="@font/hammersmith_one"
             android:background="#CC000000"
             android:gravity="center"
             android:padding="12dp"

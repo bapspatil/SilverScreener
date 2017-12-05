@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -47,6 +46,7 @@ import bapspatil.silverscreener.network.RetrofitAPI;
 import bapspatil.silverscreener.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,11 +64,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     private byte[] imageBytes;
     Movie tempMovie, mMovie;
 
-    @BindView(R.id.details_toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.trailer_label_tv) TextView mTrailersLabel0;
     @BindView(R.id.trailers_hint_tv) TextView mTrailersLabel1;
     @BindView(R.id.reviews_label_tv) TextView mReviewsLabel0;
-    @BindView(R.id.no_reviews_cv) CardView noReviewsCardView;
     @BindView(R.id.rating_value_tv) TextView mRatingTextView;
     @BindView(R.id.date_value_tv) TextView mDateTextView;
     @BindView(R.id.title_tv) TextView mTitleTextView;
@@ -78,15 +77,15 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @BindView(R.id.rv_reviews) MovieRecyclerView mReviewRecyclerView;
     @BindView(R.id.fav_button) FloatingActionButton mFavoriteButton;
 
-    RealmDataSource dataSource;
+    private RealmDataSource dataSource;
+    private Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         mContext = getApplicationContext();
-        toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
         mMovie = getIntent().getParcelableExtra("movie");
 
@@ -312,6 +311,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unbinder.unbind();
         dataSource.close();
     }
 

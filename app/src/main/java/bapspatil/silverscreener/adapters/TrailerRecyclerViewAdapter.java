@@ -1,6 +1,8 @@
 package bapspatil.silverscreener.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +45,8 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
     @Override
     public void onBindViewHolder(TrailerViewHolder viewHolder, int position) {
         String title = mTrailerTitles.get(position);
+        Typeface hammersmithOne = ResourcesCompat.getFont(mContext, R.font.hammersmith_one);
+        viewHolder.trailerTitleTextView.setTypeface(hammersmithOne);
         if(title == null)
             viewHolder.trailerTitleTextView.setText("Why aren't you connected to the internet? Or maybe there are no trailers for this movie...");
         else

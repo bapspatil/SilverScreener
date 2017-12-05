@@ -3,6 +3,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -32,6 +33,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
+                        android:fontFamily="@font/hammersmith_one"
                         android:text="@string/app_name"
                         android:textColor="@color/white"/>
                 </FrameLayout>
@@ -57,9 +59,9 @@
             <bapspatil.silverscreener.model.MovieRecyclerView
                 android:id="@+id/rv_movies"
                 android:layout_width="match_parent"
-                android:scrollbars="vertical"
+                android:layout_height="match_parent"
                 android:scrollbarThumbVertical="@color/colorAccent"
-                android:layout_height="match_parent"/>
+                android:scrollbars="vertical"/>
 
             <ProgressBar
                 android:id="@+id/loading_indicator"
@@ -83,6 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimary"
                 app:itemBackground="?android:selectableItemBackground"
                 app:itemIconTint="@color/selector"
                 app:itemTextColor="@color/selector"

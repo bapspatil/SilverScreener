@@ -1,7 +1,6 @@
 package bapspatil.silverscreener.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,6 @@ import bapspatil.silverscreener.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
 public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder> {
 
     private ArrayList<Movie> mMoviesArrayList;
@@ -27,7 +25,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     private ItemClickListener mClickListener;
 
     public interface ItemClickListener {
-        void onItemClick(int position, CardView posterCardView);
+        void onItemClick(int position, ImageView posterImageView);
     }
 
     public MovieRecyclerViewAdapter(Context context, ArrayList<Movie> movieArrayList, ItemClickListener itemClickListener) {
@@ -45,7 +43,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         Movie theMovie = mMoviesArrayList.get(position);
-        if(theMovie.getPosterBytes() != null) {
+        if (theMovie.getPosterBytes() != null) {
             GlideApp.with(mContext)
                     .load(theMovie.getPosterBytes())
                     .centerCrop()
@@ -72,7 +70,6 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.poster_image_view) ImageView mPosterImageView;
-        @BindView(R.id.poster_card_view) CardView mPosterCardView;
 
         MovieViewHolder(View itemView) {
             super(itemView);
@@ -83,7 +80,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
         @Override
         public void onClick(View v) {
             if (mClickListener != null)
-                mClickListener.onItemClick(getAdapterPosition(), mPosterCardView);
+                mClickListener.onItemClick(getAdapterPosition(), mPosterImageView);
         }
     }
 }

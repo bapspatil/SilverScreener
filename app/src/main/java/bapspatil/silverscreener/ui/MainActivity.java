@@ -8,13 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -34,6 +34,7 @@ import bapspatil.silverscreener.model.TMDBResponse;
 import bapspatil.silverscreener.network.RetrofitAPI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,12 +54,13 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     @BindView(R.id.search_view) MaterialSearchView searchView;
 
     private RealmDataSource dataSource;
+    private Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         mContext = getApplicationContext();
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
@@ -76,15 +78,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
             columns = 4;
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, columns);
         mRecyclerView.setLayoutManager(gridLayoutManager);
-
-        if (savedInstanceState != null) {
-            movieArray.clear();
-            for (int i = 0; i < savedInstanceState.getInt("noOfMovies"); i++) {
-                Movie movie;
-                movie = savedInstanceState.getParcelable("movieParcel" + i);
-                movieArray.add(movie);
-            }
-        }
 
         mAdapter = new MovieRecyclerViewAdapter(mContext, movieArray, this);
         mRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
@@ -149,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                 bottomNavigationView.setVisibility(View.VISIBLE);
             }
         });
-
     }
 
     private void fetchMovies(int taskId, String taskQuery) {
@@ -207,23 +199,12 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        int numberOfMovies = movieArray.size();
-        for (int i = 0; i < numberOfMovies; i++) {
-            Movie movie = new Movie();
-            outState.putParcelable("movieParcel" + i, movie);
-        }
-        outState.putInt("noOfMovies", numberOfMovies);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onItemClick(int position, CardView posterCardView) {
+    public void onItemClick(int position, ImageView posterImageView) {
         Movie movie;
         movie = movieArray.get(position);
         Intent startDetailsActivity = new Intent(mContext, DetailsActivity.class);
         startDetailsActivity.putExtra("movie", movie);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, posterCardView, "posterTransition");
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, posterImageView, "posterTransition");
         startActivity(startDetailsActivity, options.toBundle());
     }
 
@@ -248,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unbinder.unbind();
         dataSource.close();
     }
 }

@@ -6,7 +6,7 @@ android {
     buildToolsVersion '27.0.1'
     defaultConfig {
         applicationId "bapspatil.silverscreener"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 6
         versionName "one.two.one"
@@ -39,6 +39,7 @@ ext {
     gsonVer = '2.8.2'
     cookiebar2Ver = '1.0.5'
     rvAnimVer = '2.2.7'
+    expandTextVer = '1.0.5'
 }
 
 dependencies {
@@ -61,5 +62,6 @@ dependencies {
     implementation "com.google.code.gson:gson:$gsonVer"
     implementation "org.aviran.cookiebar2:cookiebar2:$cookiebar2Ver"
     implementation "jp.wasabeef:recyclerview-animators:$rvAnimVer"
+    implementation "at.blogc:expandabletextview:$expandTextVer"
 
 }

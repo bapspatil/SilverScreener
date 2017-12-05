@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#212121"
     android:layout_height="match_parent"
+    android:background="#212121"
     tools:context="bapspatil.silverscreener.ui.SplashScreenActivity">
 
     <ImageView
@@ -29,6 +29,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/app_name"
         android:textColor="#FFF"
+        android:fontFamily="@font/hammersmith_one"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
