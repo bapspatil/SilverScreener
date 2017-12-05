@@ -42,6 +42,7 @@ import bapspatil.silverscreener.BuildConfig;
 import bapspatil.silverscreener.R;
 import bapspatil.silverscreener.adapters.CastRecyclerViewAdapter;
 import bapspatil.silverscreener.adapters.GenresRecyclerViewAdapter;
+import bapspatil.silverscreener.adapters.MovieRecyclerViewAdapter;
 import bapspatil.silverscreener.adapters.ReviewRecyclerViewAdapter;
 import bapspatil.silverscreener.adapters.TrailerRecyclerViewAdapter;
 import bapspatil.silverscreener.data.RealmDataSource;
@@ -53,6 +54,7 @@ import bapspatil.silverscreener.model.MovieRecyclerView;
 import bapspatil.silverscreener.model.Review;
 import bapspatil.silverscreener.model.TMDBCreditsResponse;
 import bapspatil.silverscreener.model.TMDBDetailsResponse;
+import bapspatil.silverscreener.model.TMDBResponse;
 import bapspatil.silverscreener.model.TMDBReviewResponse;
 import bapspatil.silverscreener.model.TMDBTrailerResponse;
 import bapspatil.silverscreener.model.Trailer;
@@ -60,7 +62,6 @@ import bapspatil.silverscreener.network.RetrofitAPI;
 import bapspatil.silverscreener.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,12 +72,14 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     private TrailerRecyclerViewAdapter mTrailerAdapter;
     private ReviewRecyclerViewAdapter mReviewAdapter;
     private GenresRecyclerViewAdapter mGenreAdapter;
+    private MovieRecyclerViewAdapter mSimilarMoviesAdapter;
     private Context mContext;
     private ArrayList<String> mTrailerTitles = new ArrayList<>();
     private ArrayList<String> mTrailerPaths = new ArrayList<>();
     private ArrayList<String> mReviewAuthors = new ArrayList<>();
     private ArrayList<String> mReviewContents = new ArrayList<>();
     private ArrayList<GenresItem> mGenres = new ArrayList<>();
+    private ArrayList<Movie> mSimilarMovies = new ArrayList<>();
     private byte[] imageBytes;
     Movie tempMovie, mMovie;
 
@@ -102,15 +105,15 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @BindView(R.id.minutes_value_tv) TextView mMinutesTextView;
     @BindView(R.id.imdb_value_tv) ImageButton mImdbButton;
     @BindView(R.id.genres_rv) RecyclerView mGenresRecyclerView;
+    @BindView(R.id.similar_movies_rv) RecyclerView mSimilarMoviesRecyclerView;
 
     private RealmDataSource dataSource;
-    private Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        unbinder = ButterKnife.bind(this);
+        ButterKnife.bind(this);
         mContext = getApplicationContext();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -180,8 +183,44 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mGenreAdapter = new GenresRecyclerViewAdapter(mContext, mGenres);
         mGenresRecyclerView.setAdapter(mGenreAdapter);
 
+        mSimilarMoviesRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        mSimilarMoviesAdapter = new MovieRecyclerViewAdapter(mContext, mSimilarMovies, new MovieRecyclerViewAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(int position, ImageView posterImageView) {
+                CookieBar.Build(DetailsActivity.this)
+                        .setBackgroundColor(android.R.color.holo_green_dark)
+                        .setTitle(mSimilarMovies.get(position).getTitle())
+                        .setMessage("Rating: " + mSimilarMovies.get(position).getRating() + " \nRelease: " + mSimilarMovies.get(position).getDate())
+                        .show();
+            }
+        });
+        mSimilarMoviesRecyclerView.setAdapter(mSimilarMoviesAdapter);
+
         fetchDetails(mMovie.getId(), TRAILERS_DETAILS_TYPE);
         fetchDetails(mMovie.getId(), REVIEWS_DETAILS_TYPE);
+        fetchSimilarMovies(mMovie.getId());
+    }
+
+    private void fetchSimilarMovies(int id) {
+        RetrofitAPI retrofitAPI = RetrofitAPI.retrofit.create(RetrofitAPI.class);
+        Call<TMDBResponse> similarMoviesCall = retrofitAPI.getSimilarMovies(id, BuildConfig.TMDB_API_TOKEN, "en-US");
+        similarMoviesCall.enqueue(new Callback<TMDBResponse>() {
+            @Override
+            public void onResponse(Call<TMDBResponse> call, Response<TMDBResponse> response) {
+                if (response.body() != null && response.body().getResults() != null && response.body().getResults().size() != 0) {
+                    mSimilarMovies.addAll(response.body().getResults());
+                    mSimilarMoviesAdapter.notifyDataSetChanged();
+                } else {
+                    (findViewById(R.id.similar_label_tv)).setVisibility(View.GONE);
+                    mSimilarMoviesRecyclerView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TMDBResponse> call, Throwable t) {
+                // Do I really have to do this?
+            }
+        });
     }
 
     private void fetchDetails(int movieId, int detailsType) {
@@ -285,8 +324,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 }
 
                 // Get director info
-                for(Crew crew: creditsResponse.getCrew()) {
-                    if(crew.getJob().equals("Director")) {
+                for (Crew crew : creditsResponse.getCrew()) {
+                    if (crew.getJob().equals("Director")) {
                         mDirectorTextView.setText(crew.getName());
                         break;
                     }
@@ -308,7 +347,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             public void onResponse(Call<TMDBDetailsResponse> call, Response<TMDBDetailsResponse> response) {
                 final TMDBDetailsResponse tmdbDetailsResponse = response.body();
                 String tagline = tmdbDetailsResponse.getTagline();
-                if(tagline != null && !tagline.equals("")) {
+                if (tagline != null && !tagline.equals("")) {
                     mTaglineTextView.setText(tagline);
                 } else {
                     mTaglineTextView.setVisibility(View.GONE);
@@ -321,8 +360,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                         String imdbId = tmdbDetailsResponse.getImdbId();
                         try {
                             Uri uri;
-                            if(imdbId != null && !imdbId.equals(""))
-                            uri = Uri.parse("http://www.imdb.com/title/" + imdbId + "/");
+                            if (imdbId != null && !imdbId.equals(""))
+                                uri = Uri.parse("http://www.imdb.com/title/" + imdbId + "/");
                             else {
                                 Toast.makeText(mContext, "Movie isn't there on IMDB. Here is a Google search for it instead!", Toast.LENGTH_LONG).show();
                                 uri = Uri.parse("https://www.google.com/search?q=" + tmdbDetailsResponse.getTitle());
@@ -334,7 +373,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                         }
                     }
                 });
-                if(tmdbDetailsResponse.getGenres() != null && tmdbDetailsResponse.getGenres().size() != 0) {
+                if (tmdbDetailsResponse.getGenres() != null && tmdbDetailsResponse.getGenres().size() != 0) {
                     mGenres.clear();
                     mGenres.addAll(tmdbDetailsResponse.getGenres());
                     mGenreAdapter.notifyDataSetChanged();
@@ -480,7 +519,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbinder.unbind();
         dataSource.close();
     }
 

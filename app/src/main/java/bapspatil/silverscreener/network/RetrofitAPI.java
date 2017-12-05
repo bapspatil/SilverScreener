@@ -40,8 +40,11 @@ public interface RetrofitAPI {
     @GET("movie/{movie_id}")
     Call<TMDBDetailsResponse> getDetails(@Path("movie_id") int MOVIE_ID, @Query("api_key") String API_KEY, @Query("language") String LANGUAGE);
 
+    @GET("movie/{movie_id}/similar")
+    Call<TMDBResponse> getSimilarMovies(@Path("movie_id") int MOVIE_ID, @Query("api_key") String API_KEY, @Query("language") String LANGUAGE);
 
-    public static Retrofit retrofit = new Retrofit.Builder()
+
+    Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
