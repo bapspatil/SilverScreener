@@ -38,15 +38,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
+        android:ellipsize="end"
         android:fontFamily="@font/hammersmith_one"
         android:maxLines="4"
-        android:ellipsize="end"
-        app:animation_duration="750"
         android:paddingBottom="24dp"
         android:paddingEnd="24dp"
         android:paddingStart="24dp"
         android:textColor="#FFF"
         android:textSize="14sp"
+        app:animation_duration="750"
         tools:text="There's now officially (not at all officially, more like just-my-opinion-ally) twice as many good Spider-Man movies as there is bad ones. But Homecoming is my favourite of the bunch. 2017 has been a great year for the Superhero genre, and Spider-Man: Homecoming does nothing to buck that trend. It's got everything a Spider-Man movie should have: Heart, humour, action, spectacle, a grounded school life, coming-of-age themes, and all this while firmly rooting itself in the Marvel Cinematic Universe -- without relying on the framework of the past to hold it up. Spider-Man: Homecoming is spec... read the rest."/>
 
     <View

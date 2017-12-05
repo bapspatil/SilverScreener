@@ -76,6 +76,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     @BindView(R.id.rv_trailers) MovieRecyclerView mTrailerRecyclerView;
     @BindView(R.id.rv_reviews) MovieRecyclerView mReviewRecyclerView;
     @BindView(R.id.fav_button) FloatingActionButton mFavoriteButton;
+    @BindView(R.id.backdrop_iv) ImageView mBackdropImageView;
 
     private RealmDataSource dataSource;
     private Unbinder unbinder;
@@ -98,19 +99,29 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mTitleTextView.setText(mMovie.getTitle());
         mPlotTextView.setText(mMovie.getPlot());
 
+        GlideApp.with(getApplicationContext())
+                .load(RetrofitAPI.POSTER_BASE_URL + mMovie.getBackdropPath())
+                .centerCrop()
+                .placeholder(R.drawable.tmdb_placeholder_land)
+                .error(R.drawable.tmdb_placeholder_land)
+                .fallback(R.drawable.tmdb_placeholder_land)
+                .transition(new DrawableTransitionOptions().crossFade())
+                .into(mBackdropImageView);
         if (mMovie.getPosterBytes() != null) {
             GlideApp.with(getApplicationContext())
                     .load(mMovie.getPosterBytes())
-                    .error(R.drawable.no_internet_placeholder)
-                    .fallback(R.drawable.no_internet_placeholder)
                     .centerCrop()
+                    .placeholder(R.drawable.tmdb_placeholder)
+                    .error(R.drawable.tmdb_placeholder)
+                    .fallback(R.drawable.tmdb_placeholder)
                     .transition(new DrawableTransitionOptions().crossFade())
                     .into(mPosterImageView);
         } else {
             GlideApp.with(mContext)
                     .load(RetrofitAPI.POSTER_BASE_URL + mMovie.getPosterPath())
-                    .error(R.drawable.no_internet_placeholder)
-                    .fallback(R.drawable.no_internet_placeholder)
+                    .placeholder(R.drawable.tmdb_placeholder)
+                    .error(R.drawable.tmdb_placeholder)
+                    .fallback(R.drawable.tmdb_placeholder)
                     .centerCrop()
                     .transition(new DrawableTransitionOptions().crossFade())
                     .into(mPosterImageView);

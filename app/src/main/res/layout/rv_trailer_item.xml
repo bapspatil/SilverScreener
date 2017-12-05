@@ -12,9 +12,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="8dp"
         app:cardBackgroundColor="#212121"
-        app:cardUseCompatPadding="true"
         app:cardCornerRadius="8dp"
-        app:cardElevation="4dp">
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true">
 
         <ImageView
             android:id="@+id/trailer_thumbnail_iv"
@@ -28,8 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/hammersmith_one"
             android:background="#CC000000"
+            android:fontFamily="@font/hammersmith_one"
             android:gravity="center"
             android:padding="12dp"
             android:textColor="#FFF"
