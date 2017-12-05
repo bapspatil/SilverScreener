@@ -3,6 +3,7 @@ package bapspatil.silverscreener.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,6 +11,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +36,6 @@ import bapspatil.silverscreener.model.TMDBResponse;
 import bapspatil.silverscreener.network.RetrofitAPI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,13 +55,16 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     @BindView(R.id.search_view) MaterialSearchView searchView;
 
     private RealmDataSource dataSource;
-    private Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        unbinder = ButterKnife.bind(this);
+        ButterKnife.bind(this);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Slide slide = new Slide(Gravity.START);
+            getWindow().setExitTransition(slide);
+        }
         mContext = getApplicationContext();
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
@@ -242,7 +246,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbinder.unbind();
         dataSource.close();
     }
 }

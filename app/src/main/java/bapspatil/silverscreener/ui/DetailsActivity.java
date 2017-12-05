@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -16,6 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -115,6 +118,11 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
         mContext = getApplicationContext();
+        if (Build.VERSION.SDK_INT >= 21) {
+            Slide slide = new Slide(Gravity.BOTTOM);
+            getWindow().setEnterTransition(slide);
+            postponeEnterTransition();
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mMovie = getIntent().getParcelableExtra("movie");
@@ -141,7 +149,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mPlotTextView.setText(mMovie.getPlot());
         fetchCredits();
         fetchMoreDetails();
-
 
         GlideApp.with(getApplicationContext())
                 .load(RetrofitAPI.BACKDROP_BASE_URL + mMovie.getBackdropPath())
@@ -199,6 +206,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         fetchDetails(mMovie.getId(), TRAILERS_DETAILS_TYPE);
         fetchDetails(mMovie.getId(), REVIEWS_DETAILS_TYPE);
         fetchSimilarMovies(mMovie.getId());
+        startPostponedEnterTransition();
     }
 
     private void fetchSimilarMovies(int id) {
