@@ -5,6 +5,6 @@ A feature-rich movie guide app (Project 2: Popular Movies Stage 2)
 <br/><br/>
 <img src="https://github.com/bapspatil/SilverScreener/blob/master/screenshots/screen0.png"> <img src="https://github.com/bapspatil/SilverScreener/blob/master/screenshots/screen1.png">
 <img src="https://github.com/bapspatil/SilverScreener/blob/master/screenshots/screen2.png"> <img src="https://github.com/bapspatil/SilverScreener/blob/master/screenshots/screen3.png">
-<img src="https://github.com/bapspatil/SilverScreener/blob/master/screenshots/screen4.png"> img src="https://github.com/bapspatil/SilverScreener/blob/master/screenshots/screen5.png">
+<img src="https://github.com/bapspatil/SilverScreener/blob/master/screenshots/screen4.png"> <img src="https://github.com/bapspatil/SilverScreener/blob/master/screenshots/screen5.png">
 <img src="https://github.com/bapspatil/SilverScreener/blob/master/screenshots/screen6.png">
 <br/><br/>
