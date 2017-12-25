@@ -25,6 +25,7 @@
             android:layout_width="140dp"
             android:layout_height="210dp"
             android:scaleType="centerCrop"
+            android:transitionName="posterTransition"
             tools:srcCompat="@drawable/tmdb_placeholder"/>
     </android.support.v7.widget.CardView>
 
@@ -71,6 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:descendantFocusability="blocksDescendants"
+            android:nestedScrollingEnabled="false"
             app:cardCornerRadius="4dp"
             app:cardElevation="6dp"
             app:cardUseCompatPadding="true">
@@ -314,7 +316,8 @@
                     android:id="@+id/genres_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"/>
+                    android:layout_marginTop="16dp"
+                    android:nestedScrollingEnabled="true"/>
 
                 <TextView
                     android:id="@+id/trailer_label_tv"
@@ -371,7 +374,8 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/cast_rv"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="true"/>
                 </FrameLayout>
 
 
@@ -403,7 +407,8 @@
                         android:id="@+id/rv_reviews"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"/>
+                        android:layout_marginBottom="16dp"
+                        android:nestedScrollingEnabled="false"/>
                 </FrameLayout>
 
                 <TextView
@@ -421,7 +426,8 @@
                     android:id="@+id/similar_movies_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="8dp"
+                    android:nestedScrollingEnabled="true"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </android.support.v4.widget.NestedScrollView>

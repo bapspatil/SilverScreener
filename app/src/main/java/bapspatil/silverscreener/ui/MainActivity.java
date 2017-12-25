@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Slide slide = new Slide(Gravity.START);
+            Slide slide = new Slide(Gravity.LEFT);
             getWindow().setExitTransition(slide);
         }
         mContext = getApplicationContext();

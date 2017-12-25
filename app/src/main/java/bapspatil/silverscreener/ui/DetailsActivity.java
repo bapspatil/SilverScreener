@@ -224,7 +224,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             fetchDetails(mMovie.getId(), REVIEWS_DETAILS_TYPE);
             fetchSimilarMovies(mMovie.getId());
         }
-        startPostponedEnterTransition();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startPostponedEnterTransition();
+        }
     }
 
     private void fetchSimilarMovies(int id) {

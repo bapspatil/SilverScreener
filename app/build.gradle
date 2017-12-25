@@ -3,23 +3,33 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "bapspatil.silverscreener"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 27
-        versionCode 7
-        versionName "one.three"
+        versionCode 8
+        versionName "one.three.one"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
     buildTypes.each {
         it.buildConfigField 'String', 'TMDB_API_TOKEN', MyTheMovieDBApiToken
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a', 'mips'
+            universalApk false
+        }
     }
 }
 

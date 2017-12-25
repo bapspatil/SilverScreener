@@ -39,7 +39,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:contentDescription="@string/my_picture"
-            android:src="@drawable/me2"/>
+            android:src="@drawable/baps"/>
 
         <TextView
             style="@style/TextAppearance.AppCompat.Display1"

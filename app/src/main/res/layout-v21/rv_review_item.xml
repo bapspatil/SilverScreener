@@ -32,6 +32,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="16dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_expand_more_white_24dp"/>
     </RelativeLayout>
 
