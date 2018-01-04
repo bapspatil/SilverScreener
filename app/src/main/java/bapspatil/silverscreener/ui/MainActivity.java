@@ -34,6 +34,7 @@ import bapspatil.silverscreener.model.Movie;
 import bapspatil.silverscreener.model.MovieRecyclerView;
 import bapspatil.silverscreener.model.TMDBResponse;
 import bapspatil.silverscreener.network.RetrofitAPI;
+import bapspatil.silverscreener.utils.NetworkUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
@@ -151,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     private void fetchMovies(int taskId, String taskQuery) {
         mRecyclerView.setVisibility(View.INVISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
-        RetrofitAPI retrofitAPI = RetrofitAPI.retrofit.create(RetrofitAPI.class);
+        RetrofitAPI retrofitAPI = NetworkUtils.getCacheEnabledRetrofit(getApplicationContext()).create(RetrofitAPI.class);
         Call<TMDBResponse> call;
         switch (taskId) {
             case SEARCH_TASK:
@@ -177,8 +178,10 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
             public void onResponse(Call<TMDBResponse> call, Response<TMDBResponse> response) {
                 TMDBResponse tmdbResponse = response.body();
                 movieArray.clear();
-                movieArray.addAll(tmdbResponse.getResults());
-                mAdapter.notifyDataSetChanged();
+                if (tmdbResponse != null) {
+                    movieArray.addAll(tmdbResponse.getResults());
+                    mAdapter.notifyDataSetChanged();
+                }
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.INVISIBLE);
             }

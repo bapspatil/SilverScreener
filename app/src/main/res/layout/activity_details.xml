@@ -9,25 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context="bapspatil.silverscreener.ui.DetailsActivity">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/poster_card_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="#212121"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="8dp"
-        app:cardUseCompatPadding="true"
-        app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom|center">
-
-        <ImageView
-            android:id="@+id/poster_image_view"
-            android:layout_width="140dp"
-            android:layout_height="210dp"
-            android:scaleType="centerCrop"
-            tools:srcCompat="@drawable/tmdb_placeholder"/>
-    </android.support.v7.widget.CardView>
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -436,5 +417,24 @@
         app:layout_anchor="@id/nested_scrollview"
         app:layout_anchorGravity="bottom|right"
         app:rippleColor="#FFF"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/poster_card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#212121"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp"
+        app:cardUseCompatPadding="true"
+        app:layout_anchor="@id/appbar"
+        app:layout_anchorGravity="bottom|center">
+
+        <ImageView
+            android:id="@+id/poster_image_view"
+            android:layout_width="140dp"
+            android:layout_height="210dp"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@drawable/tmdb_placeholder"/>
+    </android.support.v7.widget.CardView>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -61,11 +61,12 @@ import bapspatil.silverscreener.model.TMDBResponse;
 import bapspatil.silverscreener.model.TMDBReviewResponse;
 import bapspatil.silverscreener.model.TMDBTrailerResponse;
 import bapspatil.silverscreener.model.Trailer;
-import bapspatil.silverscreener.network.Connection;
+import bapspatil.silverscreener.utils.NetworkUtils;
 import bapspatil.silverscreener.network.RetrofitAPI;
 import bapspatil.silverscreener.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -175,7 +176,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     .into(mPosterImageView);
         }
 
-        if(!Connection.hasNetwork(mContext)) {
+        if(!NetworkUtils.hasNetwork(mContext)) {
             (findViewById(R.id.tagline_tv)).setVisibility(View.GONE);
             (findViewById(R.id.similar_label_tv)).setVisibility(View.GONE);
             (findViewById(R.id.cast_label_tv)).setVisibility(View.GONE);
@@ -197,7 +198,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
             mTrailerRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
             mTrailerAdapter = new TrailerRecyclerViewAdapter(mContext, mTrailerTitles, mTrailerPaths, this);
-            mTrailerRecyclerView.setAdapter(mTrailerAdapter);
+            mTrailerRecyclerView.setAdapter(new ScaleInAnimationAdapter(mTrailerAdapter));
 
             mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.VERTICAL, false));
             mReviewAdapter = new ReviewRecyclerViewAdapter(mContext, mReviewAuthors, mReviewContents);
@@ -205,7 +206,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
             mGenresRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
             mGenreAdapter = new GenresRecyclerViewAdapter(mContext, mGenres);
-            mGenresRecyclerView.setAdapter(mGenreAdapter);
+            mGenresRecyclerView.setAdapter(new ScaleInAnimationAdapter(mGenreAdapter));
 
             mSimilarMoviesRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
             mSimilarMoviesAdapter = new MovieRecyclerViewAdapter(mContext, mSimilarMovies, new MovieRecyclerViewAdapter.ItemClickListener() {
@@ -218,7 +219,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                             .show();
                 }
             });
-            mSimilarMoviesRecyclerView.setAdapter(mSimilarMoviesAdapter);
+            mSimilarMoviesRecyclerView.setAdapter(new ScaleInAnimationAdapter(mSimilarMoviesAdapter));
 
             fetchDetails(mMovie.getId(), TRAILERS_DETAILS_TYPE);
             fetchDetails(mMovie.getId(), REVIEWS_DETAILS_TYPE);
@@ -230,7 +231,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     }
 
     private void fetchSimilarMovies(int id) {
-        RetrofitAPI retrofitAPI = RetrofitAPI.retrofit.create(RetrofitAPI.class);
+        RetrofitAPI retrofitAPI = NetworkUtils.getCacheEnabledRetrofit(getApplicationContext()).create(RetrofitAPI.class);
         Call<TMDBResponse> similarMoviesCall = retrofitAPI.getSimilarMovies(id, BuildConfig.TMDB_API_TOKEN, "en-US");
         similarMoviesCall.enqueue(new Callback<TMDBResponse>() {
             @Override
@@ -252,7 +253,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     }
 
     private void fetchDetails(int movieId, int detailsType) {
-        RetrofitAPI retrofitAPI = RetrofitAPI.retrofit.create(RetrofitAPI.class);
+        RetrofitAPI retrofitAPI = NetworkUtils.getCacheEnabledRetrofit(getApplicationContext()).create(RetrofitAPI.class);
         switch (detailsType) {
             case TRAILERS_DETAILS_TYPE:
                 mTrailerRecyclerView.setVisibility(View.GONE);
@@ -263,7 +264,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     @Override
                     public void onResponse(Call<TMDBTrailerResponse> call, Response<TMDBTrailerResponse> response) {
                         TMDBTrailerResponse tmdbTrailerResponse = response.body();
-                        if (tmdbTrailerResponse.getResults().size() != 0) {
+                        if (tmdbTrailerResponse != null && tmdbTrailerResponse.getResults().size() != 0) {
                             mTrailerTitles.clear();
                             mTrailerPaths.clear();
                             for (Trailer trailer : tmdbTrailerResponse.getResults()) {
@@ -291,7 +292,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     @Override
                     public void onResponse(Call<TMDBReviewResponse> call, Response<TMDBReviewResponse> response) {
                         TMDBReviewResponse tmdbReviewResponse = response.body();
-                        if (tmdbReviewResponse.getResults().size() != 0) {
+                        if (tmdbReviewResponse != null && tmdbReviewResponse.getResults().size() != 0) {
                             mReviewAuthors.clear();
                             mReviewContents.clear();
                             for (Review review : tmdbReviewResponse.getResults()) {
@@ -331,9 +332,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 }
             }
         });
-        mCastRecyclerView.setAdapter(mCastAdapter);
+        mCastRecyclerView.setAdapter(new ScaleInAnimationAdapter(mCastAdapter));
 
-        RetrofitAPI retrofitAPI = RetrofitAPI.retrofit.create(RetrofitAPI.class);
+        RetrofitAPI retrofitAPI = NetworkUtils.getCacheEnabledRetrofit(getApplicationContext()).create(RetrofitAPI.class);
         final Call<TMDBCreditsResponse> creditsCall = retrofitAPI.getCredits(mMovie.getId(), BuildConfig.TMDB_API_TOKEN);
         creditsCall.enqueue(new Callback<TMDBCreditsResponse>() {
             @Override
@@ -342,7 +343,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
                 // Get cast info
                 castList.clear();
-                if (creditsResponse.getCast().size() != 0) {
+                if (creditsResponse != null && creditsResponse.getCast().size() != 0) {
                     castList.addAll(creditsResponse.getCast());
                     mCastAdapter.notifyDataSetChanged();
                 } else {
@@ -351,10 +352,12 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 }
 
                 // Get director info
-                for (Crew crew : creditsResponse.getCrew()) {
-                    if (crew.getJob().equals("Director")) {
-                        mDirectorTextView.setText(crew.getName());
-                        break;
+                if (creditsResponse != null) {
+                    for (Crew crew : creditsResponse.getCrew()) {
+                        if (crew.getJob().equals("Director")) {
+                            mDirectorTextView.setText(crew.getName());
+                            break;
+                        }
                     }
                 }
             }
@@ -367,13 +370,16 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     }
 
     private void fetchMoreDetails() {
-        RetrofitAPI retrofitAPI = RetrofitAPI.retrofit.create(RetrofitAPI.class);
+        RetrofitAPI retrofitAPI = NetworkUtils.getCacheEnabledRetrofit(getApplicationContext()).create(RetrofitAPI.class);
         Call<TMDBDetailsResponse> detailsResponseCall = retrofitAPI.getDetails(mMovie.getId(), BuildConfig.TMDB_API_TOKEN, "en-US");
         detailsResponseCall.enqueue(new Callback<TMDBDetailsResponse>() {
             @Override
             public void onResponse(Call<TMDBDetailsResponse> call, Response<TMDBDetailsResponse> response) {
                 final TMDBDetailsResponse tmdbDetailsResponse = response.body();
-                String tagline = tmdbDetailsResponse.getTagline();
+                String tagline = null;
+                if (tmdbDetailsResponse != null) {
+                    tagline = tmdbDetailsResponse.getTagline();
+                }
                 if (tagline != null && !tagline.equals("")) {
                     mTaglineTextView.setText(tagline);
                 } else {
