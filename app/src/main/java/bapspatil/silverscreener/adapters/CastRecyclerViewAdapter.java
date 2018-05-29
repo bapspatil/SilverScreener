@@ -41,9 +41,6 @@ public class CastRecyclerViewAdapter extends RecyclerView.Adapter<CastRecyclerVi
         holder.mCastTextView.setText(mCastList.get(position).getName());
         GlideApp.with(mContext)
                 .load(RetrofitAPI.POSTER_BASE_URL + mCastList.get(position).getProfilePath())
-                .placeholder(R.drawable.cast_placeholder)
-                .error(R.drawable.cast_placeholder)
-                .fallback(R.drawable.cast_placeholder)
                 .into(holder.mCastImageView);
     }
 

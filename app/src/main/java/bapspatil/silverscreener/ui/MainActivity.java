@@ -1,10 +1,12 @@
 package bapspatil.silverscreener.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -20,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.aviran.cookiebar2.CookieBar;
@@ -48,12 +52,12 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     private MovieRecyclerViewAdapter mAdapter;
     private ArrayList<Movie> movieArray = new ArrayList<>();
     private Context mContext;
+    private final int VOICE_RECOGNITION_REQUEST_CODE = 13;
 
-    @BindView(R.id.main_toolbar) Toolbar toolbar;
     @BindView(R.id.loading_indicator) ProgressBar mProgressBar;
     @BindView(R.id.rv_movies) MovieRecyclerView mRecyclerView;
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
-    @BindView(R.id.search_view) MaterialSearchView searchView;
+    @BindView(R.id.search_view) FloatingSearchView searchView;
 
     private RealmDataSource dataSource;
 
@@ -67,8 +71,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
             getWindow().setExitTransition(slide);
         }
         mContext = getApplicationContext();
-        toolbar.setLogo(R.mipmap.titlebar_logo);
-        setSupportActionBar(toolbar);
         CookieBar.build(MainActivity.this)
                 .setLayoutGravity(Gravity.BOTTOM)
                 .setBackgroundColor(android.R.color.holo_blue_dark)
@@ -118,30 +120,28 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         });
 
         searchView = findViewById(R.id.search_view);
-        searchView.setCursorDrawable(R.drawable.cursor_search);
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+        searchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                mRecyclerView.smoothScrollToPosition(0);
-                fetchMovies(SEARCH_TASK, query);
-                searchView.closeSearch();
-                return true;
+            public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
+
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
+            public void onSearchAction(String currentQuery) {
+                mRecyclerView.smoothScrollToPosition(0);
+                fetchMovies(SEARCH_TASK, currentQuery);
+                searchView.clearQuery();
             }
         });
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
-                bottomNavigationView.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-                bottomNavigationView.setVisibility(View.VISIBLE);
+        searchView.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_about_me:
+                    Intent intentToAboutMe = new Intent(this, AboutMeActivity.class);
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out);
+                    startActivity(intentToAboutMe, options.toBundle());
+                    break;
+                case R.id.action_voice_search:
+                    startVoiceRecognition();
             }
         });
     }
@@ -212,33 +212,32 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         startActivity(startDetailsActivity, options.toBundle());
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        MenuItem item = menu.findItem(R.id.action_search);
-        searchView.setMenuItem(item);
-
-        return true;
+    private void startVoiceRecognition() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice searching...");
+        startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_about_me:
-                Intent intentToAboutMe = new Intent(this, AboutMeActivity.class);
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out);
-                startActivity(intentToAboutMe, options.toBundle());
-                return true;
-            default:
-                return true;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (matches != null) {
+                if(!matches.isEmpty()) {
+                    String query = matches.get(0);
+                    fetchMovies(SEARCH_TASK, query);
+                    Toast.makeText(this, "Searching for " + query + "...", Toast.LENGTH_LONG).show();
+                }
+            }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onBackPressed() {
-        if (searchView.isSearchOpen())
-            searchView.closeSearch();
+        if (searchView.isSearchBarFocused())
+            searchView.clearQuery();
         else
             super.onBackPressed();
     }
