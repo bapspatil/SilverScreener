@@ -41,21 +41,11 @@ public class RealmDataSource {
     }
 
     public void addMovieToFavs(final Movie movie) {
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(@NonNull Realm realm) {
-                realm.insertOrUpdate(movie);
-            }
-        });
+        realm.executeTransaction(realm -> realm.insertOrUpdate(movie));
     }
 
     public void deleteMovieFromFavs(final Movie movie) {
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(@NonNull Realm realm) {
-                movie.deleteFromRealm();
-            }
-        });
+        realm.executeTransaction(realm -> movie.deleteFromRealm());
     }
 
 }

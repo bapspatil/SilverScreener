@@ -131,14 +131,11 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         collapsingToolbarLayout.setTitle(mMovie.getTitle());
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
         collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(android.R.color.white));
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (Math.abs(verticalOffset) - appBarLayout.getTotalScrollRange() == 0)
-                    mPosterImageView.setVisibility(View.GONE);
-                else
-                    mPosterImageView.setVisibility(View.VISIBLE);
-            }
+        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (Math.abs(verticalOffset) - appBarLayout.getTotalScrollRange() == 0)
+                mPosterImageView.setVisibility(View.GONE);
+            else
+                mPosterImageView.setVisibility(View.VISIBLE);
         });
 
         dataSource = new RealmDataSource();
@@ -209,16 +206,11 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             mGenresRecyclerView.setAdapter(new ScaleInAnimationAdapter(mGenreAdapter));
 
             mSimilarMoviesRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
-            mSimilarMoviesAdapter = new MovieRecyclerViewAdapter(mContext, mSimilarMovies, new MovieRecyclerViewAdapter.ItemClickListener() {
-                @Override
-                public void onItemClick(int position, ImageView posterImageView) {
-                    CookieBar.Build(DetailsActivity.this)
-                            .setBackgroundColor(android.R.color.holo_green_dark)
-                            .setTitle(mSimilarMovies.get(position).getTitle())
-                            .setMessage("Rating: " + mSimilarMovies.get(position).getRating() + " \nRelease: " + mSimilarMovies.get(position).getDate())
-                            .show();
-                }
-            });
+            mSimilarMoviesAdapter = new MovieRecyclerViewAdapter(mContext, mSimilarMovies, (position, posterImageView) -> CookieBar.build(DetailsActivity.this)
+                    .setBackgroundColor(android.R.color.holo_green_dark)
+                    .setTitle(mSimilarMovies.get(position).getTitle())
+                    .setMessage("Rating: " + mSimilarMovies.get(position).getRating() + " \nRelease: " + mSimilarMovies.get(position).getDate())
+                    .show());
             mSimilarMoviesRecyclerView.setAdapter(new ScaleInAnimationAdapter(mSimilarMoviesAdapter));
 
             fetchDetails(mMovie.getId(), TRAILERS_DETAILS_TYPE);
@@ -319,17 +311,14 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         mCastRecyclerView.setLayoutManager(layoutManager);
 
         final ArrayList<Cast> castList = new ArrayList<>();
-        final CastRecyclerViewAdapter mCastAdapter = new CastRecyclerViewAdapter(this, castList, new CastRecyclerViewAdapter.OnActorClickHandler() {
-            @Override
-            public void onActorClicked(String actorName) {
-                try {
-                    Uri uri = Uri.parse("https://www.google.com/search?q=" + actorName + " movies");
-                    Intent actorMoviesIntent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(actorMoviesIntent);
-                } catch (Exception e) {
-                    // Who doesn't have Google? Or a browser?
-                    e.printStackTrace();
-                }
+        final CastRecyclerViewAdapter mCastAdapter = new CastRecyclerViewAdapter(this, castList, actorName -> {
+            try {
+                Uri uri = Uri.parse("https://www.google.com/search?q=" + actorName + " movies");
+                Intent actorMoviesIntent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(actorMoviesIntent);
+            } catch (Exception e) {
+                // Who doesn't have Google? Or a browser?
+                e.printStackTrace();
             }
         });
         mCastRecyclerView.setAdapter(new ScaleInAnimationAdapter(mCastAdapter));
@@ -387,23 +376,20 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                 }
                 mVotesTextView.setText(String.valueOf(tmdbDetailsResponse.getVoteCount()));
                 mMinutesTextView.setText(String.valueOf(tmdbDetailsResponse.getRuntime()));
-                mImdbButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String imdbId = tmdbDetailsResponse.getImdbId();
-                        try {
-                            Uri uri;
-                            if (imdbId != null && !imdbId.equals(""))
-                                uri = Uri.parse("http://www.imdb.com/title/" + imdbId + "/");
-                            else {
-                                Toast.makeText(mContext, "Movie isn't there on IMDB. Here is a Google search for it instead!", Toast.LENGTH_LONG).show();
-                                uri = Uri.parse("https://www.google.com/search?q=" + tmdbDetailsResponse.getTitle());
-                            }
-                            Intent imdbIntent = new Intent(Intent.ACTION_VIEW, uri);
-                            startActivity(imdbIntent);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                mImdbButton.setOnClickListener(view -> {
+                    String imdbId = tmdbDetailsResponse.getImdbId();
+                    try {
+                        Uri uri;
+                        if (imdbId != null && !imdbId.equals(""))
+                            uri = Uri.parse("http://www.imdb.com/title/" + imdbId + "/");
+                        else {
+                            Toast.makeText(mContext, "Movie isn't there on IMDB. Here is a Google search for it instead!", Toast.LENGTH_LONG).show();
+                            uri = Uri.parse("https://www.google.com/search?q=" + tmdbDetailsResponse.getTitle());
                         }
+                        Intent imdbIntent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(imdbIntent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 });
                 if (tmdbDetailsResponse.getGenres() != null && tmdbDetailsResponse.getGenres().size() != 0) {
@@ -449,92 +435,89 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
             mFavoriteButton.setImageResource(R.drawable.ic_favorite_border);
         else
             mFavoriteButton.setImageResource(R.drawable.ic_favorite);
-        mFavoriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Movie transactedMovie = dataSource.findMovieWithId(id);
-                if (transactedMovie == null) {
-                    tempMovie = mMovie;
-                    GlideApp.with(mContext)
-                            .load(tempMovie.getPosterPath())
-                            .centerCrop()
-                            .into(new Target<Drawable>() {
-                                @Override
-                                public void onLoadStarted(@Nullable Drawable placeholder) {
+        mFavoriteButton.setOnClickListener(view -> {
+            Movie transactedMovie = dataSource.findMovieWithId(id);
+            if (transactedMovie == null) {
+                tempMovie = mMovie;
+                GlideApp.with(mContext)
+                        .load(tempMovie.getPosterPath())
+                        .centerCrop()
+                        .into(new Target<Drawable>() {
+                            @Override
+                            public void onLoadStarted(@Nullable Drawable placeholder) {
 
-                                }
+                            }
 
-                                @Override
-                                public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                            @Override
+                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
 
-                                }
+                            }
 
-                                @Override
-                                public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                                    Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
-                                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                                    imageBytes = stream.toByteArray();
-                                }
+                            @Override
+                            public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                                Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                                imageBytes = stream.toByteArray();
+                            }
 
-                                @Override
-                                public void onLoadCleared(@Nullable Drawable placeholder) {
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                                }
+                            }
 
-                                @Override
-                                public void getSize(SizeReadyCallback cb) {
+                            @Override
+                            public void getSize(SizeReadyCallback cb) {
 
-                                }
+                            }
 
-                                @Override
-                                public void removeCallback(SizeReadyCallback cb) {
+                            @Override
+                            public void removeCallback(SizeReadyCallback cb) {
 
-                                }
+                            }
 
-                                @Override
-                                public void setRequest(@Nullable Request request) {
+                            @Override
+                            public void setRequest(@Nullable Request request) {
 
-                                }
+                            }
 
-                                @Nullable
-                                @Override
-                                public Request getRequest() {
-                                    return null;
-                                }
+                            @Nullable
+                            @Override
+                            public Request getRequest() {
+                                return null;
+                            }
 
-                                @Override
-                                public void onStart() {
+                            @Override
+                            public void onStart() {
 
-                                }
+                            }
 
-                                @Override
-                                public void onStop() {
+                            @Override
+                            public void onStop() {
 
-                                }
+                            }
 
-                                @Override
-                                public void onDestroy() {
+                            @Override
+                            public void onDestroy() {
 
-                                }
-                            });
-                    tempMovie.setPosterBytes(imageBytes);
-                    dataSource.addMovieToFavs(tempMovie);
-                    mFavoriteButton.setImageResource(R.drawable.ic_favorite);
-                    CookieBar.Build(DetailsActivity.this)
-                            .setBackgroundColor(android.R.color.holo_blue_dark)
-                            .setTitle("Movie added to favorites!")
-                            .setMessage("You can now see the details, even when offline, in your Favorites.")
-                            .show();
-                } else {
-                    CookieBar.Build(DetailsActivity.this)
-                            .setBackgroundColor(android.R.color.holo_red_dark)
-                            .setTitle("Movie removed from favorites!")
-                            .setMessage("But did you really have to? :-(")
-                            .show();
-                    dataSource.deleteMovieFromFavs(transactedMovie);
-                    mFavoriteButton.setImageResource(R.drawable.ic_favorite_border);
-                }
+                            }
+                        });
+                tempMovie.setPosterBytes(imageBytes);
+                dataSource.addMovieToFavs(tempMovie);
+                mFavoriteButton.setImageResource(R.drawable.ic_favorite);
+                CookieBar.build(DetailsActivity.this)
+                        .setBackgroundColor(android.R.color.holo_blue_dark)
+                        .setTitle("Movie added to favorites!")
+                        .setMessage("You can now see the details, even when offline, in your Favorites.")
+                        .show();
+            } else {
+                CookieBar.build(DetailsActivity.this)
+                        .setBackgroundColor(android.R.color.holo_red_dark)
+                        .setTitle("Movie removed from favorites!")
+                        .setMessage("But did you really have to? :-(")
+                        .show();
+                dataSource.deleteMovieFromFavs(transactedMovie);
+                mFavoriteButton.setImageResource(R.drawable.ic_favorite_border);
             }
         });
     }

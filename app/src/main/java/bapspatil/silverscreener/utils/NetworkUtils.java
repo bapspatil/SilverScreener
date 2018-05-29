@@ -28,16 +28,13 @@ public class NetworkUtils {
     public static Retrofit getCacheEnabledRetrofit(final Context context) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .cache(new Cache(context.getCacheDir(), 5 * 1024 * 1024))
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
-                        Request request = chain.request();
-                        if(hasNetwork(context))
-                            request = request.newBuilder().header("Cache-Control", "public, max-age=" + 1).build();
-                        else
-                            request = request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build();
-                        return chain.proceed(request);
-                    }
+                .addInterceptor(chain -> {
+                    Request request = chain.request();
+                    if(hasNetwork(context))
+                        request = request.newBuilder().header("Cache-Control", "public, max-age=" + 1).build();
+                    else
+                        request = request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build();
+                    return chain.proceed(request);
                 })
                 .build();
 

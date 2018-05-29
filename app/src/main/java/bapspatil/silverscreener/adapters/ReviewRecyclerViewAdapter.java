@@ -45,19 +45,13 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
         holder.reviewAuthorTextView.setText(reviewAuthor);
         holder.reviewContentTextView.setInterpolator(new OvershootInterpolator());
         holder.reviewContentTextView.setText(mReviewContents.get(position));
-        holder.reviewExpandButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.reviewExpandButton.setImageResource(holder.reviewContentTextView.isExpanded() ? R.drawable.ic_expand_more_white_24dp : R.drawable.ic_expand_less_white_24dp);
-                holder.reviewContentTextView.toggle();
-            }
+        holder.reviewExpandButton.setOnClickListener(view -> {
+            holder.reviewExpandButton.setImageResource(holder.reviewContentTextView.isExpanded() ? R.drawable.ic_expand_more_white_24dp : R.drawable.ic_expand_less_white_24dp);
+            holder.reviewContentTextView.toggle();
         });
-        holder.reviewLinearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.reviewExpandButton.setImageResource(holder.reviewContentTextView.isExpanded() ? R.drawable.ic_expand_more_white_24dp : R.drawable.ic_expand_less_white_24dp);
-                holder.reviewContentTextView.toggle();
-            }
+        holder.reviewLinearLayout.setOnClickListener(view -> {
+            holder.reviewExpandButton.setImageResource(holder.reviewContentTextView.isExpanded() ? R.drawable.ic_expand_more_white_24dp : R.drawable.ic_expand_less_white_24dp);
+            holder.reviewContentTextView.toggle();
         });
     }
 

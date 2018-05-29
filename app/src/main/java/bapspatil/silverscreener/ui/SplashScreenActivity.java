@@ -16,13 +16,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         hideSystemUI();
         int SPLASH_TIME_OUT = 1000;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
-                startActivity(i);
-                finish();
-            }
+        new Handler().postDelayed(() -> {
+            Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
+            startActivity(i);
+            finish();
         }, SPLASH_TIME_OUT);
     }
 

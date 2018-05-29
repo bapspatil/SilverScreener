@@ -22,21 +22,15 @@ public class AboutMeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        (findViewById(R.id.play_iv)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Uri uri = Uri.parse("https://play.google.com/store/apps/dev?id=7368032842071222295");
-                Intent intentToPlayStore = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intentToPlayStore);
-            }
+        (findViewById(R.id.play_iv)).setOnClickListener(view -> {
+            Uri uri = Uri.parse("https://play.google.com/store/apps/dev?id=7368032842071222295");
+            Intent intentToPlayStore = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intentToPlayStore);
         });
-        (findViewById(R.id.github_iv)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Uri uri = Uri.parse("https://github.com/bapspatil");
-                Intent intentToGitHub = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intentToGitHub);
-            }
+        (findViewById(R.id.github_iv)).setOnClickListener(view -> {
+            Uri uri = Uri.parse("https://github.com/bapspatil");
+            Intent intentToGitHub = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intentToGitHub);
         });
     }
 

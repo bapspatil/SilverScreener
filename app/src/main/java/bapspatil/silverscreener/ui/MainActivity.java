@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         mContext = getApplicationContext();
         toolbar.setLogo(R.mipmap.titlebar_logo);
         setSupportActionBar(toolbar);
-        CookieBar.Build(MainActivity.this)
+        CookieBar.build(MainActivity.this)
                 .setLayoutGravity(Gravity.BOTTOM)
                 .setBackgroundColor(android.R.color.holo_blue_dark)
                 .setTitle("App developed by Bapusaheb Patil")
@@ -89,35 +89,32 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
 
         fetchMovies(POPULAR_TASK, null);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_popular:
-                        mRecyclerView.smoothScrollToPosition(0);
-                        fetchMovies(POPULAR_TASK, null);
-                        break;
-                    case R.id.action_rated:
-                        mRecyclerView.smoothScrollToPosition(0);
-                        fetchMovies(TOP_RATED_TASK, null);
-                        break;
-                    case R.id.action_upcoming:
-                        mRecyclerView.smoothScrollToPosition(0);
-                        fetchMovies(UPCOMING_TASK, null);
-                        break;
-                    case R.id.action_now:
-                        mRecyclerView.smoothScrollToPosition(0);
-                        fetchMovies(NOW_PLAYING_TASK, null);
-                        break;
-                    case R.id.action_favorites:
-                        mRecyclerView.smoothScrollToPosition(0);
-                        fetchFavs();
-                        break;
-                    default:
-                        fetchMovies(POPULAR_TASK, null);
-                }
-                return true;
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_popular:
+                    mRecyclerView.smoothScrollToPosition(0);
+                    fetchMovies(POPULAR_TASK, null);
+                    break;
+                case R.id.action_rated:
+                    mRecyclerView.smoothScrollToPosition(0);
+                    fetchMovies(TOP_RATED_TASK, null);
+                    break;
+                case R.id.action_upcoming:
+                    mRecyclerView.smoothScrollToPosition(0);
+                    fetchMovies(UPCOMING_TASK, null);
+                    break;
+                case R.id.action_now:
+                    mRecyclerView.smoothScrollToPosition(0);
+                    fetchMovies(NOW_PLAYING_TASK, null);
+                    break;
+                case R.id.action_favorites:
+                    mRecyclerView.smoothScrollToPosition(0);
+                    fetchFavs();
+                    break;
+                default:
+                    fetchMovies(POPULAR_TASK, null);
             }
+            return true;
         });
 
         searchView = findViewById(R.id.search_view);
