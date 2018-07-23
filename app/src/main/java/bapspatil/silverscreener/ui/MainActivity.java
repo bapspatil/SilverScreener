@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.aviran.cookiebar2.CookieBar;
 
