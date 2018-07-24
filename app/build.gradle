@@ -4,7 +4,7 @@ apply plugin: 'io.fabric' // Fabric's Crashlytics Gradle Plugin
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.1'
     defaultConfig {
         applicationId "bapspatil.silverscreener"
         minSdkVersion 21
@@ -53,7 +53,7 @@ repositories {
 
 ext {
     supportVer = '27.1.1'
-    constraintVer = '1.1.0'
+    constraintVer = '1.1.2'
     glideVer = '4.7.1'
     butterknifeVer = '8.8.1'
     floatingsearchviewVer = '2.1.1'
@@ -62,7 +62,6 @@ ext {
     cookiebar2Ver = '1.0.9'
     rvAnimVer = '2.3.0'
     expandTextVer = '1.0.5'
-    firebase = '16.0.0'
 }
 
 dependencies {
@@ -86,9 +85,9 @@ dependencies {
     implementation "at.blogc:expandabletextview:$expandTextVer"
     implementation "com.github.arimorty:floatingsearchview:$floatingsearchviewVer"
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.3@aar') { transitive = true } // Firebase Crashlytics
-    implementation "com.google.firebase:firebase-core:$firebase" // Firebase Analytics
-    implementation "com.google.firebase:firebase-messaging:17.0.0" // Firebase Cloud Messaging
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') { transitive = true } // Firebase Crashlytics
+    implementation "com.google.firebase:firebase-core:16.0.1" // Firebase Analytics
+    implementation "com.google.firebase:firebase-messaging:17.1.0" // Firebase Cloud Messaging
 }
 
 apply plugin: 'com.google.gms.google-services' // Google Services Gradle Plugin
