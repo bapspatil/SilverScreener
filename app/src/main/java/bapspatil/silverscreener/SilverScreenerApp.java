@@ -9,7 +9,7 @@ import io.realm.RealmConfiguration;
  * Created by bapspatil
  */
 
-public class App extends Application {
+public class SilverScreenerApp extends Application {
 
     @Override
     public void onCreate() {

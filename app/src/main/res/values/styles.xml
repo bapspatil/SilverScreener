@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="fontFamily">@font/hammersmith_one</item>
+        <item name="android:fontFamily">@font/hammersmith_one</item>
     </style>
 
     <style name="AppTheme.Details" parent="AppTheme">
