@@ -141,8 +141,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
         mContext = getApplicationContext();
         if (Build.VERSION.SDK_INT >= 21) {

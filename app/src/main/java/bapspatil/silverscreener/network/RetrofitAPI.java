@@ -18,8 +18,8 @@ import retrofit2.http.Query;
 
 public interface RetrofitAPI {
 
-    String POSTER_BASE_URL = "http://image.tmdb.org/t/p/w342";
-    String BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w500";
+    String POSTER_BASE_URL = "https://image.tmdb.org/t/p/w342";
+    String BACKDROP_BASE_URL = "https://image.tmdb.org/t/p/w500";
     String BASE_URL = "https://api.themoviedb.org/3/";
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(BASE_URL)

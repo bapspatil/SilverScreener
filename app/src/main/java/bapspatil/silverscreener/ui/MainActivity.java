@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
         }
