@@ -39,7 +39,7 @@
                 app:floatingSearch_searchBarMarginRight="8dp"
                 app:floatingSearch_searchHint="@string/app_name"
                 app:floatingSearch_showSearchKey="true"
-                app:floatingSearch_viewTextColor="@color/white" />
+                app:floatingSearch_viewTextColor="@color/colorAccent" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

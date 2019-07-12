@@ -32,9 +32,9 @@
             android:fontFamily="@font/hammersmith_one"
             android:gravity="center"
             android:padding="12dp"
-            android:textColor="#FFF"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:textColor="@color/colorAccent"
             tools:text="Spider-Man Homecoming International Trailer #1"/>
 
     </androidx.cardview.widget.CardView>

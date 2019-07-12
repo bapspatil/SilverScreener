@@ -73,7 +73,6 @@
                     android:gravity="center"
                     android:paddingEnd="24dp"
                     android:paddingStart="24dp"
-                    android:textColor="#FFF"
                     android:textSize="32sp"
                     android:textStyle="bold"
                     tools:text="A Very Long Title Of The Movie"/>
@@ -87,7 +86,6 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginEnd="24dp"
                     android:gravity="center"
-                    android:textColor="@color/white"
                     android:textSize="16sp"
                     tools:text="An even longer tagline of the movie."/>
 
@@ -113,7 +111,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:text="RATING"
-                            android:textColor="@color/white"
                             android:textSize="12sp"/>
 
                         <TextView
@@ -122,7 +119,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="24dp"
-                            android:textColor="@color/white"
                             android:textSize="26sp"
                             tools:text="10.0"/>
 
@@ -140,7 +136,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:text="RELEASE"
-                            android:textColor="@color/white"
                             android:textSize="12sp"/>
 
                         <TextView
@@ -150,7 +145,6 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="16dp"
                             android:gravity="center"
-                            android:textColor="@color/white"
                             android:textSize="18sp"
                             tools:text="Dec 13\n1989"/>
                     </FrameLayout>
@@ -167,7 +161,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:text="DIRECTOR"
-                            android:textColor="@color/white"
                             android:textSize="12sp"/>
 
                         <TextView
@@ -177,7 +170,6 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="16dp"
                             android:gravity="center"
-                            android:textColor="@color/white"
                             android:textSize="20sp"
                             tools:text="Steven Spielberg"/>
                     </FrameLayout>
@@ -204,7 +196,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:text="VOTES"
-                            android:textColor="@color/white"
                             android:textSize="12sp"/>
 
                         <TextView
@@ -213,7 +204,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="26dp"
-                            android:textColor="@color/white"
                             android:textSize="18sp"
                             tools:text="1313"/>
                     </FrameLayout>
@@ -230,7 +220,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:text="MINUTES"
-                            android:textColor="@color/white"
                             android:textSize="12sp"/>
 
                         <TextView
@@ -239,7 +228,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="24dp"
-                            android:textColor="@color/white"
                             android:textSize="26sp"
                             tools:text="133"/>
                     </FrameLayout>
@@ -256,7 +244,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:text="IMDB"
-                            android:textColor="@color/white"
                             android:textSize="12sp"/>
 
                         <ImageButton
@@ -280,7 +267,6 @@
                     android:paddingBottom="24dp"
                     android:paddingEnd="24dp"
                     android:paddingStart="24dp"
-                    android:textColor="#FFF"
                     android:textSize="16sp"
                     tools:text="This is gonna be a plot synopsis of the movie. This data will be fetched by the TMDB API. And this will contain info of the movie script."/>
 
@@ -290,7 +276,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:text="GENRES"
-                    android:textColor="#FFF"
                     android:textSize="14sp"
                     android:textStyle="bold"/>
 
@@ -309,7 +294,6 @@
                     android:paddingEnd="24dp"
                     android:paddingStart="24dp"
                     android:text="TRAILERS"
-                    android:textColor="#FFF"
                     android:textSize="14sp"
                     android:textStyle="bold"/>
 
@@ -320,7 +304,6 @@
                     android:paddingEnd="24dp"
                     android:paddingStart="24dp"
                     android:text="(SWIPE SIDEWAYS TO SEE MORE TRAILERS)"
-                    android:textColor="#FFF"
                     android:textSize="12sp"/>
 
                 <FrameLayout
@@ -343,7 +326,6 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:text="@string/cast"
-                    android:textColor="#FFF"
                     android:textSize="14sp"
                     android:textStyle="bold"/>
 
@@ -370,7 +352,6 @@
                     android:paddingStart="24dp"
                     android:paddingTop="8dp"
                     android:text="@string/reviews"
-                    android:textColor="#FFF"
                     android:textSize="14sp"
                     android:textStyle="bold"/>
 
@@ -400,7 +381,6 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="16dp"
                     android:text="SIMILAR MOVIES"
-                    android:textColor="#FFF"
                     android:textSize="14sp"
                     android:textStyle="bold"/>
 

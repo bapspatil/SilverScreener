@@ -26,9 +26,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:textColor="@color/colorAccent"
                     android:fontFamily="@font/hammersmith_one"
                     android:text="@string/about_me"
-                    android:textColor="@color/colorAccent"
                     android:textStyle="bold"/>
             </FrameLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -47,8 +47,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="24dp"
             android:fontFamily="@font/hammersmith_one"
-            android:text="@string/bapusaheb_patil"
-            android:textColor="#FFF"/>
+            android:text="@string/bapusaheb_patil"/>
 
         <TextView
             style="@style/TextAppearance.AppCompat.Medium"
@@ -58,8 +57,7 @@
             android:layout_margin="24dp"
             android:fontFamily="@font/hammersmith_one"
             android:gravity="center"
-            android:text="@string/about_me_detail"
-            android:textColor="#FFF"/>
+            android:text="@string/about_me_detail" />
 
         <LinearLayout
             android:layout_width="wrap_content"
