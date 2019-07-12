@@ -70,8 +70,9 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         mContext = getApplicationContext();
         CookieBar.build(MainActivity.this)
                 .setLayoutGravity(Gravity.BOTTOM)
-                .setBackgroundColor(android.R.color.holo_blue_dark)
-                .setTitle("SilverScreenerApp developed by Bapusaheb Patil")
+                .setBackgroundColor(R.color.colorAccent)
+                .setTitleColor(R.color.colorPrimary)
+                .setTitle("App developed by Bapusaheb Patil")
                 .show();
 
         dataSource = new RealmDataSource();
