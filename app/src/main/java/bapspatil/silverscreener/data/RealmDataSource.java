@@ -1,7 +1,5 @@
 package bapspatil.silverscreener.data;
 
-import android.support.annotation.NonNull;
-
 import java.util.ArrayList;
 
 import bapspatil.silverscreener.model.Movie;
