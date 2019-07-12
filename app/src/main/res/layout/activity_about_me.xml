@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context="bapspatil.silverscreener.ui.AboutMeActivity">
 
     <LinearLayout
@@ -14,8 +15,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimaryDark">
+            android:layout_height="?attr/actionBarSize">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                     android:layout_gravity="center_vertical"
                     android:fontFamily="@font/hammersmith_one"
                     android:text="@string/about_me"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorAccent"
                     android:textStyle="bold"/>
             </FrameLayout>
         </androidx.appcompat.widget.Toolbar>

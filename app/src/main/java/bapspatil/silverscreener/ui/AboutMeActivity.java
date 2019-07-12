@@ -2,10 +2,12 @@ package bapspatil.silverscreener.ui;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import bapspatil.silverscreener.R;
 import butterknife.BindView;
@@ -21,6 +23,9 @@ public class AboutMeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_me);
         ButterKnife.bind(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        }
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         (findViewById(R.id.play_iv)).setOnClickListener(view -> {
