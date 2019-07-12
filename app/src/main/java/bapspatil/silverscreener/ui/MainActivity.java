@@ -7,12 +7,6 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.appcompat.widget.Toolbar;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.View;
@@ -20,8 +14,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.aviran.cookiebar2.CookieBar;
 
@@ -45,17 +44,18 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements MovieRecyclerViewAdapter.ItemClickListener {
     private static final int SEARCH_TASK = 0, POPULAR_TASK = 1, TOP_RATED_TASK = 2, UPCOMING_TASK = 3, NOW_PLAYING_TASK = 4;
-
+    private final int VOICE_RECOGNITION_REQUEST_CODE = 13;
+    @BindView(R.id.loading_indicator)
+    ProgressBar mProgressBar;
+    @BindView(R.id.rv_movies)
+    MovieRecyclerView mRecyclerView;
+    @BindView(R.id.bottom_navigation)
+    BottomNavigationView bottomNavigationView;
+    @BindView(R.id.search_view)
+    FloatingSearchView searchView;
     private MovieRecyclerViewAdapter mAdapter;
     private ArrayList<Movie> movieArray = new ArrayList<>();
     private Context mContext;
-    private final int VOICE_RECOGNITION_REQUEST_CODE = 13;
-
-    @BindView(R.id.loading_indicator) ProgressBar mProgressBar;
-    @BindView(R.id.rv_movies) MovieRecyclerView mRecyclerView;
-    @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
-    @BindView(R.id.search_view) FloatingSearchView searchView;
-
     private RealmDataSource dataSource;
 
     @Override
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Slide slide = new Slide(Gravity.LEFT);
             getWindow().setExitTransition(slide);
         }
@@ -218,10 +218,10 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (matches != null) {
-                if(!matches.isEmpty()) {
+                if (!matches.isEmpty()) {
                     String query = matches.get(0);
                     fetchMovies(SEARCH_TASK, query);
                     Toast.makeText(this, "Searching for " + query + "...", Toast.LENGTH_LONG).show();

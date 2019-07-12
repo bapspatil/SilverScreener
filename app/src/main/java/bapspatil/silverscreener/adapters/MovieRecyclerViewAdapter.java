@@ -1,11 +1,12 @@
 package bapspatil.silverscreener.adapters;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
@@ -23,10 +24,6 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     private ArrayList<Movie> mMoviesArrayList;
     private Context mContext;
     private ItemClickListener mClickListener;
-
-    public interface ItemClickListener {
-        void onItemClick(int position, ImageView posterImageView);
-    }
 
     public MovieRecyclerViewAdapter(Context context, ArrayList<Movie> movieArrayList, ItemClickListener itemClickListener) {
         this.mContext = context;
@@ -68,8 +65,13 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
         else return mMoviesArrayList.size();
     }
 
+    public interface ItemClickListener {
+        void onItemClick(int position, ImageView posterImageView);
+    }
+
     public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.poster_image_view) ImageView mPosterImageView;
+        @BindView(R.id.poster_image_view)
+        ImageView mPosterImageView;
 
         MovieViewHolder(View itemView) {
             super(itemView);

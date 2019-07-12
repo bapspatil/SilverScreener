@@ -12,7 +12,26 @@ import java.util.ArrayList;
  */
 
 public class TMDBReviewResponse implements Parcelable {
-    @SerializedName("results") private ArrayList<Review> results;
+    public static final Creator<TMDBReviewResponse> CREATOR = new Creator<TMDBReviewResponse>() {
+        @Override
+        public TMDBReviewResponse createFromParcel(Parcel source) {
+            return new TMDBReviewResponse(source);
+        }
+
+        @Override
+        public TMDBReviewResponse[] newArray(int size) {
+            return new TMDBReviewResponse[size];
+        }
+    };
+    @SerializedName("results")
+    private ArrayList<Review> results;
+
+    public TMDBReviewResponse() {
+    }
+
+    protected TMDBReviewResponse(Parcel in) {
+        this.results = in.createTypedArrayList(Review.CREATOR);
+    }
 
     public ArrayList<Review> getResults() {
         return results;
@@ -31,23 +50,4 @@ public class TMDBReviewResponse implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.results);
     }
-
-    public TMDBReviewResponse() {
-    }
-
-    protected TMDBReviewResponse(Parcel in) {
-        this.results = in.createTypedArrayList(Review.CREATOR);
-    }
-
-    public static final Creator<TMDBReviewResponse> CREATOR = new Creator<TMDBReviewResponse>() {
-        @Override
-        public TMDBReviewResponse createFromParcel(Parcel source) {
-            return new TMDBReviewResponse(source);
-        }
-
-        @Override
-        public TMDBReviewResponse[] newArray(int size) {
-            return new TMDBReviewResponse[size];
-        }
-    };
 }

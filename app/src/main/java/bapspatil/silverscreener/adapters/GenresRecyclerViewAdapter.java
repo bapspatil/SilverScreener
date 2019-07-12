@@ -2,12 +2,13 @@ package bapspatil.silverscreener.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
@@ -52,7 +53,9 @@ public class GenresRecyclerViewAdapter extends RecyclerView.Adapter<GenresRecycl
     }
 
     public class GenreViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.genre_tv) TextView mGenreTextView;
+        @BindView(R.id.genre_tv)
+        TextView mGenreTextView;
+
         public GenreViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

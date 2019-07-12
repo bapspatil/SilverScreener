@@ -1,12 +1,13 @@
 package bapspatil.silverscreener.adapters;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
@@ -49,7 +50,11 @@ public class CastRecyclerViewAdapter extends RecyclerView.Adapter<CastRecyclerVi
         return mCastList.size();
     }
 
-    public class CastViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public interface OnActorClickHandler {
+        void onActorClicked(String actorName);
+    }
+
+    public class CastViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView mCastTextView;
         public ImageView mCastImageView;
 
@@ -64,9 +69,5 @@ public class CastRecyclerViewAdapter extends RecyclerView.Adapter<CastRecyclerVi
         public void onClick(View view) {
             mActorClickHandler.onActorClicked(mCastTextView.getText().toString());
         }
-    }
-
-    public interface OnActorClickHandler {
-        void onActorClicked(String actorName);
     }
 }

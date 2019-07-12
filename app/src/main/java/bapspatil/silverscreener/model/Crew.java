@@ -10,8 +10,29 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Crew implements Parcelable {
-    @SerializedName("job") private String job;
-    @SerializedName("name") private String name;
+    public static final Creator<Crew> CREATOR = new Creator<Crew>() {
+        @Override
+        public Crew createFromParcel(Parcel source) {
+            return new Crew(source);
+        }
+
+        @Override
+        public Crew[] newArray(int size) {
+            return new Crew[size];
+        }
+    };
+    @SerializedName("job")
+    private String job;
+    @SerializedName("name")
+    private String name;
+
+    public Crew() {
+    }
+
+    protected Crew(Parcel in) {
+        this.job = in.readString();
+        this.name = in.readString();
+    }
 
     public String getJob() {
         return job;
@@ -39,24 +60,4 @@ public class Crew implements Parcelable {
         dest.writeString(this.job);
         dest.writeString(this.name);
     }
-
-    public Crew() {
-    }
-
-    protected Crew(Parcel in) {
-        this.job = in.readString();
-        this.name = in.readString();
-    }
-
-    public static final Creator<Crew> CREATOR = new Creator<Crew>() {
-        @Override
-        public Crew createFromParcel(Parcel source) {
-            return new Crew(source);
-        }
-
-        @Override
-        public Crew[] newArray(int size) {
-            return new Crew[size];
-        }
-    };
 }

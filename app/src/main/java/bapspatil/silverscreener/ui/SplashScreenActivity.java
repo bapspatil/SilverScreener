@@ -3,8 +3,9 @@ package bapspatil.silverscreener.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import bapspatil.silverscreener.R;
 

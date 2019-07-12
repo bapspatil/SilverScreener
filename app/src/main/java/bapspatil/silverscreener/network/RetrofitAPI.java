@@ -21,6 +21,10 @@ public interface RetrofitAPI {
     String POSTER_BASE_URL = "http://image.tmdb.org/t/p/w342";
     String BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w500";
     String BASE_URL = "https://api.themoviedb.org/3/";
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
 
     @GET("movie/{type}")
     Call<TMDBResponse> getMovies(@Path("type") String TYPE, @Query("api_key") String API_KEY, @Query("language") String LANGUAGE, @Query("page") int PAGE);
@@ -42,11 +46,5 @@ public interface RetrofitAPI {
 
     @GET("movie/{movie_id}/similar")
     Call<TMDBResponse> getSimilarMovies(@Path("movie_id") int MOVIE_ID, @Query("api_key") String API_KEY, @Query("language") String LANGUAGE);
-
-
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
 
 }

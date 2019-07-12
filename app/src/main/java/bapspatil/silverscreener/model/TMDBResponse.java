@@ -12,10 +12,39 @@ import java.util.ArrayList;
  */
 
 public class TMDBResponse implements Parcelable {
-    @SerializedName("page") private int page;
-    @SerializedName("results") private ArrayList<Movie> results;
-    @SerializedName("total_results") private int totalResults;
-    @SerializedName("total_pages") private int totalPages;
+    public static final Creator<TMDBResponse> CREATOR = new Creator<TMDBResponse>() {
+        @Override
+        public TMDBResponse createFromParcel(Parcel source) {
+            return new TMDBResponse(source);
+        }
+
+        @Override
+        public TMDBResponse[] newArray(int size) {
+            return new TMDBResponse[size];
+        }
+    };
+    @SerializedName("page")
+    private int page;
+    @SerializedName("results")
+    private ArrayList<Movie> results;
+    @SerializedName("total_results")
+    private int totalResults;
+    @SerializedName("total_pages")
+    private int totalPages;
+
+    public TMDBResponse() {
+    }
+
+    protected TMDBResponse(Parcel in) {
+        this.page = in.readInt();
+        this.results = in.createTypedArrayList(Movie.CREATOR);
+        this.totalResults = in.readInt();
+        this.totalPages = in.readInt();
+    }
+
+    public static Creator<TMDBResponse> getCREATOR() {
+        return CREATOR;
+    }
 
     public int getPage() {
         return page;
@@ -49,10 +78,6 @@ public class TMDBResponse implements Parcelable {
         this.totalPages = totalPages;
     }
 
-    public static Creator<TMDBResponse> getCREATOR() {
-        return CREATOR;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -65,26 +90,4 @@ public class TMDBResponse implements Parcelable {
         dest.writeInt(this.totalResults);
         dest.writeInt(this.totalPages);
     }
-
-    public TMDBResponse() {
-    }
-
-    protected TMDBResponse(Parcel in) {
-        this.page = in.readInt();
-        this.results = in.createTypedArrayList(Movie.CREATOR);
-        this.totalResults = in.readInt();
-        this.totalPages = in.readInt();
-    }
-
-    public static final Creator<TMDBResponse> CREATOR = new Creator<TMDBResponse>() {
-        @Override
-        public TMDBResponse createFromParcel(Parcel source) {
-            return new TMDBResponse(source);
-        }
-
-        @Override
-        public TMDBResponse[] newArray(int size) {
-            return new TMDBResponse[size];
-        }
-    };
 }

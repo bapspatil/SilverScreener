@@ -10,13 +10,32 @@ import io.realm.annotations.PrimaryKey;
 
 public class Movie extends RealmObject implements Parcelable {
 
-    @PrimaryKey @SerializedName("id") private int id;
-    @SerializedName("poster_path") private String posterPath;
-    @SerializedName("title") private String title;
-    @SerializedName("overview") private String plot;
-    @SerializedName("release_date") private String date;
-    @SerializedName("vote_average") private String rating;
-    @SerializedName("backdrop_path") private String backdropPath;
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel source) {
+            return new Movie(source);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+    @PrimaryKey
+    @SerializedName("id")
+    private int id;
+    @SerializedName("poster_path")
+    private String posterPath;
+    @SerializedName("title")
+    private String title;
+    @SerializedName("overview")
+    private String plot;
+    @SerializedName("release_date")
+    private String date;
+    @SerializedName("vote_average")
+    private String rating;
+    @SerializedName("backdrop_path")
+    private String backdropPath;
     private byte[] posterBytes;
 
     public Movie() {
@@ -32,6 +51,17 @@ public class Movie extends RealmObject implements Parcelable {
         this.backdropPath = backdropPath;
         this.id = id;
         this.posterBytes = posterBytes;
+    }
+
+    protected Movie(Parcel in) {
+        this.posterPath = in.readString();
+        this.title = in.readString();
+        this.plot = in.readString();
+        this.date = in.readString();
+        this.rating = in.readString();
+        this.backdropPath = in.readString();
+        this.id = in.readInt();
+        this.posterBytes = in.createByteArray();
     }
 
     public String getPosterPath() {
@@ -115,27 +145,4 @@ public class Movie extends RealmObject implements Parcelable {
         dest.writeInt(this.id);
         dest.writeByteArray(this.posterBytes);
     }
-
-    protected Movie(Parcel in) {
-        this.posterPath = in.readString();
-        this.title = in.readString();
-        this.plot = in.readString();
-        this.date = in.readString();
-        this.rating = in.readString();
-        this.backdropPath = in.readString();
-        this.id = in.readInt();
-        this.posterBytes = in.createByteArray();
-    }
-
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel source) {
-            return new Movie(source);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
 }

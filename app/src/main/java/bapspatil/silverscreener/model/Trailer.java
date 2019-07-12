@@ -10,8 +10,33 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Trailer implements Parcelable {
-    @SerializedName("name") private String name;
-    @SerializedName("key") private String key;
+    public static final Creator<Trailer> CREATOR = new Creator<Trailer>() {
+        @Override
+        public Trailer createFromParcel(Parcel source) {
+            return new Trailer(source);
+        }
+
+        @Override
+        public Trailer[] newArray(int size) {
+            return new Trailer[size];
+        }
+    };
+    @SerializedName("name")
+    private String name;
+    @SerializedName("key")
+    private String key;
+
+    public Trailer() {
+    }
+
+    protected Trailer(Parcel in) {
+        this.name = in.readString();
+        this.key = in.readString();
+    }
+
+    public static Creator<Trailer> getCREATOR() {
+        return CREATOR;
+    }
 
     public String getName() {
         return name;
@@ -29,10 +54,6 @@ public class Trailer implements Parcelable {
         this.key = key;
     }
 
-    public static Creator<Trailer> getCREATOR() {
-        return CREATOR;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -43,24 +64,4 @@ public class Trailer implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.key);
     }
-
-    public Trailer() {
-    }
-
-    protected Trailer(Parcel in) {
-        this.name = in.readString();
-        this.key = in.readString();
-    }
-
-    public static final Creator<Trailer> CREATOR = new Creator<Trailer>() {
-        @Override
-        public Trailer createFromParcel(Parcel source) {
-            return new Trailer(source);
-        }
-
-        @Override
-        public Trailer[] newArray(int size) {
-            return new Trailer[size];
-        }
-    };
 }

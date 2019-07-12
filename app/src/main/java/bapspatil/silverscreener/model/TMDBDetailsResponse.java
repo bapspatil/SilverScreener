@@ -9,66 +9,57 @@ import java.util.List;
 
 public class TMDBDetailsResponse implements Parcelable {
 
+    public static final Creator<TMDBDetailsResponse> CREATOR = new Creator<TMDBDetailsResponse>() {
+        @Override
+        public TMDBDetailsResponse createFromParcel(Parcel source) {
+            return new TMDBDetailsResponse(source);
+        }
+
+        @Override
+        public TMDBDetailsResponse[] newArray(int size) {
+            return new TMDBDetailsResponse[size];
+        }
+    };
     @SerializedName("original_language")
     private String originalLanguage;
-
     @SerializedName("imdb_id")
     private String imdbId;
-
     @SerializedName("video")
     private boolean video;
-
     @SerializedName("title")
     private String title;
-
     @SerializedName("backdrop_path")
     private String backdropPath;
-
     @SerializedName("revenue")
     private int revenue;
-
     @SerializedName("genres")
     private List<GenresItem> genres;
-
     @SerializedName("popularity")
     private double popularity;
-
     @SerializedName("id")
     private int id;
-
     @SerializedName("vote_count")
     private int voteCount;
-
     @SerializedName("budget")
     private int budget;
-
     @SerializedName("overview")
     private String overview;
-
     @SerializedName("original_title")
     private String originalTitle;
-
     @SerializedName("runtime")
     private int runtime;
-
     @SerializedName("poster_path")
     private String posterPath;
-
     @SerializedName("release_date")
     private String releaseDate;
-
     @SerializedName("vote_average")
     private double voteAverage;
-
     @SerializedName("tagline")
     private String tagline;
-
     @SerializedName("adult")
     private boolean adult;
-
     @SerializedName("homepage")
     private String homepage;
-
     @SerializedName("status")
     private String status;
 
@@ -100,172 +91,196 @@ public class TMDBDetailsResponse implements Parcelable {
         this.status = status;
     }
 
-    public void setOriginalLanguage(String originalLanguage) {
-        this.originalLanguage = originalLanguage;
+    protected TMDBDetailsResponse(Parcel in) {
+        this.originalLanguage = in.readString();
+        this.imdbId = in.readString();
+        this.video = in.readByte() != 0;
+        this.title = in.readString();
+        this.backdropPath = in.readString();
+        this.revenue = in.readInt();
+        this.genres = in.createTypedArrayList(GenresItem.CREATOR);
+        this.popularity = in.readDouble();
+        this.id = in.readInt();
+        this.voteCount = in.readInt();
+        this.budget = in.readInt();
+        this.overview = in.readString();
+        this.originalTitle = in.readString();
+        this.runtime = in.readInt();
+        this.posterPath = in.readString();
+        this.releaseDate = in.readString();
+        this.voteAverage = in.readDouble();
+        this.tagline = in.readString();
+        this.adult = in.readByte() != 0;
+        this.homepage = in.readString();
+        this.status = in.readString();
     }
 
     public String getOriginalLanguage() {
         return originalLanguage;
     }
 
-    public void setImdbId(String imdbId) {
-        this.imdbId = imdbId;
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
     }
 
     public String getImdbId() {
         return imdbId;
     }
 
-    public void setVideo(boolean video) {
-        this.video = video;
+    public void setImdbId(String imdbId) {
+        this.imdbId = imdbId;
     }
 
     public boolean isVideo() {
         return video;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setVideo(boolean video) {
+        this.video = video;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getBackdropPath() {
         return backdropPath;
     }
 
-    public void setRevenue(int revenue) {
-        this.revenue = revenue;
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
     }
 
     public int getRevenue() {
         return revenue;
     }
 
-    public void setGenres(List<GenresItem> genres) {
-        this.genres = genres;
+    public void setRevenue(int revenue) {
+        this.revenue = revenue;
     }
 
     public List<GenresItem> getGenres() {
         return genres;
     }
 
-    public void setPopularity(double popularity) {
-        this.popularity = popularity;
+    public void setGenres(List<GenresItem> genres) {
+        this.genres = genres;
     }
 
     public double getPopularity() {
         return popularity;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPopularity(double popularity) {
+        this.popularity = popularity;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setVoteCount(int voteCount) {
-        this.voteCount = voteCount;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getVoteCount() {
         return voteCount;
     }
 
-    public void setBudget(int budget) {
-        this.budget = budget;
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
     }
 
     public int getBudget() {
         return budget;
     }
 
-    public void setOverview(String overview) {
-        this.overview = overview;
+    public void setBudget(int budget) {
+        this.budget = budget;
     }
 
     public String getOverview() {
         return overview;
     }
 
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 
     public String getOriginalTitle() {
         return originalTitle;
     }
 
-    public void setRuntime(int runtime) {
-        this.runtime = runtime;
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
     }
 
     public int getRuntime() {
         return runtime;
     }
 
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
+    public void setRuntime(int runtime) {
+        this.runtime = runtime;
     }
 
     public String getPosterPath() {
         return posterPath;
     }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
     public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setVoteAverage(double voteAverage) {
-        this.voteAverage = voteAverage;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public double getVoteAverage() {
         return voteAverage;
     }
 
-    public void setTagline(String tagline) {
-        this.tagline = tagline;
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     public String getTagline() {
         return tagline;
     }
 
-    public void setAdult(boolean adult) {
-        this.adult = adult;
+    public void setTagline(String tagline) {
+        this.tagline = tagline;
     }
 
     public boolean isAdult() {
         return adult;
     }
 
-    public void setHomepage(String homepage) {
-        this.homepage = homepage;
+    public void setAdult(boolean adult) {
+        this.adult = adult;
     }
 
     public String getHomepage() {
         return homepage;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setHomepage(String homepage) {
+        this.homepage = homepage;
     }
 
     public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
@@ -297,40 +312,4 @@ public class TMDBDetailsResponse implements Parcelable {
         dest.writeString(this.homepage);
         dest.writeString(this.status);
     }
-
-    protected TMDBDetailsResponse(Parcel in) {
-        this.originalLanguage = in.readString();
-        this.imdbId = in.readString();
-        this.video = in.readByte() != 0;
-        this.title = in.readString();
-        this.backdropPath = in.readString();
-        this.revenue = in.readInt();
-        this.genres = in.createTypedArrayList(GenresItem.CREATOR);
-        this.popularity = in.readDouble();
-        this.id = in.readInt();
-        this.voteCount = in.readInt();
-        this.budget = in.readInt();
-        this.overview = in.readString();
-        this.originalTitle = in.readString();
-        this.runtime = in.readInt();
-        this.posterPath = in.readString();
-        this.releaseDate = in.readString();
-        this.voteAverage = in.readDouble();
-        this.tagline = in.readString();
-        this.adult = in.readByte() != 0;
-        this.homepage = in.readString();
-        this.status = in.readString();
-    }
-
-    public static final Creator<TMDBDetailsResponse> CREATOR = new Creator<TMDBDetailsResponse>() {
-        @Override
-        public TMDBDetailsResponse createFromParcel(Parcel source) {
-            return new TMDBDetailsResponse(source);
-        }
-
-        @Override
-        public TMDBDetailsResponse[] newArray(int size) {
-            return new TMDBDetailsResponse[size];
-        }
-    };
 }

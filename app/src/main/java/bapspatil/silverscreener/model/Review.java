@@ -10,8 +10,29 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Review implements Parcelable {
-    @SerializedName("author") private String author;
-    @SerializedName("content") private String content;
+    public static final Creator<Review> CREATOR = new Creator<Review>() {
+        @Override
+        public Review createFromParcel(Parcel source) {
+            return new Review(source);
+        }
+
+        @Override
+        public Review[] newArray(int size) {
+            return new Review[size];
+        }
+    };
+    @SerializedName("author")
+    private String author;
+    @SerializedName("content")
+    private String content;
+
+    public Review() {
+    }
+
+    protected Review(Parcel in) {
+        this.author = in.readString();
+        this.content = in.readString();
+    }
 
     public String getAuthor() {
         return author;
@@ -39,24 +60,4 @@ public class Review implements Parcelable {
         dest.writeString(this.author);
         dest.writeString(this.content);
     }
-
-    public Review() {
-    }
-
-    protected Review(Parcel in) {
-        this.author = in.readString();
-        this.content = in.readString();
-    }
-
-    public static final Creator<Review> CREATOR = new Creator<Review>() {
-        @Override
-        public Review createFromParcel(Parcel source) {
-            return new Review(source);
-        }
-
-        @Override
-        public Review[] newArray(int size) {
-            return new Review[size];
-        }
-    };
 }

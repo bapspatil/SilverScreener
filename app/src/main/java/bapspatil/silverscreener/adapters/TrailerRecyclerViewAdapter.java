@@ -2,13 +2,14 @@ package bapspatil.silverscreener.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
@@ -24,10 +25,6 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
     private ArrayList<String> mTrailerTitles, mTrailerPaths;
     private Context mContext;
     private ItemClickListener mClickListener;
-
-    public interface ItemClickListener {
-        void onItemClick(String stringUrlTrailerClicked);
-    }
 
     public TrailerRecyclerViewAdapter(Context context, ArrayList<String> trailerTitles, ArrayList<String> trailerPaths, ItemClickListener itemClickListener) {
         this.mContext = context;
@@ -47,7 +44,7 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
         String title = mTrailerTitles.get(position);
         Typeface hammersmithOne = ResourcesCompat.getFont(mContext, R.font.hammersmith_one);
         viewHolder.trailerTitleTextView.setTypeface(hammersmithOne);
-        if(title == null)
+        if (title == null)
             viewHolder.trailerTitleTextView.setText("Why aren't you connected to the internet? Or maybe there are no trailers for this movie...");
         else
             viewHolder.trailerTitleTextView.setText(title);
@@ -68,9 +65,15 @@ public class TrailerRecyclerViewAdapter extends RecyclerView.Adapter<TrailerRecy
         else return mTrailerTitles.size();
     }
 
+    public interface ItemClickListener {
+        void onItemClick(String stringUrlTrailerClicked);
+    }
+
     public class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.trailer_title_tv) TextView trailerTitleTextView;
-        @BindView(R.id.trailer_thumbnail_iv) ImageView trailerThumbnailImageView;
+        @BindView(R.id.trailer_title_tv)
+        TextView trailerTitleTextView;
+        @BindView(R.id.trailer_thumbnail_iv)
+        ImageView trailerThumbnailImageView;
 
         TrailerViewHolder(View itemView) {
             super(itemView);

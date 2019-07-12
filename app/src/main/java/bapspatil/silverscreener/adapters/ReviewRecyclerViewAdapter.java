@@ -2,8 +2,6 @@ package bapspatil.silverscreener.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +9,9 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
@@ -62,10 +63,14 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
     }
 
     public class ReviewItemViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.review_author_tv) TextView reviewAuthorTextView;
-        @BindView(R.id.review_content_tv) ExpandableTextView reviewContentTextView;
-        @BindView(R.id.review_expand_button) ImageButton reviewExpandButton;
-        @BindView(R.id.review_linear_layout) LinearLayout reviewLinearLayout;
+        @BindView(R.id.review_author_tv)
+        TextView reviewAuthorTextView;
+        @BindView(R.id.review_content_tv)
+        ExpandableTextView reviewContentTextView;
+        @BindView(R.id.review_expand_button)
+        ImageButton reviewExpandButton;
+        @BindView(R.id.review_linear_layout)
+        LinearLayout reviewLinearLayout;
 
         ReviewItemViewHolder(View itemView) {
             super(itemView);

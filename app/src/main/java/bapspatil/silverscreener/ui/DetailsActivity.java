@@ -8,15 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.core.app.NavUtils;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -26,11 +17,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NavUtils;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.aviran.cookiebar2.CookieBar;
 
@@ -61,9 +62,9 @@ import bapspatil.silverscreener.model.TMDBResponse;
 import bapspatil.silverscreener.model.TMDBReviewResponse;
 import bapspatil.silverscreener.model.TMDBTrailerResponse;
 import bapspatil.silverscreener.model.Trailer;
-import bapspatil.silverscreener.utils.NetworkUtils;
 import bapspatil.silverscreener.network.RetrofitAPI;
 import bapspatil.silverscreener.utils.GlideApp;
+import bapspatil.silverscreener.utils.NetworkUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
@@ -73,7 +74,53 @@ import retrofit2.Response;
 
 public class DetailsActivity extends AppCompatActivity implements TrailerRecyclerViewAdapter.ItemClickListener {
     private static final int TRAILERS_DETAILS_TYPE = 0, REVIEWS_DETAILS_TYPE = 1;
-
+    Movie tempMovie, mMovie;
+    @BindView(R.id.appbar)
+    AppBarLayout appBarLayout;
+    @BindView(R.id.collapsing_toolbar_layout)
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.trailer_label_tv)
+    TextView mTrailersLabel0;
+    @BindView(R.id.trailers_hint_tv)
+    TextView mTrailersLabel1;
+    @BindView(R.id.reviews_label_tv)
+    TextView mReviewsLabel0;
+    @BindView(R.id.rating_value_tv)
+    TextView mRatingTextView;
+    @BindView(R.id.date_value_tv)
+    TextView mDateTextView;
+    @BindView(R.id.title_tv)
+    TextView mTitleTextView;
+    @BindView(R.id.plot_tv)
+    TextView mPlotTextView;
+    @BindView(R.id.poster_image_view)
+    ImageView mPosterImageView;
+    @BindView(R.id.rv_trailers)
+    MovieRecyclerView mTrailerRecyclerView;
+    @BindView(R.id.rv_reviews)
+    MovieRecyclerView mReviewRecyclerView;
+    @BindView(R.id.fav_button)
+    FloatingActionButton mFavoriteButton;
+    @BindView(R.id.backdrop_iv)
+    ImageView mBackdropImageView;
+    @BindView(R.id.director_value_tv)
+    TextView mDirectorTextView;
+    @BindView(R.id.cast_rv)
+    RecyclerView mCastRecyclerView;
+    @BindView(R.id.tagline_tv)
+    TextView mTaglineTextView;
+    @BindView(R.id.votes_value_tv)
+    TextView mVotesTextView;
+    @BindView(R.id.minutes_value_tv)
+    TextView mMinutesTextView;
+    @BindView(R.id.imdb_value_tv)
+    ImageButton mImdbButton;
+    @BindView(R.id.genres_rv)
+    RecyclerView mGenresRecyclerView;
+    @BindView(R.id.similar_movies_rv)
+    RecyclerView mSimilarMoviesRecyclerView;
     private TrailerRecyclerViewAdapter mTrailerAdapter;
     private ReviewRecyclerViewAdapter mReviewAdapter;
     private GenresRecyclerViewAdapter mGenreAdapter;
@@ -86,32 +133,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
     private ArrayList<GenresItem> mGenres = new ArrayList<>();
     private ArrayList<Movie> mSimilarMovies = new ArrayList<>();
     private byte[] imageBytes;
-    Movie tempMovie, mMovie;
-
-    @BindView(R.id.appbar) AppBarLayout appBarLayout;
-    @BindView(R.id.collapsing_toolbar_layout) CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.trailer_label_tv) TextView mTrailersLabel0;
-    @BindView(R.id.trailers_hint_tv) TextView mTrailersLabel1;
-    @BindView(R.id.reviews_label_tv) TextView mReviewsLabel0;
-    @BindView(R.id.rating_value_tv) TextView mRatingTextView;
-    @BindView(R.id.date_value_tv) TextView mDateTextView;
-    @BindView(R.id.title_tv) TextView mTitleTextView;
-    @BindView(R.id.plot_tv) TextView mPlotTextView;
-    @BindView(R.id.poster_image_view) ImageView mPosterImageView;
-    @BindView(R.id.rv_trailers) MovieRecyclerView mTrailerRecyclerView;
-    @BindView(R.id.rv_reviews) MovieRecyclerView mReviewRecyclerView;
-    @BindView(R.id.fav_button) FloatingActionButton mFavoriteButton;
-    @BindView(R.id.backdrop_iv) ImageView mBackdropImageView;
-    @BindView(R.id.director_value_tv) TextView mDirectorTextView;
-    @BindView(R.id.cast_rv) RecyclerView mCastRecyclerView;
-    @BindView(R.id.tagline_tv) TextView mTaglineTextView;
-    @BindView(R.id.votes_value_tv) TextView mVotesTextView;
-    @BindView(R.id.minutes_value_tv) TextView mMinutesTextView;
-    @BindView(R.id.imdb_value_tv) ImageButton mImdbButton;
-    @BindView(R.id.genres_rv) RecyclerView mGenresRecyclerView;
-    @BindView(R.id.similar_movies_rv) RecyclerView mSimilarMoviesRecyclerView;
-
     private RealmDataSource dataSource;
 
     @Override
@@ -173,7 +194,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
                     .into(mPosterImageView);
         }
 
-        if(!NetworkUtils.hasNetwork(mContext)) {
+        if (!NetworkUtils.hasNetwork(mContext)) {
             (findViewById(R.id.tagline_tv)).setVisibility(View.GONE);
             (findViewById(R.id.similar_label_tv)).setVisibility(View.GONE);
             (findViewById(R.id.cast_label_tv)).setVisibility(View.GONE);
@@ -476,15 +497,15 @@ public class DetailsActivity extends AppCompatActivity implements TrailerRecycle
 
                             }
 
-                            @Override
-                            public void setRequest(@Nullable Request request) {
-
-                            }
-
                             @Nullable
                             @Override
                             public Request getRequest() {
                                 return null;
+                            }
+
+                            @Override
+                            public void setRequest(@Nullable Request request) {
+
                             }
 
                             @Override

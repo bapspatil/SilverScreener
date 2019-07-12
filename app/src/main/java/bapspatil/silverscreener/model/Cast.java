@@ -10,8 +10,29 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Cast implements Parcelable {
-    @SerializedName("name") private String name;
-    @SerializedName("profile_path") private String profilePath;
+    public static final Creator<Cast> CREATOR = new Creator<Cast>() {
+        @Override
+        public Cast createFromParcel(Parcel source) {
+            return new Cast(source);
+        }
+
+        @Override
+        public Cast[] newArray(int size) {
+            return new Cast[size];
+        }
+    };
+    @SerializedName("name")
+    private String name;
+    @SerializedName("profile_path")
+    private String profilePath;
+
+    public Cast() {
+    }
+
+    protected Cast(Parcel in) {
+        this.name = in.readString();
+        this.profilePath = in.readString();
+    }
 
     public String getName() {
         return name;
@@ -39,24 +60,4 @@ public class Cast implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.profilePath);
     }
-
-    public Cast() {
-    }
-
-    protected Cast(Parcel in) {
-        this.name = in.readString();
-        this.profilePath = in.readString();
-    }
-
-    public static final Creator<Cast> CREATOR = new Creator<Cast>() {
-        @Override
-        public Cast createFromParcel(Parcel source) {
-            return new Cast(source);
-        }
-
-        @Override
-        public Cast[] newArray(int size) {
-            return new Cast[size];
-        }
-    };
 }

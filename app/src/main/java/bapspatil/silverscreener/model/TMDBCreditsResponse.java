@@ -12,8 +12,29 @@ import java.util.ArrayList;
  */
 
 public class TMDBCreditsResponse implements Parcelable {
-    @SerializedName("cast") private ArrayList<Cast> cast;
-    @SerializedName("crew") private ArrayList<Crew> crew;
+    public static final Creator<TMDBCreditsResponse> CREATOR = new Creator<TMDBCreditsResponse>() {
+        @Override
+        public TMDBCreditsResponse createFromParcel(Parcel source) {
+            return new TMDBCreditsResponse(source);
+        }
+
+        @Override
+        public TMDBCreditsResponse[] newArray(int size) {
+            return new TMDBCreditsResponse[size];
+        }
+    };
+    @SerializedName("cast")
+    private ArrayList<Cast> cast;
+    @SerializedName("crew")
+    private ArrayList<Crew> crew;
+
+    public TMDBCreditsResponse() {
+    }
+
+    protected TMDBCreditsResponse(Parcel in) {
+        this.cast = in.createTypedArrayList(Cast.CREATOR);
+        this.crew = in.createTypedArrayList(Crew.CREATOR);
+    }
 
     public ArrayList<Cast> getCast() {
         return cast;
@@ -41,24 +62,4 @@ public class TMDBCreditsResponse implements Parcelable {
         dest.writeTypedList(this.cast);
         dest.writeTypedList(this.crew);
     }
-
-    public TMDBCreditsResponse() {
-    }
-
-    protected TMDBCreditsResponse(Parcel in) {
-        this.cast = in.createTypedArrayList(Cast.CREATOR);
-        this.crew = in.createTypedArrayList(Crew.CREATOR);
-    }
-
-    public static final Creator<TMDBCreditsResponse> CREATOR = new Creator<TMDBCreditsResponse>() {
-        @Override
-        public TMDBCreditsResponse createFromParcel(Parcel source) {
-            return new TMDBCreditsResponse(source);
-        }
-
-        @Override
-        public TMDBCreditsResponse[] newArray(int size) {
-            return new TMDBCreditsResponse[size];
-        }
-    };
 }

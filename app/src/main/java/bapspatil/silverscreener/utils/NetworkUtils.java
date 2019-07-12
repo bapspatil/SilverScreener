@@ -4,11 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import java.io.IOException;
-
 import bapspatil.silverscreener.network.RetrofitAPI;
 import okhttp3.Cache;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
@@ -30,7 +27,7 @@ public class NetworkUtils {
                 .cache(new Cache(context.getCacheDir(), 5 * 1024 * 1024))
                 .addInterceptor(chain -> {
                     Request request = chain.request();
-                    if(hasNetwork(context))
+                    if (hasNetwork(context))
                         request = request.newBuilder().header("Cache-Control", "public, max-age=" + 1).build();
                     else
                         request = request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build();
