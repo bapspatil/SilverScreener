@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+
+import com.bumptech.glide.Glide;
 
 import bapspatil.silverscreener.R;
 import butterknife.BindView;
@@ -39,6 +42,9 @@ public class AboutMeActivity extends AppCompatActivity {
             Intent intentToGitHub = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intentToGitHub);
         });
+        Glide.with(this)
+                .load("https://github.com/bapspatil.png")
+                .into((ImageView) findViewById(R.id.bapspatil_iv));
     }
 
     @Override

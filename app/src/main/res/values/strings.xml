@@ -10,10 +10,10 @@
     <string name="reviews">REVIEWS</string>
     <string name="cast">CAST</string>
     <string name="cast_images">Cast Images</string>
-    <string name="about_me">About Me</string>
+    <string name="about_me">About The Developer</string>
     <string name="my_picture">This is Bapusaheb Patil</string>
     <string name="bapusaheb_patil">Bapusaheb Patil</string>
-    <string name="about_me_detail">Hi! I am a self-taught Android developer and an UX/UI designer.\n\nI love making apps that have a good balance of minimal elegant design and excellent functionality.\n\nI also love making memes.\n\nSee more of my apps and my work here:</string>
+    <string name="about_me_detail">Hi! I am a Google-certified Android Developer and an IDF-certified UX Designer.\n\nI love making apps, watchfaces and memes.\n\nNot specifically in that order.\n\nSee more of my apps and my work here:</string>
     <string name="voice_search">Voice Search</string>
 
     <string-array name="sort_criteria">

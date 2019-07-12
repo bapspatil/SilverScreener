@@ -25,7 +25,7 @@
                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="center"
                     android:fontFamily="@font/hammersmith_one"
                     android:text="@string/about_me"
                     android:textColor="@color/colorAccent"
@@ -34,13 +34,12 @@
         </androidx.appcompat.widget.Toolbar>
 
         <ImageView
+            android:id="@+id/bapspatil_iv"
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:contentDescription="@string/my_picture"
-            android:src="@drawable/baps"/>
-
+            android:contentDescription="@string/my_picture"/>
         <TextView
             style="@style/TextAppearance.AppCompat.Display1"
             android:layout_width="wrap_content"
@@ -68,6 +67,13 @@
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:layout_marginBottom="24dp">
+
+            <ImageView
+                android:id="@+id/website_iv"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="24dp"
+                android:src="@drawable/ic_language_white_36dp"/>
 
             <ImageView
                 android:id="@+id/play_iv"
